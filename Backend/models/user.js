@@ -23,8 +23,6 @@ const userSchema = new Schema({
     refreshToken: { type: String, default: null },
 });
 
-userSchema.methods.getJWTToken = function () {};
-
 userSchema.pre('save', async function (next) {
     if (!this.isModified('password')) {
         return next();
