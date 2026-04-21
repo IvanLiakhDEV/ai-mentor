@@ -1,7 +1,6 @@
 import { catchAsyncErrors } from '../utils/errorHandlers.js';
-import { authenticateUser, createUser } from '../services/user.service.js';
-import { sendTokens } from '../utils/sendTokens.js';
-
+import { authenticateUser, createUser, logoutUser } from '../services/user.service.js';
+import { sendTokens, clearTokens } from '../utils/tokens.js';
 export const register = catchAsyncErrors(async (req, res, next) => {
     const { username, email, password } = req.body;
     const user = await createUser(username, email, password);
@@ -19,5 +18,14 @@ export const login = catchAsyncErrors(async (req, res, next) => {
         success: true,
         message: 'Авторизація успішна',
         data: user,
+    });
+});
+export const logout = catchAsyncErrors(async (req, res, next) => {
+    const userId = req.user._id;
+    await logoutUser(userId);
+    clearTokens(res);
+    res.status(200).json({
+        success: true,
+        message: 'Успішне завершення сесії',
     });
 });

@@ -7,7 +7,6 @@ export const createUser = async (username, email, password) => {
         throw new ErrorHandler('Така пошта вже зареєстрована', 409);
     }
     const user = await User.create({ username, email, password });
-    user.password = undefined;
     return user;
 };
 export const authenticateUser = async (email, password) => {
@@ -23,4 +22,8 @@ export const authenticateUser = async (email, password) => {
     await User.findByIdAndUpdate(user._id, { refreshToken });
 
     return { user, accessToken, refreshToken };
+};
+export const logoutUser = async userId => {
+    const user = await User.findByIdAndUpdate(userId, { $set: { refreshToken: null } });
+    if (!user) throw new ErrorHandler('Користувача не знайдено', 404);
 };
