@@ -37,3 +37,11 @@ export const renewTokens = async oldToken => {
     await User.findByIdAndUpdate(user._id, { refreshToken });
     return { user, accessToken, refreshToken };
 };
+export const setPassword = async (userId, currentPassword, newPassword) => {
+    const user = await User.findOne(userId).select('+password');
+    if (!user) throw new ErrorHandler('Користувача не знайдено', 404);
+    const isMatch = await user.comparePassword(currentPassword);
+    if (!isMatch) throw new ErrorHandler('Введений пароль не збігається з паролем облікового запису', 400);
+    user.password = newPassword;
+    user.save();
+};

@@ -1,6 +1,7 @@
 import { catchAsyncErrors } from '../utils/errorHandlers.js';
-import { authenticateUser, createUser, logoutUser, renewTokens } from '../services/user.service.js';
+import { authenticateUser, createUser, logoutUser, renewTokens, setPassword } from '../services/user.service.js';
 import { sendTokens, clearTokens } from '../utils/tokens.js';
+
 export const register = catchAsyncErrors(async (req, res, next) => {
     const { username, email, password } = req.body;
     const user = await createUser(username, email, password);
@@ -36,5 +37,14 @@ export const refresh = catchAsyncErrors(async (req, res, next) => {
     res.status(200).json({
         success: true,
         message: 'Успішне оновлення токену',
+    });
+});
+export const changePassword = catchAsyncErrors(async (req, res, next) => {
+    const userId = req.user._id;
+    const { currentPassword, newPassword } = req.body;
+    await setPassword(userId, currentPassword, newPassword);
+    res.status(200).json({
+        success: true,
+        message: 'Пароль успішно оновлено',
     });
 });
