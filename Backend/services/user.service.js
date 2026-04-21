@@ -1,6 +1,6 @@
 import User from '../models/user.js';
 import { ErrorHandler } from '../utils/errorHandlers.js';
-import { getAccessToken, getRefreshToken } from './token.service.js';
+import { getAccessToken, getRefreshToken, verifyRefreshToken } from './token.service.js';
 export const createUser = async (username, email, password) => {
     const userExist = await User.findOne({ email });
     if (userExist) {
@@ -26,4 +26,14 @@ export const authenticateUser = async (email, password) => {
 export const logoutUser = async userId => {
     const user = await User.findByIdAndUpdate(userId, { $set: { refreshToken: null } });
     if (!user) throw new ErrorHandler('Користувача не знайдено', 404);
+};
+export const renewTokens = async oldToken => {
+    if (!oldToken) throw new ErrorHandler('Токен не дісний', 401);
+    verifyRefreshToken(oldToken);
+    const user = await User.findOne({ refreshToken: oldToken });
+    if (!user) throw new ErrorHandler('Користувача не знайдено', 404);
+    const accessToken = getAccessToken(user);
+    const refreshToken = getRefreshToken(user);
+    await User.findByIdAndUpdate(user._id, { refreshToken });
+    return { user, accessToken, refreshToken };
 };
