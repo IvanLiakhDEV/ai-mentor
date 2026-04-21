@@ -1,0 +1,17 @@
+import jwt from 'jsonwebtoken';
+import User from '../models/user.js';
+import { catchAsyncErrors } from '../utils/errorHandlers.js';
+import { ErrorHandler } from '../utils/errorHandlers.js';
+export const verifyJWT = catchAsyncErrors(async (req, res, next) => {
+    const token = req.cookies.accessToken;
+
+    if (!token) throw new ErrorHandler('Спочатку авторизуйтеся', 401);
+
+    const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
+
+    const user = await User.findById(decoded.id);
+    if (!user) throw new ErrorHandler('Користувача не знайдено', 401);
+
+    req.user = user;
+    next();
+});
