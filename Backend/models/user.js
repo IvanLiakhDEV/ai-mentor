@@ -7,7 +7,7 @@ const userSchema = new Schema({
         required: true,
         trim: true,
         minLength: [3, "Ім'я не може бути коротшим за 3 символи"],
-        maxLength: [30, "Ім'я не може бути довшим за 20 символів"],
+        maxLength: [30, "Ім'я не може бути довшим за 30 символів"],
     },
     email: {
         type: String,
@@ -20,15 +20,23 @@ const userSchema = new Schema({
         minlength: [8, 'Довжина пароля не може бути менше 8 симовлів'],
         select: false,
     },
-    refreshToken: { type: String, default: null },
+    refreshToken: { type: String, default: null, select: false },
 });
 
-userSchema.pre('save', async function (next) {
+userSchema.set('toJSON', {
+    transform: (doc, ret) => {
+        delete ret.password;
+        delete ret.refreshToken;
+        delete ret.__v;
+        return ret;
+    },
+});
+
+userSchema.pre('save', async function () {
     if (!this.isModified('password')) {
-        return next();
+        return;
     }
     this.password = await bcrypt.hash(this.password, 10);
-    next();
 });
 
 userSchema.methods.comparePassword = async function (password) {
