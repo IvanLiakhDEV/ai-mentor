@@ -16,10 +16,7 @@ const courseSchema = new Schema(
             minLength: [50, 'Опис не може бути коротшим за 50 символів'],
             maxLength: [500, 'Опис не може бути довшим за 500 символів'],
         },
-        technology: {
-            type: String,
-            required: true,
-        },
+        tags: [{ type: String, required: true, maxLength: [30, 'Опис не може бути довшим за 30 символів'] }],
         numOfParticipants: {
             type: Number,
             default: 0,

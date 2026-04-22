@@ -11,7 +11,7 @@ const lessonSchema = new Schema(
             maxLength: [100, 'Назва не може бути довша за 100 символів'],
         },
         theory: {
-            content: { type: String, required: true },
+            content: { type: String, required: true, maxLength: [5000, 'Теорія не може бути довша за 5000 символів'] },
         },
         practice: {
             taskDescription: { type: String, required: true },
