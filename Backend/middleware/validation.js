@@ -9,3 +9,8 @@ export const validateSchema = schema => (req, res, next) => {
     req.body = result.data;
     next();
 };
+export const issuesHandler = field => ({
+    error: iss => {
+        if (iss.input === undefined) return `Поле ${field} обов'язкове до заповнення`;
+    },
+});

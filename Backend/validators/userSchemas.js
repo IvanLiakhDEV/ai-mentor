@@ -1,11 +1,6 @@
 // @ts-check
 import { z } from 'zod';
-
-const issuesHandler = field => ({
-    error: iss => {
-        if (iss.input === undefined) return `Поле ${field} обов'язкове до заповнення`;
-    },
-});
+import { issuesHandler } from '../middleware/validation.js';
 
 export const registerSchema = z.object({
     username: z.string(issuesHandler('username')).min(3, 'Нікнейм має бути від 8 символів').max(30, 'Нікнейм має бути до 30 символів'),
