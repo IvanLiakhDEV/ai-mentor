@@ -30,6 +30,9 @@ export const courseValidationSchema = z.object({
         )
         .optional(),
 });
+export const byIdValidationSchema = z.object({
+    id: objectIdSchema('id'),
+});
 
 export const enrollmentValidationSchema = z.object({
     courseId: objectIdSchema('courseId'),

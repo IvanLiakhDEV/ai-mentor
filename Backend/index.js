@@ -4,6 +4,7 @@ import { connectDB } from './config/DB.js';
 import { userRouter } from './routes/UserRouter.js';
 import { errorMiddleware } from './middleware/error.js';
 import cookieParser from 'cookie-parser';
+import { courseRouter } from './routes/courseRouter.js';
 dotenv.config();
 
 const app = express();
@@ -12,6 +13,7 @@ app.use(json());
 app.use(cookieParser());
 
 app.use('/user', userRouter);
+app.use('/course', courseRouter);
 
 app.use(errorMiddleware);
 
