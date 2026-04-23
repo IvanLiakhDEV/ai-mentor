@@ -20,6 +20,11 @@ const userSchema = new Schema({
         minlength: [8, 'Довжина пароля не може бути менше 8 симовлів'],
         select: false,
     },
+    role: {
+        type: String,
+        enum: ['student', 'admin'],
+        default: 'student',
+    },
     refreshToken: { type: String, default: null, select: false },
 });
 
