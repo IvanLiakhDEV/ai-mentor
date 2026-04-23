@@ -2,7 +2,7 @@
 import { z } from 'zod';
 import { issuesHandler } from '../middleware/validation.js';
 
-const objectIdSchema = fieldName =>
+export const objectIdSchema = fieldName =>
     z.string(issuesHandler(fieldName)).regex(/^[0-9a-fA-F]{24}$/, `Невалідний ідентифікатор (ObjectId) для поля ${fieldName}`);
 
 export const courseValidationSchema = z.object({
@@ -36,7 +36,6 @@ export const byIdValidationSchema = z.object({
 
 export const enrollmentValidationSchema = z.object({
     courseId: objectIdSchema('courseId'),
-    userId: objectIdSchema('userId'),
     completedSequence: z.number(issuesHandler('completedSequence')).nonnegative().default(0),
     status: z.enum(['Active', 'Completed'], issuesHandler('status')).default('Active'),
     archived: z.boolean(issuesHandler('archived')).default(false),
