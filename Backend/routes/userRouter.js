@@ -2,7 +2,7 @@ import { Router } from 'express';
 import { changePassword, login, logout, refresh, register } from '../controllers/userController.js';
 import { validateSchema } from '../middleware/validation.js';
 import { changePasswordSchema, loginSchema, registerSchema } from '../validators/userSchemas.js';
-import { verifyJWT } from '../middleware/verifyJWT.js';
+import { verifyJWT } from '../middleware/verifyUser.js';
 export const userRouter = Router();
 
 userRouter.post('/register', validateSchema(registerSchema), register);

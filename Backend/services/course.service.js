@@ -15,3 +15,14 @@ export const removeCourse = async id => {
         throw new ErrorHandler(`Курсу з id = "${id}" не знайдено`, 404);
     }
 };
+export const getCourse = async id => {
+    const result = await Course.findById(id);
+    if (!result) {
+        throw new ErrorHandler(`Курсу з id = "${id}" не знайдено`, 404);
+    }
+    return result;
+};
+export const getCourses = async () => {
+    const result = await Course.find();
+    return result;
+};

@@ -23,4 +23,5 @@ export const authorize =
         if (!roles.includes(req.user.role)) {
             throw new ErrorHandler('Немає доступу', 403);
         }
+        next();
     };
