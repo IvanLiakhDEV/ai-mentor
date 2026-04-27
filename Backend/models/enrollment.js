@@ -15,9 +15,9 @@ const enrollmentSchema = new Schema(
 
 enrollmentSchema.index({ userId: 1, courseId: 1 }, { unique: true });
 
-enrollmentSchema.post('save', async function () {
-    if (this.isNew) await mongoose.model('Course').findByIdAndUpdate(this.courseId, { $inc: { numOfParticipants: 1 } });
-});
+// enrollmentSchema.post('save', async function () {
+//     if (this.isNew) await mongoose.model('Course').findByIdAndUpdate(this.courseId, { $inc: { numOfParticipants: 1 } });
+// });
 
 const Enrollment = mongoose.model('Enrollment', enrollmentSchema);
 

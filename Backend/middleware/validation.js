@@ -15,7 +15,7 @@ export const validateParamsSchema = schema => (req, res, next) => {
         const message = result.error.issues[0].message;
         return next(new ErrorHandler(message, 400));
     }
-    req.body = result.data;
+    req.params = result.data;
     next();
 };
 export const issuesHandler = field => ({
