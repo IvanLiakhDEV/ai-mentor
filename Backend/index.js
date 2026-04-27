@@ -6,6 +6,7 @@ import { errorMiddleware } from './middleware/error.js';
 import cookieParser from 'cookie-parser';
 import { courseRouter } from './routes/courseRouter.js';
 import { enrollmentRouter } from './routes/enrollmentRouter.js';
+import { lessonRouter } from './routes/lessonRouter.js';
 dotenv.config();
 
 const app = express();
@@ -16,6 +17,7 @@ app.use(cookieParser());
 app.use('/user', userRouter);
 app.use('/course', courseRouter);
 app.use('/enrollments', enrollmentRouter);
+app.use('/lesson', lessonRouter);
 
 app.use(errorMiddleware);
 

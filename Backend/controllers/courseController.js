@@ -1,4 +1,4 @@
-import { createCourse, getCourse, getCourses, removeCourse } from '../services/course.service.js';
+import { addModuleToCourse, createCourse, getCourse, getCourses, removeCourse } from '../services/course.service.js';
 import { catchAsyncErrors } from '../utils/errorHandlers.js';
 export const create = catchAsyncErrors(async (req, res, next) => {
     const courseData = req.body;
@@ -31,6 +31,16 @@ export const getById = catchAsyncErrors(async (req, res, next) => {
     res.status(200).json({
         success: true,
         message: `Курс з id = ${id} знайдено`,
+        data: result,
+    });
+});
+export const addModule = catchAsyncErrors(async (req, res, next) => {
+    const data = req.body;
+    const { id } = req.params;
+    const result = await addModuleToCourse(data, id);
+    res.status(200).json({
+        success: true,
+        message: `Модуль додано успішно`,
         data: result,
     });
 });
