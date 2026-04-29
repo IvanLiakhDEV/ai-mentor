@@ -1,0 +1,27 @@
+@use 'functions' as *;
+//BACKGROUND COLOR DARK THEME
+$bg-dark-primary: #0f172a;
+$bg-dark-surface: #0f172a;
+
+//BACKGROUND COLOR LIGHT THEME
+$bg-light-primary: #f9fafb;
+$bg-light-surface: #ffffff;
+
+//BACKGROUND COLOR FOR CTA (BUTTONS)
+$bg-cta-primary: #5b4ccc;
+
+//TEXT COLOR LIGHT THEME
+$text-light-primary: #101828;
+$text-light-secondary: #5d6d90;
+
+//TEXT COLOR DARK THEME
+$text-dark-primary: #ffffff;
+$text-dark-secondary: #7c96aa;
+
+//ACCENT TEXT COLOR
+$text-accent: #1a5996;
+
+//BORDER RADIUS
+$br-10: toRem(10);
+$br-12: toRem(12);
+$br-14: toRem(14);

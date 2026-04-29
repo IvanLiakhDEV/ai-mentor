@@ -1,1 +1,6 @@
-@use 'restart';
+@use 'variables' as *;
+@use 'functions' as *;
+@use 'global' as *;
+@tailwind base;
+@tailwind components;
+@tailwind utilities;

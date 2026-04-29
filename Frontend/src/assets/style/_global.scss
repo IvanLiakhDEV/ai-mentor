@@ -1,0 +1,27 @@
+@use 'variables' as *;
+
+@layer base {
+    input:-webkit-autofill,
+    input:-webkit-autofill:hover,
+    input:-webkit-autofill:focus {
+        -webkit-box-shadow: 0 0 0px 1000px var(--background-surface) inset !important;
+        -webkit-text-fill-color: var(--text-primary) !important;
+    }
+    :root {
+        --background-primary: #{$bg-light-primary};
+        --background-surface: #{$bg-light-surface};
+        --text-primary: #{$text-light-primary};
+        --text-secondary: #{$text-light-secondary};
+        --text-accent: #{$text-accent};
+    }
+    .dark {
+        --background-primary: #{$bg-dark-primary};
+        --background-surface: #{$bg-dark-surface};
+        --text-primary: #{$text-dark-primary};
+        --text-secondary: #{$text-dark-secondary};
+    }
+    body {
+        background-color: var(--background-primary);
+        color: var(--text-primary);
+    }
+}
