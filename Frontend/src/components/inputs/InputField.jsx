@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { IoMdEyeOff, IoMdEye } from 'react-icons/io';
-export const InputField = ({ id, label, type = 'text', placeholder, showPrefixIcon = true, icon: Icon }) => {
+export const InputField = React.forwardRef(({ id, label, type = 'text', placeholder, icon: Icon, error, ...rest }, ref) => {
     const [visible, setVisible] = useState(false);
     const toggleVisible = () => setVisible(!visible);
     return (
@@ -12,21 +12,22 @@ export const InputField = ({ id, label, type = 'text', placeholder, showPrefixIc
                     {label}
                 </label>
             )}
-
             <div
-                className={`flex flex-row items-center bg-transparent border rounded-md p-[12px_16px_12px_40px] relative ${!showPrefixIcon && 'pl-3'}`}>
-                {showPrefixIcon && (
+                className={`flex flex-row items-center bg-transparent border rounded-md p-[12px_16px_12px_40px] relative ${!Icon && 'pl-3'}`}>
+                {Icon && (
                     <Icon
-                        className='absolute left-2 top-50'
+                        className='absolute -translate-y-1/2 left-2 top-1/2'
                         size={20}
                         opacity={0.7}
                     />
                 )}
                 <input
                     id={id}
+                    ref={ref}
                     type={type == 'password' ? (visible ? 'text' : 'password') : type}
                     className='flex-1 placeholder-gray-400 bg-transparent border-none outline-none'
                     placeholder={placeholder}
+                    {...rest}
                 />
                 {type == 'password' &&
                     (visible ? (
@@ -41,6 +42,7 @@ export const InputField = ({ id, label, type = 'text', placeholder, showPrefixIc
                         />
                     ))}
             </div>
+            {error && <p className='-mb-3 text-sm font-medium text-red-500'>{error}</p>}
         </div>
     );
-};
+});
