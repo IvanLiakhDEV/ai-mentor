@@ -29,18 +29,23 @@ export const InputField = React.forwardRef(({ id, label, type = 'text', placehol
                     placeholder={placeholder}
                     {...rest}
                 />
-                {type == 'password' &&
-                    (visible ? (
-                        <IoMdEye
-                            size={20}
-                            onClick={toggleVisible}
-                        />
-                    ) : (
-                        <IoMdEyeOff
-                            size={20}
-                            onClick={toggleVisible}
-                        />
-                    ))}
+                {type == 'password' && (
+                    <button type='button'>
+                        {visible ? (
+                            <IoMdEye
+                                size={20}
+                                opacity={0.7}
+                                onClick={toggleVisible}
+                            />
+                        ) : (
+                            <IoMdEyeOff
+                                size={20}
+                                opacity={0.7}
+                                onClick={toggleVisible}
+                            />
+                        )}
+                    </button>
+                )}
             </div>
             {error && <p className='-mb-3 text-sm font-medium text-red-500'>{error}</p>}
         </div>

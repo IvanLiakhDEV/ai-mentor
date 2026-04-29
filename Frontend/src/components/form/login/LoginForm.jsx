@@ -55,12 +55,13 @@ export const LoginForm = ({ onSwitch }) => {
                     type='submit'
                 />
                 <p className='font-normal text-center'>
-                    Ще не маєте аккаунту?
-                    <span
+                    Ще не маєте аккаунту?&nbsp;
+                    <button
                         onClick={onSwitch}
+                        type='button'
                         className='font-medium cursor-pointer text-cta'>
                         Створити
-                    </span>
+                    </button>
                 </p>
             </footer>
         </form>
