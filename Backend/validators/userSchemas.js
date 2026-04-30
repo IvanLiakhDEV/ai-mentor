@@ -3,7 +3,7 @@ import { z } from 'zod';
 import { issuesHandler } from '../middleware/validation.js';
 
 export const registerSchema = z.object({
-    username: z.string(issuesHandler('username')).min(3, 'Нікнейм має бути від 8 символів').max(30, 'Нікнейм має бути до 30 символів'),
+    username: z.string(issuesHandler('username')).min(3, 'Нікнейм має бути від 3 символів').max(20, 'Нікнейм має бути до 20 символів'),
     email: z.email(issuesHandler('email')),
     password: z
         .string(issuesHandler('password'))

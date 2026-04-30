@@ -15,6 +15,7 @@ export const registerSchema = z
     })
     .refine(data => data.password === data.confirmPassword, {
         message: 'Паролі не співпадають',
+        path: ['confirmPassword'],
     });
 export const loginSchema = z.object({
     email: z.email('Некоректний формат пошти').nonempty('Поле не може бути порожнім'),

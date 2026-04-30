@@ -5,17 +5,19 @@ import { MdOutlineEmail, MdOutlineLock, MdPersonOutline } from 'react-icons/md';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { loginSchema } from '@/formValidation/userSchema';
+import { useLogin } from '@/hooks/useAuth';
 
 export const LoginForm = ({ onSwitch }) => {
+    const { mutate: handleLogin, isPending, error } = useLogin();
     const {
         register,
         handleSubmit,
-        formState: { errors, isSubmitting },
+        formState: { errors },
     } = useForm({
         resolver: zodResolver(loginSchema),
     });
     const onSubmit = async data => {
-        console.log(data);
+        handleLogin(data);
     };
     return (
         <form
@@ -48,10 +50,13 @@ export const LoginForm = ({ onSwitch }) => {
                     Забули пароль?
                 </a>
             </div>
+            {error && (
+                <p className='mb-3 text-sm font-medium text-center text-red-500 '>{error.response?.data?.message || 'Щось пішло не так'}</p>
+            )}
             <footer className='grid gap-5'>
                 <Button
-                    title={`${isSubmitting ? 'Завантаження' : 'Увійти'}`}
-                    isDisabled={isSubmitting && true}
+                    title={`${isPending ? 'Завантаження' : 'Увійти'}`}
+                    isDisabled={isPending}
                     type='submit'
                 />
                 <p className='font-normal text-center'>

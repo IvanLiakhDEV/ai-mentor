@@ -5,16 +5,18 @@ import { MdOutlineEmail, MdOutlineLock, MdPersonOutline } from 'react-icons/md';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { registerSchema } from '@/formValidation/userSchema';
+import { useRegister } from '@/hooks/useAuth';
 export const RegisterForm = ({ onSwitch }) => {
+    const { mutate: handleRegister, isPending, error } = useRegister();
     const {
         register,
         handleSubmit,
-        formState: { errors, isSubmitting },
+        formState: { errors },
     } = useForm({
         resolver: zodResolver(registerSchema),
     });
     const onSubmit = async data => {
-        console.log(data);
+        handleRegister(data);
     };
     return (
         <form
@@ -58,10 +60,15 @@ export const RegisterForm = ({ onSwitch }) => {
                     error={errors.confirmPassword?.message}
                 />
             </div>
+            {error && (
+                <p className='-mb-3 text-sm font-medium text-center text-red-500'>{error.response?.data?.message || 'Щось пішло не так'}</p>
+            )}
+
             <footer className='grid gap-5 mt-5'>
                 <Button
-                    title={`${isSubmitting ? 'Завантаження' : 'Створити аккаунт'}`}
-                    isDisabled={isSubmitting && true}
+                    title={`${isPending ? 'Завантаження' : 'Створити аккаунт'}`}
+                    isDisabled={isPending}
+                    type='submit'
                 />
                 <p className='font-normal text-center'>
                     Вже маєте аккаунт?&nbsp;
