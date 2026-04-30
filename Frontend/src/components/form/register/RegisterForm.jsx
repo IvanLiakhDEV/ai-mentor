@@ -62,6 +62,7 @@ export const RegisterForm = ({ onSwitch }) => {
                 <Button
                     title={`${isSubmitting ? 'Завантаження' : 'Створити аккаунт'}`}
                     isDisabled={isSubmitting && true}
+                    type='submit'
                 />
                 <p className='font-normal text-center'>
                     Вже маєте аккаунт?&nbsp;
