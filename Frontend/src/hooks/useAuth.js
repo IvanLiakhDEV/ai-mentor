@@ -1,21 +1,36 @@
-import { useMutation } from '@tanstack/react-query';
-import { loginUser, registerUser } from '@/api/auth.api';
-
+import { useMutation, useQuery } from '@tanstack/react-query';
+import { fetchMe, loginUser, registerUser } from '@/api/auth.api';
+import { useDispatch } from 'react-redux';
+import { setUser } from '@/store/slices/authSlice';
+import { useEffect } from 'react';
 export const useRegister = () => {
     return useMutation({
         mutationFn: registerUser,
         onSuccess: response => {
-            ///TODO store data
             console.log(response);
         },
     });
 };
 export const useLogin = () => {
+    const dispatch = useDispatch();
     return useMutation({
         mutationFn: loginUser,
         onSuccess: response => {
-            ///TODO store data
-            console.log(response);
+            dispatch(setUser(response.data));
         },
     });
+};
+export const useMe = () => {
+    const dispatch = useDispatch();
+
+    const query = useQuery({
+        queryKey: ['me'],
+        queryFn: fetchMe,
+        retry: false,
+    });
+    useEffect(() => {
+        if (query.data) dispatch(setUser(query.data.data));
+    }, [query.data]);
+
+    return query;
 };
