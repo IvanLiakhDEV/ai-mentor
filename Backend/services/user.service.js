@@ -45,3 +45,8 @@ export const setPassword = async (userId, currentPassword, newPassword) => {
     user.password = newPassword;
     user.save();
 };
+export const getUser = async userId => {
+    const user = await User.findOne(userId);
+    if (!user) throw new ErrorHandler('Користувача не знайдено', 404);
+    return user;
+};

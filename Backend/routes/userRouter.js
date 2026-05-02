@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { changePassword, login, logout, refresh, register } from '../controllers/userController.js';
+import { changePassword, getMe, login, logout, refresh, register } from '../controllers/userController.js';
 import { validateSchema } from '../middleware/validation.js';
 import { changePasswordSchema, loginSchema, registerSchema } from '../validators/userSchemas.js';
 import { verifyJWT } from '../middleware/verifyUser.js';
@@ -10,3 +10,4 @@ userRouter.post('/login', validateSchema(loginSchema), login);
 userRouter.post('/logout', verifyJWT, logout);
 userRouter.post('/refresh', refresh);
 userRouter.patch('/change-password', verifyJWT, validateSchema(changePasswordSchema), changePassword);
+userRouter.get('/', verifyJWT, getMe);
