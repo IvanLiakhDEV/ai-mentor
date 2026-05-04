@@ -19,7 +19,6 @@ api.interceptors.response.use(
                 return api(originalRequest);
             } catch {
                 store.dispatch(clearUser());
-                window.location.href = '/auth';
             }
         }
         return Promise.reject(error);
