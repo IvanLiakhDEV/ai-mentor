@@ -4,11 +4,11 @@ import { Outlet } from 'react-router';
 
 export const Layout = () => {
     return (
-        <>
+        <div className='min-h-screen'>
             <Header />
-            <main>
+            <main className='bg-bg'>
                 <Outlet />
             </main>
-        </>
+        </div>
     );
 };

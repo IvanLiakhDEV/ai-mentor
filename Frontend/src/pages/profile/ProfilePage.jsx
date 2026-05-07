@@ -7,7 +7,7 @@ import { useSelector } from 'react-redux';
 export const ProfilePage = () => {
     const user = useSelector(selectUser);
     return (
-        <div className='px-4'>
+        <div className='px-6 mx-auto max-w-7xl'>
             <div className='flex p-8 mt-10 border border-gray-200 rounded-md shadow-sm bg-bg-surface text-secondary'>
                 <header className='flex items-start justify-between w-full '>
                     <div className='flex items-center gap-7'>
