@@ -5,6 +5,7 @@ import { ProtectedRoute } from './protectedRoute';
 import { PublicRoute } from './publicRoute';
 import { Layout } from '@/components/layout/Layout';
 import { ProfilePage } from '@/pages/profile/ProfilePage';
+import { CoursePage } from '@/pages/course/CoursePage';
 export const router = createBrowserRouter([
     {
         element: <PublicRoute />,
@@ -18,6 +19,7 @@ export const router = createBrowserRouter([
                 children: [
                     { path: '/', element: <HomePage /> },
                     { path: '/profile', element: <ProfilePage /> },
+                    { path: '/course/:id', element: <CoursePage /> },
                 ],
             },
         ],
