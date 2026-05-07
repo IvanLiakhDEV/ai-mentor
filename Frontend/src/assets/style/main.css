@@ -1,0 +1,177 @@
+@import 'tailwindcss';
+@import 'tw-animate-css';
+@import '@fontsource-variable/inter';
+
+@variant dark (&:where(.dark, .dark *));
+
+@theme {
+    --font-sans: 'Inter Variable', sans-serif;
+
+    --color-bg-primary: var(--background-primary);
+    --color-bg-surface: var(--background-surface);
+    --color-primary: var(--text-primary);
+    --color-secondary: var(--text-secondary);
+    --color-accent: var(--text-accent);
+    --color-cta: #5b4ccc;
+
+    --radius-10: 0.625rem;
+    --radius-12: 0.75rem;
+    --radius-14: 0.875rem;
+}
+
+@layer base {
+    html,
+    body,
+    div,
+    span,
+    applet,
+    object,
+    iframe,
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6,
+    p,
+    blockquote,
+    pre,
+    a,
+    abbr,
+    acronym,
+    address,
+    big,
+    cite,
+    code,
+    del,
+    dfn,
+    em,
+    img,
+    ins,
+    kbd,
+    q,
+    s,
+    samp,
+    small,
+    strike,
+    strong,
+    sub,
+    sup,
+    tt,
+    var,
+    b,
+    u,
+    i,
+    center,
+    dl,
+    dt,
+    dd,
+    ol,
+    ul,
+    li,
+    fieldset,
+    form,
+    label,
+    legend,
+    table,
+    caption,
+    tbody,
+    tfoot,
+    thead,
+    tr,
+    th,
+    td,
+    article,
+    aside,
+    canvas,
+    details,
+    embed,
+    figure,
+    figcaption,
+    footer,
+    header,
+    hgroup,
+    menu,
+    nav,
+    output,
+    ruby,
+    section,
+    summary,
+    time,
+    mark,
+    audio,
+    video {
+        margin: 0;
+        padding: 0;
+        border: 0;
+        font-size: 100%;
+        font: inherit;
+        vertical-align: baseline;
+    }
+
+    article,
+    aside,
+    details,
+    figcaption,
+    figure,
+    footer,
+    header,
+    hgroup,
+    menu,
+    nav,
+    section {
+        display: block;
+    }
+
+    body {
+        line-height: 1;
+    }
+    ol,
+    ul {
+        list-style: none;
+    }
+    blockquote,
+    q {
+        quotes: none;
+    }
+    blockquote:before,
+    blockquote:after,
+    q:before,
+    q:after {
+        content: '';
+        content: none;
+    }
+    table {
+        border-collapse: collapse;
+        border-spacing: 0;
+    }
+
+    /* Autofill */
+    input:-webkit-autofill,
+    input:-webkit-autofill:hover,
+    input:-webkit-autofill:focus {
+        -webkit-box-shadow: 0 0 0px 1000px var(--background-surface) inset !important;
+        -webkit-text-fill-color: var(--text-primary) !important;
+    }
+
+    :root {
+        --background-primary: #f9fafb;
+        --background-surface: #ffffff;
+        --text-primary: #101828;
+        --text-secondary: #5d6d90;
+        --text-accent: #1a5996;
+    }
+
+    .dark {
+        --background-primary: #0f172a;
+        --background-surface: #0f172a;
+        --text-primary: #ffffff;
+        --text-secondary: #7c96aa;
+    }
+
+    body {
+        background-color: var(--background-primary);
+        color: var(--text-primary);
+        font-family: var(--font-sans);
+    }
+}
