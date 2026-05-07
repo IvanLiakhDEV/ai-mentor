@@ -34,6 +34,7 @@ export const getById = catchAsyncErrors(async (req, res, next) => {
         data: result,
     });
 });
+
 export const addModule = catchAsyncErrors(async (req, res, next) => {
     const data = req.body;
     const { id } = req.params;

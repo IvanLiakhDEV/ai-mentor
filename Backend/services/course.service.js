@@ -1,4 +1,5 @@
 import Course from '../models/course.js';
+import Lesson from '../models/lesson.js';
 import { ErrorHandler } from '../utils/errorHandlers.js';
 export const createCourse = async data => {
     const { title } = data;
@@ -15,12 +16,17 @@ export const removeCourse = async id => {
         throw new ErrorHandler(`Курсу з id = "${id}" не знайдено`, 404);
     }
 };
-export const getCourse = async id => {
-    const result = await Course.findById(id);
-    if (!result) {
-        throw new ErrorHandler(`Курсу з id = "${id}" не знайдено`, 404);
-    }
-    return result;
+export const getCourse = async courseId => {
+    const [course, lessons] = await Promise.all([Course.findById(courseId), Lesson.find({ courseId }).sort({ sequenceNumber: 1 })]);
+    if (!course) throw new ErrorHandler('Курс не знайдено', 404);
+    const modulesWithLessons = course.modules.map(module => ({
+        ...module.toObject(),
+        lessons: lessons.filter(lesson => lesson.moduleId.toString() === module._id.toString()),
+    }));
+    return {
+        ...course.toObject(),
+        modules: modulesWithLessons,
+    };
 };
 export const getCourses = async () => {
     const result = await Course.find();
@@ -31,7 +37,6 @@ export const addModuleToCourse = async (moduleData, courseId) => {
     if (!courseExist) {
         throw new ErrorHandler(`Курсу з id = "${courseId}" не знайдено`, 404);
     }
-
     const result = await Course.findByIdAndUpdate(courseId, { $push: { modules: moduleData } }, { returnDocument: 'after' });
     return result;
 };
