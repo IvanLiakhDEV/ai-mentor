@@ -7,7 +7,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { registerSchema } from '@/formValidation/userSchema';
 import { useRegister } from '@/hooks/useAuth';
 export const RegisterForm = ({ onSwitch }) => {
-    const { mutate: handleRegister, isPending, error } = useRegister();
+    const { mutate: handleRegister, isPending, isSuccess, error } = useRegister();
     const {
         register,
         handleSubmit,
@@ -18,6 +18,7 @@ export const RegisterForm = ({ onSwitch }) => {
     const onSubmit = async data => {
         handleRegister(data);
     };
+    if (isSuccess) onSwitch(true);
     return (
         <form
             onSubmit={handleSubmit(onSubmit)}

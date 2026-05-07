@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { LoginForm } from '../../components/form/login/LoginForm.jsx';
 import { RegisterForm } from '../../components/form/register/RegisterForm.jsx';
-
 export const AuthPage = () => {
     const [isLogin, setIsLogin] = useState(false);
 

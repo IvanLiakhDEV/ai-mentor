@@ -1,13 +1,25 @@
 import { createBrowserRouter } from 'react-router';
 import { HomePage } from '../pages/home/HomePage';
 import { AuthPage } from '../pages/auth/AuthPage';
+import { ProtectedRoute } from './protectedRoute';
+import { PublicRoute } from './publicRoute';
+import { Layout } from '@/components/layout/Layout';
+import { ProfilePage } from '@/pages/profile/ProfilePage';
 export const router = createBrowserRouter([
     {
-        path: '/',
-        element: <HomePage />,
+        element: <PublicRoute />,
+        children: [{ path: '/auth', element: <AuthPage /> }],
     },
     {
-        path: '/auth',
-        element: <AuthPage />,
+        element: <ProtectedRoute />,
+        children: [
+            {
+                element: <Layout />,
+                children: [
+                    { path: '/', element: <HomePage /> },
+                    { path: '/profile', element: <ProfilePage /> },
+                ],
+            },
+        ],
     },
 ]);
