@@ -26,6 +26,7 @@ export const getCourse = async courseId => {
     return {
         ...course.toObject(),
         modules: modulesWithLessons,
+        numberOfLessons: lessons.length,
     };
 };
 export const getCourses = async () => {
