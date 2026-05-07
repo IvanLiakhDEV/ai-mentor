@@ -5,173 +5,99 @@
 @variant dark (&:where(.dark, .dark *));
 
 @theme {
-    --font-sans: 'Inter Variable', sans-serif;
+    --color-background: var(--background);
+    --color-foreground: var(--foreground);
+    --color-card: var(--card);
+    --color-card-foreground: var(--card-foreground);
+    --color-popover: var(--popover);
+    --color-popover-foreground: var(--popover-foreground);
+    --color-primary: var(--primary);
+    --color-primary-foreground: var(--primary-foreground);
+    --color-secondary: var(--secondary);
+    --color-secondary-foreground: var(--secondary-foreground);
+    --color-muted: var(--muted);
+    --color-muted-foreground: var(--muted-foreground);
+    --color-accent: var(--accent);
+    --color-accent-foreground: var(--accent-foreground);
+    --color-destructive: var(--destructive);
+    --color-destructive-foreground: var(--destructive-foreground);
+    --color-border: var(--border);
+    --color-input: var(--input);
+    --color-ring: var(--ring);
+    --color-primary: var(--text-primary);
+    --color-secondary: var(--text-secondary);
 
     --color-bg-primary: var(--background-primary);
     --color-bg-surface: var(--background-surface);
-    --color-primary: var(--text-primary);
-    --color-secondary: var(--text-secondary);
-    --color-accent: var(--text-accent);
     --color-cta: #5b4ccc;
 
-    --radius-10: 0.625rem;
-    --radius-12: 0.75rem;
-    --radius-14: 0.875rem;
+    --font-sans: 'Inter Variable', sans-serif;
+    --radius-lg: var(--radius);
+    --radius-md: calc(var(--radius) - 2px);
+    --radius-sm: calc(var(--radius) - 4px);
 }
 
 @layer base {
-    html,
-    body,
-    div,
-    span,
-    applet,
-    object,
-    iframe,
-    h1,
-    h2,
-    h3,
-    h4,
-    h5,
-    h6,
-    p,
-    blockquote,
-    pre,
-    a,
-    abbr,
-    acronym,
-    address,
-    big,
-    cite,
-    code,
-    del,
-    dfn,
-    em,
-    img,
-    ins,
-    kbd,
-    q,
-    s,
-    samp,
-    small,
-    strike,
-    strong,
-    sub,
-    sup,
-    tt,
-    var,
-    b,
-    u,
-    i,
-    center,
-    dl,
-    dt,
-    dd,
-    ol,
-    ul,
-    li,
-    fieldset,
-    form,
-    label,
-    legend,
-    table,
-    caption,
-    tbody,
-    tfoot,
-    thead,
-    tr,
-    th,
-    td,
-    article,
-    aside,
-    canvas,
-    details,
-    embed,
-    figure,
-    figcaption,
-    footer,
-    header,
-    hgroup,
-    menu,
-    nav,
-    output,
-    ruby,
-    section,
-    summary,
-    time,
-    mark,
-    audio,
-    video {
-        margin: 0;
-        padding: 0;
-        border: 0;
-        font-size: 100%;
-        font: inherit;
-        vertical-align: baseline;
-    }
-
-    article,
-    aside,
-    details,
-    figcaption,
-    figure,
-    footer,
-    header,
-    hgroup,
-    menu,
-    nav,
-    section {
-        display: block;
-    }
-
-    body {
-        line-height: 1;
-    }
-    ol,
-    ul {
-        list-style: none;
-    }
-    blockquote,
-    q {
-        quotes: none;
-    }
-    blockquote:before,
-    blockquote:after,
-    q:before,
-    q:after {
-        content: '';
-        content: none;
-    }
-    table {
-        border-collapse: collapse;
-        border-spacing: 0;
-    }
-
-    /* Autofill */
-    input:-webkit-autofill,
-    input:-webkit-autofill:hover,
-    input:-webkit-autofill:focus {
-        -webkit-box-shadow: 0 0 0px 1000px var(--background-surface) inset !important;
-        -webkit-text-fill-color: var(--text-primary) !important;
-    }
-
     :root {
-        --background-primary: #f9fafb;
+        --background: oklch(1 0 0);
+        --foreground: oklch(0.145 0 0);
+        --card: oklch(1 0 0);
+        --card-foreground: oklch(0.145 0 0);
+        --popover: oklch(1 0 0);
+        --popover-foreground: oklch(0.145 0 0);
+        --primary: oklch(0.205 0 0);
+        --primary-foreground: oklch(0.985 0 0);
+        --secondary: oklch(0.97 0 0);
+        --secondary-foreground: oklch(0.205 0 0);
+        --muted: oklch(0.97 0 0);
+        --muted-foreground: oklch(0.556 0 0);
+        --accent: oklch(0.97 0 0);
+        --accent-foreground: oklch(0.205 0 0);
+        --destructive: oklch(0.577 0.245 27.325);
+        --destructive-foreground: oklch(0.985 0 0);
+        --border: oklch(0.922 0 0);
+        --input: oklch(0.922 0 0);
+        --ring: oklch(0.708 0 0);
+        --radius: 0.625rem;
+
+        --text-primary: oklch(21% 0.034 264.665);
+        --text-secondary: oklch(44.6% 0.03 256.802);
+        --background-primary: oklch(98.5% 0.002 247.839);
         --background-surface: #ffffff;
-        --text-primary: #101828;
-        --text-secondary: #5d6d90;
-        --text-accent: #1a5996;
+        --background-muted: oklch(92.8% 0.006 264.531);
     }
 
     .dark {
+        --background: oklch(0.145 0 0);
+        --foreground: oklch(0.985 0 0);
+        --card: oklch(0.205 0 0);
+        --card-foreground: oklch(0.985 0 0);
+        --primary: oklch(0.922 0 0);
+        --primary-foreground: oklch(0.205 0 0);
+        --border: oklch(1 0 0 / 10%);
+        --input: oklch(1 0 0 / 15%);
+
+        --text-primary: oklch(21% 0.034 264.665);
+        --text-secondary: oklch(44.6% 0.03 256.802);
         --background-primary: #0f172a;
-        --background-surface: #0f172a;
-        --text-primary: #ffffff;
-        --text-secondary: #7c96aa;
+        --background-surface: oklch(44.6% 0.03 256.802);
+        --background-muted: oklch(37.3% 0.034 259.733);
+    }
+
+    * {
+        @apply border-border;
     }
 
     body {
+        @apply antialiased bg-background text-foreground;
         background-color: var(--background-primary);
         color: var(--text-primary);
         font-family: var(--font-sans);
+        line-height: 1.5;
+    }
+
+    input:-webkit-autofill {
+        -webkit-box-shadow: 0 0 0px 1000px var(--background-surface) inset !important;
+        transition: background-color 5000s ease-in-out 0s;
     }
 }
