@@ -15,9 +15,11 @@ export const CoursePage = () => {
     const { data: course, isLoading: isLoadingCourse } = useCourseById(id);
     const { mutate: handleRegister } = useRegisterToCourse();
     const onClick = () => {
-        if (course.data.isEnrolled) {
+        if (course?.data?.isEnrolled) {
             console.log('TODO redirect');
-        } else handleRegister(course.data._id);
+        } else if (course?.data?._id) {
+            handleRegister(course.data._id);
+        }
     };
     if (isLoadingCourse)
         return (
