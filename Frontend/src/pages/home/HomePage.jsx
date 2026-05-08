@@ -1,4 +1,3 @@
-import { Button } from '@/components/button/Button';
 import { CourseList } from '@/components/CourseList/CourseList';
 import React from 'react';
 export const HomePage = () => {

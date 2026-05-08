@@ -27,13 +27,15 @@ export const getAll = catchAsyncErrors(async (req, res, next) => {
 });
 export const getById = catchAsyncErrors(async (req, res, next) => {
     const { id } = req.params;
-    const result = await getCourse(id);
+    const userId = req.user._id;
+    const result = await getCourse(id, userId);
     res.status(200).json({
         success: true,
         message: `Курс з id = ${id} знайдено`,
         data: result,
     });
 });
+
 export const addModule = catchAsyncErrors(async (req, res, next) => {
     const data = req.body;
     const { id } = req.params;

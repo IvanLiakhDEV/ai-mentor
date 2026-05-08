@@ -2,11 +2,12 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { RouterProvider } from 'react-router/dom';
 import { router } from './router/router';
-import './assets/style/main.scss';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import store from './store/store';
 import { Provider } from 'react-redux';
-import { AuthProvider } from './components/authProvider/authProvider';
+import { AuthProvider } from './components/authProvider/AuthProvider';
+import './assets/style/main.css';
+
 const queryClient = new QueryClient({
     defaultOptions: {
         queries: {
