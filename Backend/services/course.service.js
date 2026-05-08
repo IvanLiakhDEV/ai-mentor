@@ -1,5 +1,7 @@
 import Course from '../models/course.js';
 import Lesson from '../models/lesson.js';
+import Enrollment from '../models/enrollment.js';
+
 import { ErrorHandler } from '../utils/errorHandlers.js';
 export const createCourse = async data => {
     const { title } = data;
@@ -16,8 +18,12 @@ export const removeCourse = async id => {
         throw new ErrorHandler(`Курсу з id = "${id}" не знайдено`, 404);
     }
 };
-export const getCourse = async courseId => {
-    const [course, lessons] = await Promise.all([Course.findById(courseId), Lesson.find({ courseId }).sort({ sequenceNumber: 1 })]);
+export const getCourse = async (courseId, userId) => {
+    const [course, lessons, enrollment] = await Promise.all([
+        Course.findById(courseId),
+        Lesson.find({ courseId }).sort({ sequenceNumber: 1 }),
+        Enrollment.findOne({ courseId, userId }),
+    ]);
     if (!course) throw new ErrorHandler('Курс не знайдено', 404);
     const modulesWithLessons = course.modules.map(module => ({
         ...module.toObject(),
@@ -27,6 +33,8 @@ export const getCourse = async courseId => {
         ...course.toObject(),
         modules: modulesWithLessons,
         numberOfLessons: lessons.length,
+        isEnrolled: !!enrollment,
+        enrollment: enrollment,
     };
 };
 export const getCourses = async () => {

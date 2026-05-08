@@ -6,7 +6,7 @@ import { fetchCourseById, fetchCourses } from '@/api/course.api';
 export const useCourses = () => {
     const dispatch = useDispatch();
     const query = useQuery({
-        queryKey: ['courses'],
+        queryKey: ['course'],
         queryFn: fetchCourses,
         retry: false,
     });
