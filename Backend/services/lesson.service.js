@@ -21,3 +21,11 @@ export const deleteLesson = async id => {
     const result = Lesson.findByIdAndDelete(id);
     return result;
 };
+
+export const getLessonById = async id => {
+    const lesson = await Lesson.findById(id);
+    if (!lesson) {
+        throw new ErrorHandler(`Уроку з id = ${id} не існує`, 404);
+    }
+    return lesson;
+};
