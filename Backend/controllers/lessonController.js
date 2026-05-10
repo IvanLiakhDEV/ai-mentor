@@ -20,7 +20,8 @@ export const removeLesson = catchAsyncErrors(async (req, res, next) => {
 });
 export const getLesson = catchAsyncErrors(async (req, res, next) => {
     const { id } = req.params;
-    const result = await getLessonById(id);
+    const userId = req.user._id;
+    const result = await getLessonById(id, userId);
     res.status(201).json({
         success: true,
         message: `Урок знайдено`,

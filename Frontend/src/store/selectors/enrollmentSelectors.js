@@ -1,2 +1,2 @@
-export const selectEnrollments = state => state.enrollments.enrollments;
-export const selectIsInitialized = state => state.enrollments.isInitialized;
+export const selectEnrollments = state => state.enrollment.enrollments;
+export const selectIsInitialized = state => state.enrollment.isInitialized;
