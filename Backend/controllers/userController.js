@@ -1,5 +1,13 @@
 import { catchAsyncErrors } from '../utils/errorHandlers.js';
-import { authenticateUser, createUser, getUser, logoutUser, renewTokens, setPassword } from '../services/user.service.js';
+import {
+    authenticateUser,
+    createUser,
+    getLeaderboardData,
+    getUser,
+    logoutUser,
+    renewTokens,
+    setPassword,
+} from '../services/user.service.js';
 import { sendTokens, clearTokens } from '../utils/tokens.js';
 
 export const register = catchAsyncErrors(async (req, res, next) => {
@@ -50,11 +58,18 @@ export const changePassword = catchAsyncErrors(async (req, res, next) => {
 });
 export const getMe = catchAsyncErrors(async (req, res, next) => {
     const userId = req.user._id;
-
     const result = await getUser(userId);
     res.status(200).json({
         success: true,
         message: 'Дані користувача отримано',
+        data: result,
+    });
+});
+export const getLeaderboard = catchAsyncErrors(async (req, res, next) => {
+    const result = await getLeaderboardData();
+    res.status(200).json({
+        success: true,
+        message: 'Статистика отримана',
         data: result,
     });
 });
