@@ -12,7 +12,7 @@ api.interceptors.response.use(
 
     async error => {
         const originalRequest = error.config;
-        if (error.response?.status === 401 && !originalRequest._retry) {
+        if (error.response?.status === 401 && !originalRequest._retry && !originalRequest.url.includes('/user/refresh')) {
             originalRequest._retry = true;
             try {
                 await api.post('/user/refresh');
@@ -20,6 +20,9 @@ api.interceptors.response.use(
             } catch {
                 store.dispatch(clearUser());
             }
+        }
+        if (error.response?.status === 401 && originalRequest.url.includes('/user/refresh')) {
+            store.dispatch(clearUser());
         }
         return Promise.reject(error);
     },
