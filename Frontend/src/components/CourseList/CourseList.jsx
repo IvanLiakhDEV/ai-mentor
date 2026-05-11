@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useCourses } from '@/hooks/useCourse';
 import { selectCourses, selectIsInitialized } from '@/store/selectors/courseSelectors';
 import { useSelector } from 'react-redux';
-import { CourseCard } from '../courseCard/CourseCard';
+import { CourseCard } from '../coursecard/CourseCard';
 import { InputField } from '../inputs/InputField';
 import { HiMagnifyingGlass } from 'react-icons/hi2';
 export const CourseList = () => {

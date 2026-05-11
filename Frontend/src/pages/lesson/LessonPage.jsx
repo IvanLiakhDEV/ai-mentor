@@ -9,7 +9,7 @@ import { FaArrowLeft, FaPlay } from 'react-icons/fa6';
 import { IoMdCheckmarkCircleOutline } from 'react-icons/io';
 import { useSubmitCode } from '@/hooks/useCode';
 import { Spinner } from '@/components/ui/Spinner';
-import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from '@/components/ui/resizable';
+import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from '@/components/ui/Resizable';
 export const LessonPage = () => {
     const { id } = useParams();
     const { data: lesson, isLoading } = useGetLesson(id);
