@@ -53,14 +53,14 @@ export const CoursePage = () => {
                         <h2 className='text-xl'>{course.data.description}</h2>
                         <div className='grid gap-2'>
                             <div className='flex justify-between'>
-                                <p>Кількість пройдених уроків: {course.data.enrollment.completedSequence}</p>
+                                <p>Кількість пройдених уроків: {course.data?.enrollment?.completedSequence || 0}</p>
                                 <p>
-                                    Кількість уроків, що залишилася:{' '}
-                                    {course.data.numberOfLessons - course.data.enrollment.completedSequence}
+                                    Кількість уроків, що залишилася:
+                                    {course.data.numberOfLessons - (course.data?.enrollment?.completedSequence || 0)}
                                 </p>
                             </div>
                             <Progress
-                                value={(course.data.enrollment.completedSequence / course.data.numberOfLessons) * 100}
+                                value={((course.data?.enrollment?.completedSequence || 0) / course.data.numberOfLessons) * 100}
                                 className='bg-blue-100'
                             />
                         </div>
@@ -92,7 +92,7 @@ export const CoursePage = () => {
                                     {module.lessons.map(lesson => (
                                         <AccordionContent className='px-6  py-4 flex items-center justify-between w-full  transition-colors hover:bg-gray-50 cursor-pointer mb-0'>
                                             <p className='font-medium text-gray-900 text-[1rem]'>{lesson.title}</p>
-                                            {lesson.sequenceNumber <= course.data.enrollment.completedSequence && (
+                                            {lesson.sequenceNumber <= (course.data.enrollment?.completedSequence || 0) && (
                                                 <IoMdCheckmarkCircleOutline
                                                     className='w-6 h-6 text-green-500'
                                                     aria-label={`Урок ${lesson.title} виконано`}
@@ -106,7 +106,13 @@ export const CoursePage = () => {
                     </Box>
                     <Box className='max-h-min'>
                         <Button
-                            title={course.data.isEnrolled ? 'Продовжити навчання' : 'Зареєструватися на курс'}
+                            title={
+                                course?.data?.isEnrolled
+                                    ? course.data.enrollment.isCompleted
+                                        ? 'Курс пройдено'
+                                        : 'Продовжити навчання'
+                                    : 'Зареєструватися на курс'
+                            }
                             onClick={() => onClick()}
                             className='mx-auto'
                         />

@@ -9,7 +9,7 @@ export const HomePage = () => {
                     <h2 className='text-xl'>Вивчай нове та покращуй набуте</h2>
                 </div>
             </section>
-            <div className='grid w-full px-6 mx-auto mt-6 max-w-7xl'>
+            <div className='flex w-full px-6 mx-auto mt-6 max-w-7xl '>
                 <CourseList />
             </div>
         </div>

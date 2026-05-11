@@ -17,7 +17,7 @@ export const CourseList = () => {
     });
 
     return (
-        <div className='flex flex-col gap-6'>
+        <div className='flex flex-col gap-6 flex-1'>
             <h1 className='text-2xl font-bold '>Досліджуй каталог доступних курсів</h1>
             <div className='-mt-3.75'>
                 <InputField
@@ -25,9 +25,10 @@ export const CourseList = () => {
                     value={searchQuery}
                     onChange={e => setSearchQuery(e.target.value)}
                     icon={HiMagnifyingGlass}
+                    id={'searchbar'}
                 />
             </div>
-            <div className='flex gap-10'>
+            <div className='flex gap-4 justify-between flex-wrap'>
                 {isInitialized ? (
                     filteredCourses.length > 0 ? (
                         filteredCourses.map((course, index) => (
