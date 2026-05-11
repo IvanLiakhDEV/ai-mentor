@@ -6,10 +6,18 @@ import { HiOutlinePencil } from 'react-icons/hi';
 import { useSelector } from 'react-redux';
 import { Box } from '@/components/box/Box';
 import { useUserEnrollments } from '@/hooks/useEnrollment';
+import { Skeleton } from '@/components/ui/skeleton';
+import { LuBookOpen, LuTrophy } from 'react-icons/lu';
 export const ProfilePage = () => {
     const { data, isLoading } = useUserEnrollments();
     const user = useSelector(selectUser);
-    if (isLoading) return <p>Loading</p>;
+    if (isLoading)
+        return (
+            <div>
+                <Skeleton />
+            </div>
+        );
+    const completedCourses = data.data.filter(value => value.status === 'Completed').reduce((value, acc) => acc + value, 0);
     return (
         <div className='px-6 mx-auto max-w-7xl pt-14'>
             <Box>
@@ -40,11 +48,34 @@ export const ProfilePage = () => {
                     />
                 </header>
             </Box>
-            <div className='flex'>
-                <Box className='flex-col'>
-                    <p>Пройдених курсів</p>
-                    {data.data.filter(value => value.status === 'Completed').reduce((value, acc) => acc + value, 0)}
-                    {console.log(data.data)}
+            <div className='flex lg:flex-row flex-col justify-between mt-7 gap-4 '>
+                <Box className='flex-col gap-6 flex p-6 flex-1'>
+                    <div className='flex gap-2'>
+                        <LuBookOpen className='text-blue-600 w-6 h-6' />
+                        <p className='text-secondary font-semibold'>Пройдених курсів</p>
+                    </div>
+                    <p className='font-bold text-3xl'>{completedCourses}</p>
+                </Box>
+                <Box className='flex-col gap-4 flex p-6 flex-1'>
+                    <div className='flex gap-2'>
+                        <LuTrophy className='w-6 h-6 text-yellow-600' />
+                        <p className='text-secondary font-semibold'>Кількість очок</p>
+                    </div>
+                    <p className='font-bold text-3xl'>{completedCourses}</p>
+                </Box>
+                <Box className='flex-col gap-4 flex p-6 flex-1'>
+                    <div className='flex gap-2 items-center'>
+                        <LuBookOpen className='text-blue-600 w-6 h-6' />
+                        <p className='text-secondary font-semibold'>Пройдених курсів</p>
+                    </div>
+                    <p className='font-bold text-3xl'>{completedCourses}</p>
+                </Box>
+                <Box className='flex-col gap-4 flex p-6 flex-1'>
+                    <div className='flex gap-2'>
+                        <LuBookOpen className='text-blue-600 w-6 h-6' />
+                        <p className='text-secondary font-semibold'>Пройдених курсів</p>
+                    </div>
+                    <p className='font-bold text-3xl'>{completedCourses}</p>
                 </Box>
             </div>
         </div>

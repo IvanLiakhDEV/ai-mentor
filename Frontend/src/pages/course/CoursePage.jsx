@@ -1,14 +1,16 @@
 import React from 'react';
 import { useCourseById } from '@/hooks/useCourse';
 import { useNavigate, useParams } from 'react-router';
-import { Skeleton } from '@/components/ui/skeleton';
+import { Skeleton } from '@/components/ui/Skeleton';
 import { FaArrowLeft } from 'react-icons/fa6';
 import { RxPeople } from 'react-icons/rx';
+import { IoMdCheckmarkCircleOutline } from 'react-icons/io';
 import { LuBookOpen } from 'react-icons/lu';
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/Accordion';
 import { Box } from '@/components/box/Box';
 import { Button } from '@/components/button/Button';
 import { useRegisterToCourse } from '@/hooks/useEnrollment';
+import { Progress } from '@/components/ui/Progress';
 export const CoursePage = () => {
     const { id } = useParams();
     const navigate = useNavigate();
@@ -16,7 +18,11 @@ export const CoursePage = () => {
     const { mutate: handleRegister } = useRegisterToCourse();
     const onClick = () => {
         if (course?.data?.isEnrolled) {
-            console.log('TODO redirect');
+            const nextLesson = course.data.modules
+                .flatMap(module => module.lessons)
+                .find(lesson => lesson.sequenceNumber === course.data.enrollment.completedSequence + 1);
+            if (!nextLesson) return;
+            navigate(`/lesson/${nextLesson._id}`);
         } else if (course?.data?._id) {
             handleRegister(course.data._id);
         }
@@ -36,7 +42,7 @@ export const CoursePage = () => {
         <div className='pt-14 mx-auto max-w-7xl px-6 '>
             <div className='flex flex-col gap-7'>
                 <button
-                    className='flex gap-2 text-secondary items-center font-medium cursor-pointer'
+                    className='flex gap-2 text-secondary items-center font-medium cursor-pointer max-w-fit'
                     onClick={() => navigate(-1)}>
                     <FaArrowLeft />
                     Повернутися до курсів
@@ -45,6 +51,19 @@ export const CoursePage = () => {
                     <div className='grid gap-7'>
                         <h1 className='text-4xl font-bold'>{course.data.title}</h1>
                         <h2 className='text-xl'>{course.data.description}</h2>
+                        <div className='grid gap-2'>
+                            <div className='flex justify-between'>
+                                <p>Кількість пройдених уроків: {course.data.enrollment.completedSequence}</p>
+                                <p>
+                                    Кількість уроків, що залишилася:{' '}
+                                    {course.data.numberOfLessons - course.data.enrollment.completedSequence}
+                                </p>
+                            </div>
+                            <Progress
+                                value={(course.data.enrollment.completedSequence / course.data.numberOfLessons) * 100}
+                                className='bg-blue-100'
+                            />
+                        </div>
                     </div>
                     <div className='flex gap-4 mt-6'>
                         <div className='flex gap-2 items-center'>
@@ -71,8 +90,14 @@ export const CoursePage = () => {
                                         <p className='text-lg font-bold text-gray-900'>{module.title}</p>
                                     </AccordionTrigger>
                                     {module.lessons.map(lesson => (
-                                        <AccordionContent className='px-4 py-4 flex items-center justify-between transition-colors hover:bg-gray-50 cursor-pointer'>
+                                        <AccordionContent className='px-6  py-4 flex items-center justify-between w-full  transition-colors hover:bg-gray-50 cursor-pointer mb-0'>
                                             <p className='font-medium text-gray-900 text-[1rem]'>{lesson.title}</p>
+                                            {lesson.sequenceNumber <= course.data.enrollment.completedSequence && (
+                                                <IoMdCheckmarkCircleOutline
+                                                    className='w-6 h-6 text-green-500'
+                                                    aria-label={`Урок ${lesson.title} виконано`}
+                                                />
+                                            )}
                                         </AccordionContent>
                                     ))}
                                 </AccordionItem>
