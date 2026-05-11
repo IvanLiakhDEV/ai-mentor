@@ -1,11 +1,9 @@
 import axios from 'axios';
 import Enrollment from '../models/enrollment.js';
 import Lesson from '../models/lesson.js';
-
+import { getLessonById } from './lesson.service.js';
 export const executeCode = async (code, lessonId, userId) => {
-    const lesson = await Lesson.findById(lessonId);
-    if (!lesson) throw new ErrorHandler('Урок не знайдено', 404);
-
+    const lesson = await getLessonById(lessonId, userId);
     const response = await axios.post(
         'https://api.onecompiler.com/v1/run',
         {
@@ -25,7 +23,12 @@ export const executeCode = async (code, lessonId, userId) => {
     const isCorrect = normalize(stdout) === normalize(lesson.practice.expectedOutput);
 
     if (isCorrect) {
-        await Enrollment.findOneAndUpdate({ courseId: lesson.courseId, userId }, { $max: { completedSequence: lesson.sequenceNumber } });
+        await Promise.all([
+            Enrollment.findOneAndUpdate({ courseId: lesson.courseId, userId }, { $max: { completedSequence: lesson.sequenceNumber } }),
+            User.findByIdAndUpdate(userId, {
+                $inc: { points: lesson.points },
+            }),
+        ]);
     }
 
     return {
