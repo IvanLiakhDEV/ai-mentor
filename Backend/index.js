@@ -2,7 +2,7 @@ import express, { json } from 'express';
 import dotenv from 'dotenv';
 import cors from 'cors';
 import { connectDB } from './config/DB.js';
-import { userRouter } from './routes/UserRouter.js';
+import { userRouter } from './routes/userRouter.js';
 import { errorMiddleware } from './middleware/error.js';
 import cookieParser from 'cookie-parser';
 import { courseRouter } from './routes/courseRouter.js';
