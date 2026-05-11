@@ -1,5 +1,5 @@
 import { useMutation, useQuery } from '@tanstack/react-query';
-import { fetchMe, loginUser, registerUser } from '@/api/auth.api';
+import { fetchLeaderboard, fetchMe, loginUser, registerUser } from '@/api/auth.api';
 import { useDispatch } from 'react-redux';
 import { setUser } from '@/store/slices/authSlice';
 import { useEffect } from 'react';
@@ -32,5 +32,13 @@ export const useMe = () => {
         if (query.data) dispatch(setUser(query.data.data));
     }, [query.data]);
 
+    return query;
+};
+export const useLeaderboard = () => {
+    const query = useQuery({
+        queryKey: ['leaderboard'],
+        queryFn: fetchLeaderboard,
+        retry: false,
+    });
     return query;
 };

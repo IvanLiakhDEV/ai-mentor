@@ -6,7 +6,7 @@ import { HiOutlinePencil } from 'react-icons/hi';
 import { useSelector } from 'react-redux';
 import { Box } from '@/components/box/Box';
 import { useUserEnrollments } from '@/hooks/useEnrollment';
-import { Skeleton } from '@/components/ui/skeleton';
+import { Skeleton } from '@/components/ui/Skeleton';
 import { LuBookOpen, LuTrophy } from 'react-icons/lu';
 export const ProfilePage = () => {
     const { data, isLoading } = useUserEnrollments();
@@ -18,6 +18,7 @@ export const ProfilePage = () => {
             </div>
         );
     const completedCourses = data.data.filter(value => value.status === 'Completed').reduce((value, acc) => acc + value, 0);
+
     return (
         <div className='px-6 mx-auto max-w-7xl pt-14'>
             <Box>
@@ -61,7 +62,7 @@ export const ProfilePage = () => {
                         <LuTrophy className='w-6 h-6 text-yellow-600' />
                         <p className='text-secondary font-semibold'>Кількість очок</p>
                     </div>
-                    <p className='font-bold text-3xl'>{completedCourses}</p>
+                    <p className='font-bold text-3xl'>{user.points}</p>
                 </Box>
                 <Box className='flex-col gap-4 flex p-6 flex-1'>
                     <div className='flex gap-2 items-center'>

@@ -50,3 +50,45 @@ export const getUser = async userId => {
     if (!user) throw new ErrorHandler('Користувача не знайдено', 404);
     return user;
 };
+export const getLeaderboardData = async () => {
+    const result = await User.aggregate([
+        {
+            $facet: {
+                leaderboard: [
+                    { $sort: { points: -1 } },
+                    { $limit: 20 },
+                    { $lookup: { from: 'enrollments', localField: '_id', foreignField: 'userId', as: 'enrollments' } },
+                    {
+                        $project: {
+                            username: 1,
+                            points: 1,
+                            completedCourses: {
+                                $size: {
+                                    $filter: {
+                                        input: '$enrollments',
+                                        cond: { $eq: ['$$this.status', 'Completed'] },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                ],
+                overallStats: [
+                    {
+                        $group: {
+                            _id: null,
+                            totalPointsAllUsers: { $sum: '$points' },
+                            totalUsers: { $sum: 1 },
+                        },
+                    },
+                ],
+            },
+        },
+    ]);
+
+    return {
+        leaderboard: result[0].leaderboard,
+        totalPoints: result[0].overallStats[0]?.totalPointsAllUsers || 0,
+        totalUsers: result[0].overallStats[0]?.totalUsers || 0,
+    };
+};

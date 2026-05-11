@@ -25,6 +25,13 @@ export const Header = () => {
                                     Catalog
                                 </NavLink>
                             </li>
+                            <li>
+                                <NavLink
+                                    to='/leaderboard'
+                                    className={getClassName}>
+                                    Leaderboard
+                                </NavLink>
+                            </li>
                         </ul>
                     </nav>
                 </div>

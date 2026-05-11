@@ -13,6 +13,7 @@ const lessonSchema = new Schema(
         theory: {
             content: { type: String, required: true, maxLength: [5000, 'Теорія не може бути довша за 5000 символів'] },
         },
+        points: { type: Number, default: 10 },
         practice: {
             taskDescription: { type: String, required: true },
             initialCode: { type: String, default: '' },
