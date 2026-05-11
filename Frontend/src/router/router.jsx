@@ -7,6 +7,7 @@ import { Layout } from '@/components/layout/Layout';
 import { ProfilePage } from '@/pages/profile/ProfilePage';
 import { CoursePage } from '@/pages/course/CoursePage';
 import { LessonPage } from '@/pages/lesson/LessonPage';
+import { LeaderBoardPage } from '@/pages/leaderBoard/LeaderBoard';
 export const router = createBrowserRouter([
     {
         element: <PublicRoute />,
@@ -21,9 +22,10 @@ export const router = createBrowserRouter([
                     { path: '/', element: <HomePage /> },
                     { path: '/profile', element: <ProfilePage /> },
                     { path: '/course/:id', element: <CoursePage /> },
-                    { path: '/lesson/:id', element: <LessonPage /> },
+                    { path: '/leaderboard', element: <LeaderBoardPage /> },
                 ],
             },
+            { path: '/lesson/:id', element: <LessonPage /> },
         ],
     },
 ]);
