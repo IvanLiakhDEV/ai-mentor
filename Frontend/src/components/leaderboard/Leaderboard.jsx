@@ -13,7 +13,7 @@ export const Leaderboard = () => {
         if (index === 0) return <LuMedal className='text-yellow-600 w-6 h-6 ' />;
         if (index === 1) return <LuMedal className='text-gray-400 w-6 h-6' />;
         if (index === 2) return <LuMedal className='text-orange-600 w-6 h-6' />;
-        return `#${index}`;
+        return `#${index + 1}`;
     };
 
     return (
