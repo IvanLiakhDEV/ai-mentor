@@ -25,6 +25,10 @@ const userSchema = new Schema({
         enum: ['student', 'admin'],
         default: 'student',
     },
+    points: {
+        type: Number,
+        default: 0,
+    },
     refreshToken: { type: String, default: null, select: false },
 });
 
