@@ -25,7 +25,7 @@ export const InputField = React.forwardRef(({ id, label, type = 'text', placehol
                     id={id}
                     ref={ref}
                     type={type == 'password' ? (visible ? 'text' : 'password') : type}
-                    className='flex-1 placeholder-gray-400 bg-transparent border-none outline-none'
+                    className='flex-1 placeholder-gray-400 bg-transparent border-none outline-none w-full'
                     placeholder={placeholder}
                     {...rest}
                 />
