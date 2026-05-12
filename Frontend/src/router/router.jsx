@@ -8,6 +8,7 @@ import { ProfilePage } from '@/pages/profile/ProfilePage';
 import { CoursePage } from '@/pages/course/CoursePage';
 import { LessonPage } from '@/pages/lesson/LessonPage';
 import { LeaderBoardPage } from '@/pages/leaderBoard/LeaderBoard';
+import { ErrorBoundary } from '@/components/errorelement/ErrorBoundary';
 export const router = createBrowserRouter([
     {
         element: <PublicRoute />,
@@ -27,5 +28,6 @@ export const router = createBrowserRouter([
             },
             { path: '/lesson/:id', element: <LessonPage /> },
         ],
+        errorElement: <ErrorBoundary />,
     },
 ]);
