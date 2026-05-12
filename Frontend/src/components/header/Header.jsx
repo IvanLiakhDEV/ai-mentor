@@ -1,10 +1,14 @@
 import React from 'react';
 import { NavLink, useNavigate } from 'react-router';
 import { MdPersonOutline } from 'react-icons/md';
-
+import { useDispatch, useSelector } from 'react-redux';
+import { selectTheme } from '@/store/selectors/themeSelectors';
+import { toggleTheme } from '@/store/slices/themeSlice';
+import { LuMoon, LuSun } from 'react-icons/lu';
 export const Header = () => {
     const navigate = useNavigate();
-
+    const dispatch = useDispatch();
+    const theme = useSelector(selectTheme);
     const baseStyles = 'py-2 px-3 transition-colors duration-200 rounded-md ';
     const activeStyles = 'bg-cta font-semibold text-white';
     const inactiveStyles = 'text-gray-600 hover:text-gray-900 hover:bg-gray-100';
@@ -36,7 +40,13 @@ export const Header = () => {
                     </nav>
                 </div>
 
-                <div>
+                <div className='flex gap-2'>
+                    <button
+                        onClick={() => dispatch(toggleTheme())}
+                        className='p-2 text-gray-600 transition-all rounded-md hover:text-gray-900 hover:bg-gray-100'
+                        title='Мій профіль'>
+                        {theme === 'light' ? <LuMoon size={25} /> : <LuSun size={25} />}
+                    </button>
                     <button
                         onClick={() => navigate('/profile')}
                         className='p-2 text-gray-600 transition-all rounded-md hover:text-gray-900 hover:bg-gray-100'
