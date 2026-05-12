@@ -28,21 +28,18 @@ export const CourseList = () => {
                     id={'searchbar'}
                 />
             </div>
-            <div className='flex gap-4 justify-between flex-wrap'>
-                {isInitialized ? (
-                    filteredCourses.length > 0 ? (
-                        filteredCourses.map((course, index) => (
+            <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'>
+                {isInitialized &&
+                    (filteredCourses.length > 0 ? (
+                        filteredCourses.map(course => (
                             <CourseCard
+                                key={course._id}
                                 courseData={course}
-                                key={index}
                             />
                         ))
                     ) : (
                         <p className='text-center'>Список курсів порожній</p>
-                    )
-                ) : (
-                    <p className='text-center'>Завантаження курсів...</p>
-                )}
+                    ))}
             </div>
         </div>
     );
