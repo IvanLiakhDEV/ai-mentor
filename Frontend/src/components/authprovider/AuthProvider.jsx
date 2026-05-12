@@ -4,7 +4,9 @@ import { useSelector } from 'react-redux';
 import { selectIsInitialized } from '@/store/selectors/authSelectors';
 import { useUserEnrollments } from '@/hooks/useEnrollment';
 import { Spinner } from '../ui/Spinner';
+import { useTheme } from '@/hooks/useTheme';
 export const AuthProvider = ({ children }) => {
+    useTheme();
     useMe();
     useUserEnrollments();
     const isInitialized = useSelector(selectIsInitialized);
