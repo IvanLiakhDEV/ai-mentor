@@ -7,7 +7,7 @@ import { Layout } from '@/components/layout/Layout';
 import { ProfilePage } from '@/pages/profile/ProfilePage';
 import { CoursePage } from '@/pages/course/CoursePage';
 import { LessonPage } from '@/pages/lesson/LessonPage';
-import { LeaderBoardPage } from '@/pages/leaderBoard/LeaderBoard';
+import { LeaderBoardPage } from '@/pages/leaderboard/LeaderBoard';
 import { ErrorBoundary } from '@/components/errorelement/ErrorBoundary';
 export const router = createBrowserRouter([
     {

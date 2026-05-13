@@ -11,9 +11,11 @@ export const LeaderBoardPage = () => {
                     <h2 className='text-xl'>Пройди урок - покращиш рейтинг</h2>
                 </div>
             </section>
-            <div className='grid w-full px-6 mx-auto mt-2 max-w-7xl py-12 pt-4'>
-                <h2 className='text-3xl font-bold mb-2 text-gray-900'>Глобальна таблиця лідерів</h2>
-                <p className='text-gray-600'>Топ користувачів за кількістю здобутих очків</p>
+            <div className='grid w-full px-6 mx-auto mt-2 max-w-7xl py-12 pt-4 gap-3'>
+                <div>
+                    <h2 className='text-3xl font-bold mb-2 text-primary'>Глобальна таблиця лідерів</h2>
+                    <p className='text-secondary'>Топ користувачів за кількістю здобутих очків</p>
+                </div>
                 <Leaderboard />
             </div>
         </div>
