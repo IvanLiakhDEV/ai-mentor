@@ -1,4 +1,4 @@
-import { CourseList } from '@/components/CourseList/CourseList';
+import { CourseList } from '@/components/courselist/CourseList';
 import React from 'react';
 export const HomePage = () => {
     return (
