@@ -29,8 +29,8 @@ export const CoursePage = () => {
     };
     if (isLoadingCourse)
         return (
-            <div className='max-w-7xl'>
-                <Skeleton className='bg-gray-200 h-60 pt-14' />
+            <div className='max-w-7xl mx-auto pt-14'>
+                <Skeleton className='bg-gray-200 h-60 ' />
                 <div className='flex gap-10 pt-6'>
                     <Skeleton className='h-16' />
                     <Skeleton className='h-16' />

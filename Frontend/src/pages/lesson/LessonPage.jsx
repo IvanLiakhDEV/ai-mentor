@@ -37,7 +37,7 @@ export const LessonPage = () => {
                     defaultSize='30%'
                     minSize='20%'
                     maxSize='45%'>
-                    <div className='flex flex-col h-full flex-1 border-r-6 border-gray-200  overflow-auto'>
+                    <div className='flex flex-col h-full flex-1  overflow-auto'>
                         <button
                             className='flex gap-2 dark:text-primary text-secondary items-center font-medium cursor-pointer bg-bg-primary p-4 border'
                             onClick={() => navigate('/')}>
@@ -70,7 +70,7 @@ export const LessonPage = () => {
                     defaultSize='42%'
                     minSize='30%'
                     className='bg-black'>
-                    <div className='flex flex-1 flex-col border-r-6 border-gray-200 h-full overflow-hidden'>
+                    <div className='flex flex-1 flex-col  h-full overflow-hidden'>
                         <div className='flex-1 flex flex-col'>
                             <div className='bg-neutral-900 p-2 flex border-b border-gray-700'>
                                 <button
