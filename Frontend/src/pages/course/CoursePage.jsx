@@ -29,8 +29,8 @@ export const CoursePage = () => {
     };
     if (isLoadingCourse)
         return (
-            <div className='max-w-7xl'>
-                <Skeleton className='bg-gray-200 h-60 pt-14' />
+            <div className='max-w-7xl mx-auto pt-14'>
+                <Skeleton className='bg-gray-200 h-60 ' />
                 <div className='flex gap-10 pt-6'>
                     <Skeleton className='h-16' />
                     <Skeleton className='h-16' />
@@ -82,16 +82,16 @@ export const CoursePage = () => {
                         {course.data.modules.map(module => (
                             <Accordion
                                 type='multiple'
-                                className='border rounded-lg overflow-hidden border-gray-200 '>
+                                className='border rounded-lg overflow-hidden border-border '>
                                 <AccordionItem
                                     key={module.title}
                                     value={module.title}>
-                                    <AccordionTrigger className='px-6 py-4 border-b bg-gray-100 border-gray-200'>
-                                        <p className='text-lg font-bold text-gray-900'>{module.title}</p>
+                                    <AccordionTrigger className='px-6 py-4 border-b dark:bg-gray-700 border-border'>
+                                        <p className='text-lg font-bold text-primary'>{module.title}</p>
                                     </AccordionTrigger>
                                     {module.lessons.map(lesson => (
-                                        <AccordionContent className='px-6  py-4 flex items-center justify-between w-full  transition-colors hover:bg-gray-50 cursor-pointer mb-0'>
-                                            <p className='font-medium text-gray-900 text-[1rem]'>{lesson.title}</p>
+                                        <AccordionContent className='px-6  py-4 flex items-center justify-between w-full  transition-colors hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer mb-0'>
+                                            <p className='font-medium text-primary text-[1rem]'>{lesson.title}</p>
                                             {lesson.sequenceNumber <= (course.data.enrollment?.completedSequence || 0) && (
                                                 <IoMdCheckmarkCircleOutline
                                                     className='w-6 h-6 text-green-500'
