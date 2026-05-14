@@ -15,11 +15,11 @@ export const useCourses = () => {
     }, [query.data]);
     return query;
 };
-export const useCourseById = id => {
+export const useCourseById = (id, isEnabled) => {
     const query = useQuery({
         queryKey: ['course', id],
         queryFn: () => fetchCourseById(id),
-        enabled: !!id,
+        enabled: !!id && isEnabled,
         retry: false,
     });
     return query;
