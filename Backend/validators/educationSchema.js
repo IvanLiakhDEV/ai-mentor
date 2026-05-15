@@ -47,7 +47,6 @@ export const enrollmentValidationSchema = z.object({
 export const lessonValidationSchema = z.object({
     courseId: objectIdSchema('courseId'),
     moduleId: objectIdSchema('moduleId'),
-    sequenceNumber: z.number(issuesHandler('sequenceNumber')).nonnegative(),
     title: z
         .string(issuesHandler('title'))
         .trim()
