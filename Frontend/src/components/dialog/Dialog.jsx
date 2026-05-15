@@ -7,8 +7,7 @@ export const Dialog = ({ children, visible = false, headerTitle, onClose, sumbit
     return (
         <form
             className={cn('fixed inset-0 bg-black/50 hidden items-center justify-center p-4 z-50', visible && 'flex')}
-            onSubmit={onSubmit}
-            onClick={onClose}>
+            onSubmit={onSubmit}>
             <div className='bg-white rounded-xl shadow-xl max-w-2xl w-full'>
                 <header className='flex justify-between border-b p-6 items-center w-full'>
                     <h2 className='text-xl font-bold text-gray-900'>{headerTitle}</h2>

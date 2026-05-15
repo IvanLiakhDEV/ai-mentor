@@ -1,4 +1,4 @@
-import { useCourseById } from '@/hooks/useCourse';
+import { useAddModule, useCourseById } from '@/hooks/useCourse';
 import React, { useState } from 'react';
 import { Accordion, AccordionItem, AccordionContent, AccordionTrigger } from '@/components/ui/Accordion';
 import { LuBookOpen } from 'react-icons/lu';
@@ -7,9 +7,39 @@ import { LuPencil, LuTrash2, LuLayers } from 'react-icons/lu';
 import { Button } from '../../ui/Button';
 import { FaPlus } from 'react-icons/fa6';
 import { Spinner } from '../../ui/Spinner';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { moduleValidationSchema } from '@/formValidation/courseSchema';
+import { Dialog } from '@/components/dialog/Dialog';
+import { useForm } from 'react-hook-form';
+import { InputField } from '@/components/inputs/InputField';
 export const CourseItem = ({ course }) => {
     const [isOpen, setIsOpen] = useState(false);
     const { data: fullCourseData, isLoading } = useCourseById(course._id, isOpen);
+    const { mutate: handleAddModule, isPending, error } = useAddModule();
+    const [isVisible, setIsVisible] = useState(false);
+    const id = course._id;
+    const {
+        register,
+        handleSubmit,
+        reset,
+        formState: { errors },
+    } = useForm({
+        resolver: zodResolver(moduleValidationSchema),
+    });
+    const onSubmit = data => {
+        handleAddModule(
+            {
+                id,
+                ...data,
+            },
+            {
+                onSuccess: () => {
+                    setIsVisible(false);
+                    reset();
+                },
+            },
+        );
+    };
 
     return (
         <Accordion
@@ -50,12 +80,31 @@ export const CourseItem = ({ course }) => {
                         <Button
                             size='lg'
                             variant='secondary'
-                            className=''>
+                            className=''
+                            onClick={() => setIsVisible(!isVisible)}>
                             <FaPlus />
                             <p>Додати модуль</p>
                         </Button>
+                        <Dialog
+                            visible={isVisible}
+                            headerTitle={'Додати модуль'}
+                            onClose={() => setIsVisible(!isVisible)}
+                            sumbitTitle={'Додати модуль'}
+                            onSubmit={handleSubmit(onSubmit)}
+                            isPending={isPending}>
+                            <InputField
+                                label={'Назва модуля'}
+                                {...register('title')}
+                                error={errors.title?.message}
+                            />
+                            <InputField
+                                label={'Порядковий номер'}
+                                {...register('order', { valueAsNumber: true })}
+                                error={errors.order?.message}
+                            />
+                            {error && <p className='text-center'>{error.message || 'Щось пішло не так'}</p>}
+                        </Dialog>
                     </div>
-
                     {isLoading ? (
                         <div className='flex justify-center py-6'>
                             <Spinner />
@@ -66,6 +115,7 @@ export const CourseItem = ({ course }) => {
                                 <ModuleItem
                                     key={module._id}
                                     module={module}
+                                    courseId={fullCourseData?.data?._id}
                                 />
                             ))}
                         </div>

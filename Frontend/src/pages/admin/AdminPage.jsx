@@ -52,7 +52,8 @@ export const AdminPage = () => {
                         headerTitle={'Додати курс'}
                         onClose={() => setIsVisible(!isVisible)}
                         sumbitTitle={'Додати курс'}
-                        onSubmit={handleSubmit(onSubmit)}>
+                        onSubmit={handleSubmit(onSubmit)}
+                        isPending={isPending}>
                         <InputField
                             label={'Назва курсу'}
                             {...register('title')}
