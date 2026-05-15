@@ -1,8 +1,8 @@
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useDispatch } from 'react-redux';
 import { setCourses } from '@/store/slices/courseSlice';
 import { useEffect } from 'react';
-import { fetchCourseById, fetchCourses } from '@/api/course.api';
+import { createCourse, fetchCourseById, fetchCourses } from '@/api/course.api';
 export const useCourses = () => {
     const dispatch = useDispatch();
     const query = useQuery({
@@ -21,6 +21,14 @@ export const useCourseById = (id, isEnabled) => {
         queryFn: () => fetchCourseById(id),
         enabled: !!id && isEnabled,
         retry: false,
+    });
+    return query;
+};
+export const useCreateCourse = () => {
+    const queryClient = useQueryClient();
+    const query = useMutation({
+        mutationFn: data => createCourse(data),
+        onSuccess: response => queryClient.invalidateQueries({ queryKey: ['course'] }),
     });
     return query;
 };
