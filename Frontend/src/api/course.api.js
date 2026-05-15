@@ -12,3 +12,8 @@ export const createCourse = async data => {
     const response = await api.post(`/course`, data);
     return response.data;
 };
+
+export const addModule = async (id, data) => {
+    const response = await api.post(`/course/${id}/modules`, data);
+    return response.data;
+};

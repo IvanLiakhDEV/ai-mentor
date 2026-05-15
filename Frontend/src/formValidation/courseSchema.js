@@ -23,3 +23,7 @@ export const courseValidationSchema = z.object({
         )
         .optional(),
 });
+export const moduleValidationSchema = z.object({
+    title: z.string().min(1, "Назва модуля є обов'язковою"),
+    order: z.number(),
+});
