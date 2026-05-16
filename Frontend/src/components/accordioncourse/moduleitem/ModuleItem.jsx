@@ -100,18 +100,18 @@ export const ModuleItem = ({ module, courseId }) => {
                             <div
                                 className='flex gap-1'
                                 onClick={e => e.stopPropagation()}>
-                                <span
+                                <button
                                     role='button'
                                     className='cursor-pointer hover:bg-gray-100 p-2 rounded-md transition-colors'
                                     onClick={() => setIsEditing(true)}>
                                     <LuPencil className='w-4 h-4' />
-                                </span>
-                                <span
+                                </button>
+                                <button
                                     role='button'
                                     className='cursor-pointer hover:bg-red-100 p-2 rounded-md transition-colors'
                                     onClick={() => setIsDeleting(true)}>
                                     <LuTrash2 className='w-4 h-4' />
-                                </span>
+                                </button>
                             </div>
                         </div>
                     </AccordionTrigger>

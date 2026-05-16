@@ -1,8 +1,6 @@
 import { api } from './axios';
 
 export const addLesson = async data => {
-    console.log(data);
-
     const response = await api.post(`/lesson/`, data);
     return response.data;
 };

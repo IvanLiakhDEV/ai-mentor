@@ -13,11 +13,12 @@ export const Dialog = ({ children, visible = false, headerTitle, onClose, sumbit
              '>
                 <header className='flex justify-between border-b p-4 px-6 items-center w-full flex-1'>
                     <h2 className='text-xl font-bold text-gray-900'>{headerTitle}</h2>
-                    <span
+                    <button
+                        type='button'
                         onClick={onClose}
                         className='p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors'>
                         <IoIosClose className='w-6 h-6' />
-                    </span>
+                    </button>
                 </header>
                 <main className='py-4 px-6 gap-4 flex flex-col overflow-y-auto h-96'>{children}</main>
                 <footer className='flex justify-between gap-6 px-6 py-3 flex-1'>

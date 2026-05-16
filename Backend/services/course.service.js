@@ -13,11 +13,11 @@ export const createCourse = async data => {
     return course;
 };
 export const removeCourse = async id => {
-    await Lesson.deleteMany({ courseId: id });
     const result = await Course.findByIdAndDelete(id);
     if (!result) {
         throw new ErrorHandler(`Курсу з id = "${id}" не знайдено`, 404);
     }
+    await Lesson.deleteMany({ courseId: id });
 };
 export const editCourseInfo = async ({ id, data }) => {
     const result = await Course.findByIdAndUpdate(id, {
@@ -74,7 +74,7 @@ export const editModuleInfo = async ({ id, data }) => {
                 'modules.$.order': data.order,
             },
         },
-        { new: true },
+        { returnDocument: 'after' },
     );
 
     if (!result) {
@@ -83,9 +83,9 @@ export const editModuleInfo = async ({ id, data }) => {
     return result;
 };
 export const removeModule = async ({ id }) => {
-    await Lesson.deleteMany({ moduleId: id });
     const result = await Course.findOneAndUpdate({ 'modules._id': id }, { $pull: { modules: { _id: id } } }, { new: true });
     if (!result) {
         throw new ErrorHandler('Модуль не знайдено', 404);
     }
+    await Lesson.deleteMany({ moduleId: id });
 };

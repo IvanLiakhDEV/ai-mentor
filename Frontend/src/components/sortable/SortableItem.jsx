@@ -88,18 +88,18 @@ export function SortableItem({ lesson }) {
                     <span className='text-sm text-gray-700'>{lesson.title}</span>
                 </div>
                 <div className='flex gap-1'>
-                    <span
+                    <button
                         role='button'
                         onClick={() => setIsEditing(!isEditing)}
                         className='cursor-pointer hover:bg-gray-100 p-2  rounded-md transition-colors'>
                         <LuPencil className='w-4 h-4' />
-                    </span>
-                    <span
+                    </button>
+                    <button
                         role='button'
                         onClick={() => setIsDeleting(!isDeleting)}
                         className='cursor-pointer hover:bg-red-100 p-2  rounded-md transition-colors'>
                         <LuTrash2 className='w-4 h-4' />
-                    </span>
+                    </button>
                 </div>
             </div>
             <Dialog

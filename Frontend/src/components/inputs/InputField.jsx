@@ -2,12 +2,12 @@ import { cn } from '@/lib/utils';
 import React, { useState } from 'react';
 import { IoMdEyeOff, IoMdEye } from 'react-icons/io';
 export const InputField = React.forwardRef(
-    ({ id, label, type = 'text', isTextArea = false, placeholder, icon: Icon, error, className, ...rest }, ref) => {
+    ({ id, label, type = 'text', readOnly = false, isTextArea = false, placeholder, icon: Icon, error, className, ...rest }, ref) => {
         const [visible, setVisible] = useState(false);
         const toggleVisible = () => setVisible(!visible);
         const InputComponent = isTextArea ? 'textarea' : 'input';
         return (
-            <div className='flex flex-col w-full gap-1'>
+            <div className='flex flex-col w-full gap-1 '>
                 {label && (
                     <label
                         htmlFor={id}
@@ -27,6 +27,7 @@ export const InputField = React.forwardRef(
                     <InputComponent
                         id={id}
                         ref={ref}
+                        readOnly={readOnly}
                         {...(isTextArea ? {} : { type: type === 'password' ? (visible ? 'text' : 'password') : type })}
                         className={cn(
                             'flex-1 placeholder-gray-400 bg-transparent border-none outline-none w-full resize-none wrap-break-word',
@@ -36,18 +37,19 @@ export const InputField = React.forwardRef(
                         {...rest}
                     />
                     {type == 'password' && (
-                        <button type='button'>
+                        <button
+                            type='button'
+                            onClick={toggleVisible}
+                            aria-label={visible ? 'Сховати пароль' : 'Показати пароль'}>
                             {visible ? (
                                 <IoMdEye
                                     size={20}
                                     opacity={0.7}
-                                    onClick={toggleVisible}
                                 />
                             ) : (
                                 <IoMdEyeOff
                                     size={20}
                                     opacity={0.7}
-                                    onClick={toggleVisible}
                                 />
                             )}
                         </button>
