@@ -13,6 +13,7 @@ export const createLesson = async data => {
         throw new ErrorHandler(`Модуля з id = ${data.moduleId} не існує`, 404);
     }
     const count = await Lesson.countDocuments({ moduleId });
+    console.log(data);
 
     const lesson = await Lesson.create({
         ...data,
@@ -25,6 +26,16 @@ export const deleteLesson = async lessonId => {
     if (!lesson) throw new ErrorHandler('Урок не знайдено', 404);
     const lessons = await Lesson.find({ moduleId: lesson.moduleId }).sort({ sequenceNumber: 1 });
     await Promise.all(lessons.map((l, index) => Lesson.findByIdAndUpdate(l._id, { sequenceNumber: index + 1 })));
+};
+export const editLessonInfo = async ({ id, lesson }) => {
+    const result = await Lesson.findByIdAndUpdate(
+        id,
+        {
+            $set: { title: lesson.title, theory: lesson.theory, practice: lesson.practice, points: lesson.points },
+        },
+        { returnDocument: true },
+    );
+    if (!result) throw new ErrorHandler('Урок не знайдено', 404);
 };
 
 export const getLessonById = async (lessonId, userId) => {

@@ -68,4 +68,5 @@ export const lessonValidationSchema = z.object({
         initialCode: z.string(issuesHandler('practice.initialCode')).default(''),
         expectedOutput: z.string(issuesHandler('practice.expectedOutput')).optional(),
     }),
+    points: z.number().nonnegative('Кількість очок не може бути негативна').default(10).optional(),
 });
