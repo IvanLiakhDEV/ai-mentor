@@ -17,6 +17,19 @@ export const removeCourse = async id => {
     if (!result) {
         throw new ErrorHandler(`Курсу з id = "${id}" не знайдено`, 404);
     }
+    await Lesson.deleteMany({ courseId: id });
+};
+export const editCourseInfo = async ({ id, data }) => {
+    const result = await Course.findByIdAndUpdate(id, {
+        $set: {
+            title: data.title,
+            description: data.description,
+            tags: data.tags,
+        },
+    });
+    if (!result) {
+        throw new ErrorHandler(`Курсу з id = "${id}" не знайдено`, 404);
+    }
 };
 export const getCourse = async (courseId, userId) => {
     const [course, lessons, enrollment] = await Promise.all([
@@ -48,4 +61,31 @@ export const addModuleToCourse = async (moduleData, courseId) => {
     }
     const result = await Course.findByIdAndUpdate(courseId, { $push: { modules: moduleData } }, { returnDocument: 'after' });
     return result;
+};
+export const editModuleInfo = async ({ id, data }) => {
+    const result = await Course.findOneAndUpdate(
+        {
+            _id: id,
+            'modules._id': data.moduleId,
+        },
+        {
+            $set: {
+                'modules.$.title': data.title,
+                'modules.$.order': data.order,
+            },
+        },
+        { returnDocument: 'after' },
+    );
+
+    if (!result) {
+        throw new ErrorHandler('Курс або модуль не знайдено', 404);
+    }
+    return result;
+};
+export const removeModule = async ({ id }) => {
+    const result = await Course.findOneAndUpdate({ 'modules._id': id }, { $pull: { modules: { _id: id } } }, { new: true });
+    if (!result) {
+        throw new ErrorHandler('Модуль не знайдено', 404);
+    }
+    await Lesson.deleteMany({ moduleId: id });
 };

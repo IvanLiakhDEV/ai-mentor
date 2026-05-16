@@ -31,23 +31,23 @@ function AccordionTrigger({ className, children, ...props }) {
             <AccordionPrimitive.Trigger
                 data-slot='accordion-trigger'
                 className={cn(
-                    'group/accordion-trigger relative flex flex-1 items-start justify-between gap-6 border border-transparent p-2 text-left text-xs/relaxed font-medium transition-all outline-none disabled:pointer-events-none disabled:opacity-50 **:data-[slot=accordion-trigger-icon]:ml-auto **:data-[slot=accordion-trigger-icon]:size-5 **:data-[slot=accordion-trigger-icon]:text-muted-foreground',
+                    'group/accordion-trigger relative flex flex-1  justify-between gap-3 items-center border border-transparent p-2 text-left text-xs/relaxed font-medium transition-all outline-none disabled:pointer-events-none disabled:opacity-50 **:data-[slot=accordion-trigger-icon]:ml-auto **:data-[slot=accordion-trigger-icon]:size-5 **:data-[slot=accordion-trigger-icon]:text-muted-foreground',
                     className,
                 )}
                 {...props}>
-                {children}
                 <HugeiconsIcon
                     icon={ArrowDown01Icon}
-                    strokeWidth={3}
+                    strokeWidth={2}
                     data-slot='accordion-trigger-icon'
                     className='pointer-events-none shrink-0 group-aria-expanded/accordion-trigger:hidden'
                 />
                 <HugeiconsIcon
                     icon={ArrowUp01Icon}
-                    strokeWidth={3}
+                    strokeWidth={2}
                     data-slot='accordion-trigger-icon'
                     className='pointer-events-none hidden shrink-0 group-aria-expanded/accordion-trigger:inline'
                 />
+                {children}
             </AccordionPrimitive.Trigger>
         </AccordionPrimitive.Header>
     );
@@ -57,15 +57,9 @@ function AccordionContent({ className, children, ...props }) {
     return (
         <AccordionPrimitive.Content
             data-slot='accordion-content'
-            className='overflow-hidden text-xs/relaxed data-open:animate-accordion-down data-closed:animate-accordion-up'
+            className='text-xs/relaxed data-open:animate-accordion-down data-closed:animate-accordion-up'
             {...props}>
-            <div
-                className={cn(
-                    'h-(--radix-accordion-content-height) pt-0 [&_a]:underline [&_a]:underline-offset-3 [&_a]:hover:text-foreground ',
-                    className,
-                )}>
-                {children}
-            </div>
+            <div className={cn(' pt-0 [&_a]:underline [&_a]:underline-offset-3 [&_a]:hover:text-foreground ', className)}>{children}</div>
         </AccordionPrimitive.Content>
     );
 }

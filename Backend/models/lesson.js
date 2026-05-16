@@ -24,7 +24,7 @@ const lessonSchema = new Schema(
         timestamps: true,
     },
 );
-lessonSchema.index({ courseId: 1, sequenceNumber: 1 }, { unique: true });
+lessonSchema.index({ courseId: 1, sequenceNumber: 1 });
 
 const Lesson = mongoose.model('Lesson', lessonSchema);
 

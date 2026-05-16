@@ -37,6 +37,11 @@ export const moduleValidationSchema = z.object({
     title: z.string(issuesHandler('title')).min(1, "Назва модуля є обов'язковою"),
     order: z.number(issuesHandler('order')).positive(),
 });
+export const editModuleValidationSchema = z.object({
+    title: z.string(issuesHandler('title')).min(1, "Назва модуля є обов'язковою"),
+    order: z.number(issuesHandler('order')).positive(),
+    moduleId: objectIdSchema('moduleId'),
+});
 export const enrollmentValidationSchema = z.object({
     courseId: objectIdSchema('courseId'),
     completedSequence: z.number(issuesHandler('completedSequence')).nonnegative().default(0),
@@ -47,7 +52,6 @@ export const enrollmentValidationSchema = z.object({
 export const lessonValidationSchema = z.object({
     courseId: objectIdSchema('courseId'),
     moduleId: objectIdSchema('moduleId'),
-    sequenceNumber: z.number(issuesHandler('sequenceNumber')).nonnegative(),
     title: z
         .string(issuesHandler('title'))
         .trim()
@@ -64,4 +68,5 @@ export const lessonValidationSchema = z.object({
         initialCode: z.string(issuesHandler('practice.initialCode')).default(''),
         expectedOutput: z.string(issuesHandler('practice.expectedOutput')).optional(),
     }),
+    points: z.number().nonnegative('Кількість очок не може бути негативна').default(10).optional(),
 });

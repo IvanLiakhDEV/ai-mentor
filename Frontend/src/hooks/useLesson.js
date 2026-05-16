@@ -1,5 +1,5 @@
-import { fetchLesson } from '@/api/lesson.api';
-import { useQuery } from '@tanstack/react-query';
+import { addLesson, deleteLesson, editLessons, fetchLesson, reorderLessons } from '@/api/lesson.api';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useNavigate } from 'react-router';
 
 export const useGetLesson = id => {
@@ -16,4 +16,36 @@ export const useGetLesson = id => {
             }
         },
     });
+};
+export const useAddLesson = () => {
+    const queryClient = useQueryClient();
+    const query = useMutation({
+        mutationFn: data => addLesson(data),
+        onSuccess: () => queryClient.invalidateQueries({ queryKey: ['course'] }),
+    });
+    return query;
+};
+export const useReorderLessons = () => {
+    const queryClient = useQueryClient();
+    const query = useMutation({
+        mutationFn: data => reorderLessons(data),
+        onSuccess: () => queryClient.invalidateQueries({ queryKey: ['course'] }),
+    });
+    return query;
+};
+export const useEditLesson = courseId => {
+    const queryClient = useQueryClient();
+    const query = useMutation({
+        mutationFn: ({ id, lesson }) => editLessons(id, lesson),
+        onSuccess: () => queryClient.invalidateQueries({ queryKey: ['course', courseId] }),
+    });
+    return query;
+};
+export const useDeleteLesson = courseId => {
+    const queryClient = useQueryClient();
+    const query = useMutation({
+        mutationFn: ({ id }) => deleteLesson(id),
+        onSuccess: () => queryClient.invalidateQueries({ queryKey: ['course', courseId] }),
+    });
+    return query;
 };

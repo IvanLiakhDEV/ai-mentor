@@ -9,6 +9,8 @@ import { CoursePage } from '@/pages/course/CoursePage';
 import { LessonPage } from '@/pages/lesson/LessonPage';
 import { LeaderBoardPage } from '@/pages/leaderboard/LeaderBoard';
 import { ErrorBoundary } from '@/components/errorelement/ErrorBoundary';
+import { AdminRoute } from './adminRoute';
+import { AdminPage } from '@/pages/admin/AdminPage';
 export const router = createBrowserRouter([
     {
         path: '/',
@@ -31,6 +33,10 @@ export const router = createBrowserRouter([
                         ],
                     },
                     { path: 'lesson/:id', element: <LessonPage /> },
+                    {
+                        element: <AdminRoute />,
+                        children: [{ path: 'admin', element: <AdminPage /> }],
+                    },
                 ],
             },
         ],

@@ -1,4 +1,13 @@
-import { addModuleToCourse, createCourse, getCourse, getCourses, removeCourse } from '../services/course.service.js';
+import {
+    addModuleToCourse,
+    createCourse,
+    editCourseInfo,
+    editModuleInfo,
+    getCourse,
+    getCourses,
+    removeCourse,
+    removeModule,
+} from '../services/course.service.js';
 import { catchAsyncErrors } from '../utils/errorHandlers.js';
 export const create = catchAsyncErrors(async (req, res, next) => {
     const courseData = req.body;
@@ -12,6 +21,16 @@ export const create = catchAsyncErrors(async (req, res, next) => {
 export const remove = catchAsyncErrors(async (req, res, next) => {
     const { id } = req.params;
     await removeCourse(id);
+    res.status(200).json({
+        success: true,
+        message: `Курс з id = "${id}" видалено успішно`,
+    });
+});
+export const editCourse = catchAsyncErrors(async (req, res, next) => {
+    const { id } = req.params;
+    const data = req.body;
+
+    await editCourseInfo({ id, data });
     res.status(200).json({
         success: true,
         message: `Курс з id = "${id}" видалено успішно`,
@@ -44,5 +63,24 @@ export const addModule = catchAsyncErrors(async (req, res, next) => {
         success: true,
         message: `Модуль додано успішно`,
         data: result,
+    });
+});
+export const editModule = catchAsyncErrors(async (req, res, next) => {
+    const { id } = req.params;
+    const data = req.body;
+
+    const result = await editModuleInfo({ id, data });
+    res.status(200).json({
+        success: true,
+        message: `Модуль відредаговано`,
+        data: result,
+    });
+});
+export const deleteModule = catchAsyncErrors(async (req, res, next) => {
+    const { id } = req.params;
+    await removeModule({ id });
+    res.status(200).json({
+        success: true,
+        message: `Модуль видалено`,
     });
 });
