@@ -37,6 +37,11 @@ export const moduleValidationSchema = z.object({
     title: z.string(issuesHandler('title')).min(1, "Назва модуля є обов'язковою"),
     order: z.number(issuesHandler('order')).positive(),
 });
+export const editModuleValidationSchema = z.object({
+    title: z.string(issuesHandler('title')).min(1, "Назва модуля є обов'язковою"),
+    order: z.number(issuesHandler('order')).positive(),
+    moduleId: objectIdSchema('moduleId'),
+});
 export const enrollmentValidationSchema = z.object({
     courseId: objectIdSchema('courseId'),
     completedSequence: z.number(issuesHandler('completedSequence')).nonnegative().default(0),

@@ -49,3 +49,29 @@ export const addModuleToCourse = async (moduleData, courseId) => {
     const result = await Course.findByIdAndUpdate(courseId, { $push: { modules: moduleData } }, { returnDocument: 'after' });
     return result;
 };
+export const editModuleInfo = async ({ id, data }) => {
+    const result = await Course.findOneAndUpdate(
+        {
+            _id: id,
+            'modules._id': data.moduleId,
+        },
+        {
+            $set: {
+                'modules.$.title': data.title,
+                'modules.$.order': data.order,
+            },
+        },
+        { new: true },
+    );
+
+    if (!result) {
+        throw new ErrorHandler('Курс або модуль не знайдено', 404);
+    }
+    return result;
+};
+export const removeModule = async ({ id }) => {
+    const result = await Course.findOneAndUpdate({ 'modules._id': id }, { $pull: { modules: { _id: id } } }, { new: true });
+    if (!result) {
+        throw new ErrorHandler('Модуль не знайдено', 404);
+    }
+};

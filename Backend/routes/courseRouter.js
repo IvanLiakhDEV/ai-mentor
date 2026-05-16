@@ -1,7 +1,12 @@
 import { Router } from 'express';
 import { authorize, verifyJWT } from '../middleware/verifyUser.js';
-import { courseValidationSchema, byIdValidationSchema, moduleValidationSchema } from '../validators/educationSchema.js';
-import { addModule, create, getAll, getById, remove } from '../controllers/courseController.js';
+import {
+    courseValidationSchema,
+    byIdValidationSchema,
+    moduleValidationSchema,
+    editModuleValidationSchema,
+} from '../validators/educationSchema.js';
+import { addModule, create, deleteModule, editModule, getAll, getById, remove } from '../controllers/courseController.js';
 import { validateSchema, validateParamsSchema } from '../middleware/validation.js';
 export const courseRouter = Router();
 
@@ -17,3 +22,12 @@ courseRouter.post(
     validateSchema(moduleValidationSchema),
     addModule,
 );
+courseRouter.patch(
+    '/:id/modules',
+    verifyJWT,
+    authorize('admin'),
+    validateParamsSchema(byIdValidationSchema),
+    validateSchema(editModuleValidationSchema),
+    editModule,
+);
+courseRouter.delete('/:id/modules', verifyJWT, authorize('admin'), validateParamsSchema(byIdValidationSchema), deleteModule);
