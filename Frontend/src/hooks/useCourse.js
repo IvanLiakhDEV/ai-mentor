@@ -2,7 +2,16 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useDispatch } from 'react-redux';
 import { setCourses } from '@/store/slices/courseSlice';
 import { useEffect } from 'react';
-import { addModule, createCourse, fetchCourseById, fetchCourses } from '@/api/course.api';
+import {
+    addModule,
+    createCourse,
+    deleteCourse,
+    deleteModule,
+    editCourse,
+    editModule,
+    fetchCourseById,
+    fetchCourses,
+} from '@/api/course.api';
 export const useCourses = () => {
     const dispatch = useDispatch();
     const query = useQuery({
@@ -32,10 +41,42 @@ export const useCreateCourse = () => {
     });
     return query;
 };
+export const useDeleteCourse = () => {
+    const queryClient = useQueryClient();
+    const query = useMutation({
+        mutationFn: ({ id }) => deleteCourse(id),
+        onSuccess: () => queryClient.invalidateQueries({ queryKey: ['course'] }),
+    });
+    return query;
+};
+export const useEditCourse = () => {
+    const queryClient = useQueryClient();
+    const query = useMutation({
+        mutationFn: ({ id, data }) => editCourse(id, data),
+        onSuccess: () => queryClient.invalidateQueries({ queryKey: ['course'] }),
+    });
+    return query;
+};
 export const useAddModule = () => {
     const queryClient = useQueryClient();
     const query = useMutation({
         mutationFn: ({ id, ...data }) => addModule(id, data),
+        onSuccess: () => queryClient.invalidateQueries({ queryKey: ['course'] }),
+    });
+    return query;
+};
+export const useEditModule = () => {
+    const queryClient = useQueryClient();
+    const query = useMutation({
+        mutationFn: ({ id, data }) => editModule(id, data),
+        onSuccess: () => queryClient.invalidateQueries({ queryKey: ['course'] }),
+    });
+    return query;
+};
+export const useDeleteModule = () => {
+    const queryClient = useQueryClient();
+    const query = useMutation({
+        mutationFn: ({ id }) => deleteModule(id),
         onSuccess: () => queryClient.invalidateQueries({ queryKey: ['course'] }),
     });
     return query;
