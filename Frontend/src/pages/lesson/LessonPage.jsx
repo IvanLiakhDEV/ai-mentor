@@ -156,7 +156,7 @@ const Lesson = ({ lesson }) => {
                             <div className='flex-1 h-full min-h-0'>
                                 <Editor
                                     height='100%'
-                                    defaultLanguage='javascript'
+                                    defaultLanguage={lesson.data.language}
                                     defaultValue={lesson.data.practice.initialCode ?? ''}
                                     onMount={handleEditorDidMount}
                                     theme='vs-dark'
