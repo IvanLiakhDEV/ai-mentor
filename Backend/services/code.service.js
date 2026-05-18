@@ -5,13 +5,15 @@ import { getLessonById } from './lesson.service.js';
 import User from '../models/user.js';
 import Course from '../models/course.js';
 import { getCourse } from './course.service.js';
+import { getFileNameByLanguage } from '../utils/getFilename.js';
 export const executeCode = async (code, lessonId, userId) => {
     const lesson = await getLessonById(lessonId, userId);
+    const course = await getCourse(lesson.courseId, userId);
     const response = await axios.post(
         'https://api.onecompiler.com/v1/run',
         {
-            language: 'javascript',
-            files: [{ name: 'main.js', content: code }],
+            language: course.language,
+            files: [{ name: getFileNameByLanguage(course.language), content: code }],
         },
         {
             headers: {
@@ -25,7 +27,6 @@ export const executeCode = async (code, lessonId, userId) => {
     const normalize = str => str?.trim().replace(/[\s\n]/g, '');
     const isCorrect = normalize(stdout) === normalize(lesson.practice.expectedOutput || null);
     const enrollment = await Enrollment.findOne({ courseId: lesson.courseId, userId });
-    const course = await getCourse(lesson.courseId, userId);
 
     const alreadyCompleted = enrollment.completedSequence >= lesson.sequenceNumber;
     const isLastLesson = course.numberOfLessons === lesson.sequenceNumber;

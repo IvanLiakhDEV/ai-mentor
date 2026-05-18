@@ -19,7 +19,9 @@ export const courseValidationSchema = z.object({
     tags: z
         .array(z.string(issuesHandler('tags.item')).max(30, 'Тег не може бути довшим за 30 символів'), issuesHandler('tags'))
         .nonempty('Додайте хоча б 1 тег'),
-
+    language: z
+        .enum(['typescript', 'javascript', 'python', 'java', 'dart', 'ruby', 'cpp', 'c', 'csharp', 'sql', 'php'], issuesHandler('language'))
+        .default('javascript'),
     modules: z
         .array(
             z.object({
