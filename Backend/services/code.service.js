@@ -27,7 +27,10 @@ export const executeCode = async (code, lessonId, userId) => {
 
     if (isCorrect && !alreadyCompleted) {
         await Promise.all([
-            Enrollment.findOneAndUpdate({ courseId: lesson.courseId, userId }, { $max: { completedSequence: lesson.sequenceNumber } }),
+            Enrollment.findOneAndUpdate(
+                { courseId: lesson.courseId, userId },
+                { $max: { completedSequence: lesson.sequenceNumber }, $inc: { points: lesson.points } },
+            ),
             User.findByIdAndUpdate(userId, {
                 $inc: { points: lesson.points },
             }),

@@ -11,6 +11,7 @@ import { Box } from '@/components/box/Box';
 import { Button } from '@/components/button/Button';
 import { useRegisterToCourse } from '@/hooks/useEnrollment';
 import { Progress } from '@/components/ui/Progress';
+import { LuPlay } from 'react-icons/lu';
 export const CoursePage = () => {
     const { id } = useParams();
     const navigate = useNavigate();
@@ -37,10 +38,16 @@ export const CoursePage = () => {
                 </div>
             </div>
         );
-
+    const completedSequence = course?.data?.enrollment?.completedSequence || 0;
+    const isCompleted = lesson => {
+        return lesson?.sequenceNumber <= completedSequence;
+    };
+    const getModuleCompletedCount = module => {
+        return module.lessons.filter(isCompleted).length;
+    };
     return (
         <div className='pt-14 mx-auto max-w-7xl px-6 '>
-            <div className='flex flex-col gap-7'>
+            <div className='flex flex-col gap-7 '>
                 <button
                     className='flex gap-2 text-secondary items-center font-medium cursor-pointer max-w-fit'
                     onClick={() => navigate(-1)}>
@@ -55,20 +62,20 @@ export const CoursePage = () => {
                             <div className='flex justify-between'>
                                 <p>Кількість пройдених уроків: {course.data?.enrollment?.completedSequence || 0}</p>
                                 <p>
-                                    Кількість уроків, що залишилася:
+                                    Кількість уроків, що залишилася:&nbsp;
                                     {course.data.numberOfLessons - (course.data?.enrollment?.completedSequence || 0)}
                                 </p>
                             </div>
                             <Progress
                                 value={((course.data?.enrollment?.completedSequence || 0) / course.data.numberOfLessons) * 100}
-                                className='bg-blue-100'
+                                className='bg-blue-100 rounded-full h-2'
                             />
                         </div>
                     </div>
                     <div className='flex gap-4 mt-6'>
                         <div className='flex gap-2 items-center'>
                             <RxPeople className='w-5 h-5' />
-                            <p>{course.data.numOfParticipants}</p>
+                            <p>{course.data.numOfParticipants} приєдналося</p>
                         </div>
                         <div className='flex gap-2 items-center'>
                             <LuBookOpen className='w-5 h-5' />
@@ -77,35 +84,46 @@ export const CoursePage = () => {
                     </div>
                 </div>
                 <div className='flex gap-6 flex-col md:flex-row'>
-                    <Box className='flex-1'>
+                    <Box className='flex-1 flex flex-col gap-2'>
                         <p className='font-bold text-xl mb-5'>Зміст курсу</p>
-                        {course.data.modules.map(module => (
-                            <Accordion
-                                type='multiple'
-                                className='border rounded-lg overflow-hidden border-border '>
-                                <AccordionItem
-                                    key={module.title}
-                                    value={module.title}>
-                                    <AccordionTrigger className='px-6 py-4 border-b dark:bg-gray-700 border-border'>
-                                        <p className='text-lg font-bold text-primary'>{module.title}</p>
-                                    </AccordionTrigger>
-                                    {module.lessons.map(lesson => (
-                                        <AccordionContent className='px-6  py-4 flex items-center justify-between w-full  transition-colors hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer mb-0'>
-                                            <p className='font-medium text-primary text-[1rem]'>{lesson.title}</p>
-                                            {lesson.sequenceNumber <= (course.data.enrollment?.completedSequence || 0) && (
-                                                <IoMdCheckmarkCircleOutline
-                                                    className='w-6 h-6 text-green-500'
-                                                    aria-label={`Урок ${lesson.title} виконано`}
-                                                />
-                                            )}
-                                        </AccordionContent>
-                                    ))}
-                                </AccordionItem>
-                            </Accordion>
-                        ))}
+                        {course.data.modules.map(module => {
+                            const completedInModule = getModuleCompletedCount(module);
+                            return (
+                                <Accordion
+                                    type='multiple'
+                                    className='border rounded-lg overflow-hidden border-border'
+                                    defaultValue={[module.title]}>
+                                    <AccordionItem
+                                        key={module.title}
+                                        value={module.title}>
+                                        <AccordionTrigger className='px-6 py-4 border-b dark:bg-gray-700 border-border flex justify-between'>
+                                            <p className='text-lg font-bold text-primary flex-1'>{module.title}</p>
+                                            <p className='text-sm font-bold text-secondary'>{`${completedInModule}/${module.lessons.length} виконано`}</p>
+                                        </AccordionTrigger>
+                                        {module.lessons.map(lesson => (
+                                            <AccordionContent className='px-6 py-4 flex items-center justify-between w-full  transition-colors hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer mb-0'>
+                                                <p
+                                                    className={`font-medium text-primary text-[1rem] ${isCompleted(lesson) && 'line-through'} `}>
+                                                    {lesson.title}
+                                                </p>
+                                                {isCompleted(lesson) && (
+                                                    <div>
+                                                        <IoMdCheckmarkCircleOutline
+                                                            className='w-6 h-6 text-green-500'
+                                                            aria-label={`Урок ${lesson.title} виконано`}
+                                                        />
+                                                    </div>
+                                                )}
+                                            </AccordionContent>
+                                        ))}
+                                    </AccordionItem>
+                                </Accordion>
+                            );
+                        })}
                     </Box>
-                    <Box className='max-h-min'>
+                    <Box className='max-h-min flex flex-col gap-4'>
                         <Button
+                            prefixIcon={LuPlay}
                             title={
                                 course?.data?.isEnrolled
                                     ? course.data.enrollment.isCompleted
@@ -114,8 +132,21 @@ export const CoursePage = () => {
                                     : 'Зареєструватися на курс'
                             }
                             onClick={() => onClick()}
-                            className='mx-auto'
+                            className='mx-auto border-b'
                         />
+                        <div>
+                            <h1 className='font-semibold mb-2 text-primary text-lg'>Ваш прогрес</h1>
+                            <div className='flex flex-col'>
+                                <div className='flex justify-between mt-3 text-sm'>
+                                    <span className='text-secondary'>Очок здобуто</span>
+                                    <span className='font-semibold'>{course?.data?.enrollment?.points}</span>
+                                </div>
+                                <div className='flex justify-between mt-3 text-sm'>
+                                    <span className='text-secondary'>Уроків пройдено</span>
+                                    <span className='font-semibold'>{course?.data?.enrollment?.completedSequence}</span>
+                                </div>
+                            </div>
+                        </div>
                     </Box>
                 </div>
             </div>

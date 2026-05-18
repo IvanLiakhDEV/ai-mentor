@@ -12,8 +12,7 @@ export const createLesson = async data => {
     if (!course.modules.id(moduleId)) {
         throw new ErrorHandler(`Модуля з id = ${data.moduleId} не існує`, 404);
     }
-    const count = await Lesson.countDocuments({ moduleId });
-    console.log(data);
+    const count = await Lesson.countDocuments({ courseId });
 
     const lesson = await Lesson.create({
         ...data,
