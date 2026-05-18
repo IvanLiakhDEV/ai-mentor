@@ -7,6 +7,7 @@ const enrollmentSchema = new Schema(
         completedSequence: { type: Number, default: 0 },
         status: { type: String, enum: ['Active', 'Completed'], default: 'Active' },
         archived: { type: Boolean, default: false },
+        points: { type: Number, default: 0 },
     },
     {
         timestamps: true,

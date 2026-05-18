@@ -29,6 +29,10 @@ const userSchema = new Schema({
         type: Number,
         default: 0,
     },
+    completedCourses: {
+        type: Number,
+        default: 0,
+    },
     refreshToken: { type: String, default: null, select: false },
 });
 

@@ -12,8 +12,7 @@ export const createLesson = async data => {
     if (!course.modules.id(moduleId)) {
         throw new ErrorHandler(`Модуля з id = ${data.moduleId} не існує`, 404);
     }
-    const count = await Lesson.countDocuments({ moduleId });
-    console.log(data);
+    const count = await Lesson.countDocuments({ courseId });
 
     const lesson = await Lesson.create({
         ...data,
@@ -41,6 +40,7 @@ export const editLessonInfo = async ({ id, lesson }) => {
 export const getLessonById = async (lessonId, userId) => {
     const lesson = await Lesson.findById(lessonId);
     if (!lesson) throw new ErrorHandler('Урок не знайдено', 404);
+    const course = await Course.findOne(lesson.courseId);
     const enrollment = await Enrollment.findOne({
         courseId: lesson.courseId,
         userId,
@@ -50,8 +50,9 @@ export const getLessonById = async (lessonId, userId) => {
     if (lesson.sequenceNumber > enrollment.completedSequence + 1) {
         throw new ErrorHandler('Спочатку пройдіть попередні уроки', 403);
     }
-
-    return lesson;
+    const l = lesson.toObject();
+    l.language = course.language;
+    return l;
 };
 
 export const reorderLessonsService = async lessons => {

@@ -10,12 +10,54 @@ import { IoMdCheckmarkCircleOutline } from 'react-icons/io';
 import { useSubmitCode } from '@/hooks/useCode';
 import { Spinner } from '@/components/ui/Spinner';
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from '@/components/ui/Resizable';
+import { Skeleton } from '@/components/ui/Skeleton';
+
 export const LessonPage = () => {
     const { id } = useParams();
-    const { data: lesson, isLoading } = useGetLesson(id);
-    const [code, setCode] = useState('');
-    const editorRef = useRef(null);
     const navigate = useNavigate();
+    const { data: lesson, isLoading, isError, error } = useGetLesson(id);
+
+    if (isLoading)
+        return (
+            <div className='flex justify-between gap-4'>
+                <div className='h-screen w-full flex-1'>
+                    <Skeleton className='h-screen bg-slate-200 dark:bg-slate-800 flex justify-center p-4 flex-col gap-20'>
+                        <Skeleton className='w-full h-48 dark:bg-slate-600' />
+                        <Skeleton className='w-full h-48 dark:bg-slate-600' />
+                        <Skeleton className='w-full h-48 dark:bg-slate-600' />
+                    </Skeleton>
+                </div>
+                <div className='h-screen w-full flex-1'>
+                    <Skeleton className='h-screen bg-slate-200 dark:bg-slate-800 flex justify-center p-4 flex-col gap-10'>
+                        <Skeleton className='w-full h-full dark:bg-slate-600' />
+                        <Skeleton className='w-full h-full dark:bg-slate-600' />
+                    </Skeleton>
+                </div>
+                <div className='h-screen w-full flex-1'>
+                    <Skeleton className='h-screen bg-slate-200 dark:bg-slate-800 flex justify-center p-4 flex-col gap-20'>
+                        <Skeleton className='w-full h-full dark:bg-slate-600' />
+                    </Skeleton>
+                </div>
+            </div>
+        );
+    if (isError && error?.message?.includes('403')) {
+        navigate('/');
+        return null;
+    }
+    return (
+        <Lesson
+            key={lesson.data._id}
+            lesson={lesson}
+        />
+    );
+};
+
+const Lesson = ({ lesson }) => {
+    const navigate = useNavigate();
+    const [code, setCode] = useState(lesson.data.practice.initialCode ?? '');
+    const [isCompleted, setIsCompleted] = useState(false);
+    const [nextLesson, setNextLesson] = useState(null);
+    const editorRef = useRef(null);
 
     const { mutate: handleSubmit, isPending, data: submitedData } = useSubmitCode();
 
@@ -25,10 +67,24 @@ export const LessonPage = () => {
     }
 
     const submitCode = () => {
-        handleSubmit({ code, id: lesson.data._id });
+        handleSubmit(
+            { code, id: lesson.data._id },
+            {
+                onSuccess: response => {
+                    if (response.data.isCorrect) setIsCompleted(true);
+                    setNextLesson(response.data.nextLesson);
+                },
+            },
+        );
     };
 
-    if (isLoading) return <p>Loading</p>;
+    const goToNextLesson = () => {
+        if (!nextLesson) {
+            navigate('/');
+            return;
+        }
+        navigate(`/lesson/${nextLesson._id}`, { replace: true });
+    };
 
     return (
         <div className='flex h-screen overflow-hidden'>
@@ -53,14 +109,14 @@ export const LessonPage = () => {
                                     <LuBookOpen className='w-5 h-5 text-secondary' />
                                     <p className='text-lg font-semibold text-primary'>Теорія</p>
                                 </div>
-                                <p>{lesson.data.theory.content}</p>
+                                <p className='wrap-break-word'>{lesson.data.theory.content}</p>
                             </Box>
                             <Box>
                                 <div className='flex items-center gap-2 mb-4'>
                                     <IoMdCheckmarkCircleOutline className='w-5 h-5 text-secondary' />
                                     <p className='text-lg font-semibold text-primary'>Практика</p>
                                 </div>
-                                <p>{lesson.data.practice.taskDescription}</p>
+                                <p className='wrap-break-word'>{lesson.data.practice.taskDescription}</p>
                             </Box>
                         </div>
                     </div>
@@ -72,9 +128,20 @@ export const LessonPage = () => {
                     className='bg-black'>
                     <div className='flex flex-1 flex-col  h-full overflow-hidden'>
                         <div className='flex-1 flex flex-col'>
-                            <div className='bg-neutral-900 p-2 flex border-b border-gray-700'>
+                            <div className='bg-neutral-900 p-2 flex border-b border-gray-700 justify-end gap-2'>
+                                {isCompleted && (
+                                    <button
+                                        className='px-4 py-1.5 text-sm bg-green-600 hover:bg-green-700 text-white rounded-lg transition-all font-medium '
+                                        onClick={goToNextLesson}>
+                                        <div className='flex items-center gap-2'>
+                                            <FaPlay />
+                                            Перейди до наступного уроку
+                                        </div>
+                                    </button>
+                                )}
+
                                 <button
-                                    className='px-4 py-1.5 text-sm bg-slate-600 hover:bg-slate-700 text-white rounded-lg transition-all font-medium ml-auto'
+                                    className='px-4 py-1.5 text-sm bg-slate-600 hover:bg-slate-700 text-white rounded-lg transition-all font-medium '
                                     onClick={submitCode}>
                                     {isPending ? (
                                         <Spinner />
@@ -105,7 +172,7 @@ export const LessonPage = () => {
                         </div>
                         <div className='flex-1 shrink-0'>
                             <h2 className='text-primary font-medium bg px-4 bg-bg-primary py-3 border-b-2'> Результат виконання коду</h2>
-                            <div className='h-full bg-slate-100 flex p-2'>
+                            <div className='h-full bg-bg-primary flex p-2'>
                                 <p className='text-slate-600 font-mono text-sm break-all whitespace-pre-wrap '>
                                     {(submitedData?.data?.stdout || submitedData?.data?.stderr) ?? (
                                         <div className='flex items-center text-sm gap-2'>

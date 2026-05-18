@@ -4,10 +4,11 @@ import { FaPlus } from 'react-icons/fa6';
 import { CourseItem } from '@/components/accordioncourse/courseitem/CourseItem';
 import { Dialog } from '@/components/dialog/Dialog';
 import { InputField } from '@/components/inputs/InputField';
-import { courseValidationSchema } from '@/formValidation/courseSchema';
-import { useForm } from 'react-hook-form';
+import { courseValidationSchema, LANGUAGES } from '@/formValidation/courseSchema';
+import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from '@/components/ui/Button';
+import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 export const AdminPage = () => {
     const { data: courses, isLoading } = useCourses();
     const { mutate: handleAddCourse, isPending, error } = useCreateCourse();
@@ -16,8 +17,12 @@ export const AdminPage = () => {
         register,
         handleSubmit,
         reset,
+        control,
         formState: { errors },
     } = useForm({
+        defaultValues: {
+            language: 'javascript',
+        },
         resolver: zodResolver(courseValidationSchema),
     });
     const onSubmit = data => {
@@ -28,6 +33,7 @@ export const AdminPage = () => {
             },
         });
     };
+
     if (isLoading) return <p>Loading</p>;
     return (
         <div className='flex flex-col'>
@@ -71,18 +77,41 @@ export const AdminPage = () => {
                             {...register('tags')}
                             error={errors.tags?.message}
                         />
+
+                        <Controller
+                            name='language'
+                            control={control}
+                            render={({ field }) => (
+                                <Select
+                                    onValueChange={field.onChange}
+                                    defaultValue={field.value}>
+                                    <SelectTrigger className='w-full py-5 bg-white'>
+                                        <SelectValue placeholder='Мова програмування' />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        <SelectGroup>
+                                            {LANGUAGES?.map(lang => (
+                                                <SelectItem
+                                                    key={lang}
+                                                    value={lang}>
+                                                    {lang}
+                                                </SelectItem>
+                                            ))}
+                                        </SelectGroup>
+                                    </SelectContent>
+                                </Select>
+                            )}
+                        />
                         {error && <p className='text-center'>{error.message || 'Щось пішло не так'}</p>}
                     </Dialog>
                 </div>
-                <div className='space-y-3'>
-                    <div className='bg-white rounded-lg shadow-sm border border-gray-200'>
-                        {courses.data.map(course => (
-                            <CourseItem
-                                course={course}
-                                key={course._id}
-                            />
-                        ))}
-                    </div>
+                <div className='rounded-lg shadow-sm border-gray-200 grid gap-2'>
+                    {courses.data.map(course => (
+                        <CourseItem
+                            course={course}
+                            key={course._id}
+                        />
+                    ))}
                 </div>
             </main>
         </div>
