@@ -22,7 +22,6 @@ export const Chat = ({ lesson, code }) => {
     const onSubmit = e => {
         e.preventDefault();
         if (!message.trim() || isPending) return;
-
         const newMessages = [...messages, { message, isBot: false }];
         setMessages(newMessages);
         setMessage('');
@@ -36,6 +35,16 @@ export const Chat = ({ lesson, code }) => {
                         {
                             message: response.data,
                             isBot: true,
+                        },
+                    ]);
+                },
+                onError: error => {
+                    setMessages(prev => [
+                        ...prev,
+                        {
+                            message: error.response?.data?.message || 'Щось пішло не так. Спробуй ще раз.',
+                            isBot: true,
+                            isError: true,
                         },
                     ]);
                 },
@@ -74,6 +83,7 @@ export const Chat = ({ lesson, code }) => {
                     onChange={e => setMessage(e.target.value)}
                     value={message}
                     readOnly={isPending}
+                    maxLength={200}
                 />
                 <button className='rounded-full p-2'>
                     <LuSend className='w-8 h-8' />

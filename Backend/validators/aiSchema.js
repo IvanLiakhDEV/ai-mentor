@@ -5,7 +5,7 @@ import { issuesHandler } from '../middleware/validation.js';
 export const questionValidationSchema = z.object({
     messages: z.array(
         z.object({
-            message: z.string(),
+            message: z.string().trim().min(1, 'Повідомлення не може бути порожнім').max(200, 'Повідомлення занадто довге'),
             isBot: z.boolean(),
         }),
     ),
@@ -27,5 +27,5 @@ export const questionValidationSchema = z.object({
             expectedOutput: z.string(issuesHandler('practice.expectedOutput')).optional(),
         }),
     }),
-    code: z.string(issuesHandler('code')),
+    code: z.string(issuesHandler('code')).max(2000, 'Код занадто довгий'),
 });
