@@ -11,12 +11,12 @@ export const InputField = React.forwardRef(
                 {label && (
                     <label
                         htmlFor={id}
-                        className='font-medium'>
+                        className='font-medium text-sm'>
                         {label}
                     </label>
                 )}
                 <div
-                    className={`flex flex-row items-center bg-transparent border rounded-md p-[12px_16px_12px_40px] relative ${!Icon && 'pl-3'}`}>
+                    className={`flex flex-row text-sm items-center bg-transparent border rounded-md p-[6px_16px_6px_40px] relative ${!Icon && 'pl-3'}`}>
                     {Icon && (
                         <Icon
                             className='absolute -translate-y-1/2 left-2 top-1/2'

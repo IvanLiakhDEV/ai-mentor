@@ -12,7 +12,7 @@ export const Dialog = ({ children, visible = false, headerTitle, onClose, sumbit
                 className='bg-white rounded-xl shadow-xl max-w-2xl w-full max-h-3/4 
              '>
                 <header className='flex justify-between border-b p-4 px-6 items-center w-full flex-1'>
-                    <h2 className='text-xl font-bold text-gray-900'>{headerTitle}</h2>
+                    <h2 className='text-lg font-bold text-gray-900'>{headerTitle}</h2>
                     <button
                         type='button'
                         onClick={onClose}
@@ -25,7 +25,7 @@ export const Dialog = ({ children, visible = false, headerTitle, onClose, sumbit
                     <Button
                         variant='secondary'
                         size='lg'
-                        className='flex-1 rounded-xl p-5 text-lg'
+                        className='flex-1 rounded-xl p-4 text-base'
                         onClick={onClose}
                         type='button'>
                         <p>Скасувати</p>
@@ -33,7 +33,7 @@ export const Dialog = ({ children, visible = false, headerTitle, onClose, sumbit
                     <Button
                         size='lg'
                         type='submit'
-                        className='bg-cta hover:bg-blue-900 flex-1 rounded-xl p-5 text-lg'>
+                        className='bg-cta hover:bg-blue-900 flex-1 rounded-xl p-4 text-base'>
                         {isPending ? <Spinner className='h-5 w-5' /> : <p>{sumbitTitle}</p>}
                     </Button>
                 </footer>

@@ -15,7 +15,7 @@ export const CourseCard = ({ courseData }) => {
                 <h2 className='text-secondary break-all line-clamp-3'>{courseData.description}</h2>
             </div>
             <div>
-                <ul className='flex gap-2'>
+                <ul className='flex gap-2 line-clamp-1'>
                     {courseData?.tags?.slice(0, 6).map((tag, index) => (
                         <Tag
                             title={tag}

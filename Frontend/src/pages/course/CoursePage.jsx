@@ -39,6 +39,7 @@ export const CoursePage = () => {
             </div>
         );
     const completedSequence = course?.data?.enrollment?.completedSequence || 0;
+
     const isCompleted = lesson => {
         return lesson?.sequenceNumber <= completedSequence;
     };
@@ -121,12 +122,12 @@ export const CoursePage = () => {
                             );
                         })}
                     </Box>
-                    <Box className='max-h-min flex flex-col gap-4 max-w-72 w-full'>
+                    <Box className='max-h-min flex flex-col gap-4 max-w-88 w-full'>
                         <Button
-                            prefixIcon={course?.data?.enrollment.status === 'Completed' ? null : LuPlay}
+                            prefixIcon={course?.data?.enrollment?.status === 'Completed' ? null : LuPlay}
                             title={
                                 course?.data?.isEnrolled
-                                    ? course.data.enrollment.status === 'Completed'
+                                    ? course?.data?.enrollment?.status === 'Completed'
                                         ? 'Курс пройдено'
                                         : 'Продовжити навчання'
                                     : 'Зареєструватися на курс'
@@ -134,19 +135,21 @@ export const CoursePage = () => {
                             onClick={() => onClick()}
                             className='mx-auto border-b w-full'
                         />
-                        <div>
-                            <h1 className='font-semibold mb-2 text-primary text-lg'>Ваш прогрес</h1>
-                            <div className='flex flex-col'>
-                                <div className='flex justify-between mt-3 text-sm'>
-                                    <span className='text-secondary'>Очок здобуто</span>
-                                    <span className='font-semibold'>{course?.data?.enrollment?.points}</span>
-                                </div>
-                                <div className='flex justify-between mt-3 text-sm'>
-                                    <span className='text-secondary'>Уроків пройдено</span>
-                                    <span className='font-semibold'>{course?.data?.enrollment?.completedSequence}</span>
+                        {course.data.enrollment && (
+                            <div>
+                                <h1 className='font-semibold mb-2 text-primary text-lg'>Ваш прогрес</h1>
+                                <div className='flex flex-col'>
+                                    <div className='flex justify-between mt-3 text-sm'>
+                                        <span className='text-secondary'>Очок здобуто</span>
+                                        <span className='font-semibold'>{course?.data?.enrollment?.points}</span>
+                                    </div>
+                                    <div className='flex justify-between mt-3 text-sm'>
+                                        <span className='text-secondary'>Уроків пройдено</span>
+                                        <span className='font-semibold'>{course?.data?.enrollment?.completedSequence}</span>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
+                        )}
                     </Box>
                 </div>
             </div>
