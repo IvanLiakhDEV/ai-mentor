@@ -4,7 +4,7 @@ import { useNavigate, useParams } from 'react-router';
 import Editor from '@monaco-editor/react';
 import { Box } from '@/components/box/Box';
 import { Chat } from '@/components/chat/Chat';
-import { LuBookOpen } from 'react-icons/lu';
+import { LuBookOpen, LuTerminal } from 'react-icons/lu';
 import { FaArrowLeft, FaPlay } from 'react-icons/fa6';
 import { IoMdCheckmarkCircleOutline } from 'react-icons/io';
 import { useSubmitCode } from '@/hooks/useCode';
@@ -103,12 +103,16 @@ export const LessonPage = () => {
                                 />
                             </div>
                         </div>
-                        <div className='flex-1  shrink-0'>
-                            <h2 className='text-primary font-medium bg px-4 bg-bg-primary py-3 border-b-2'>Результат виконання коду</h2>
-                            <div className='bg-neutral-900 h-full p-2 overflow-hidden'>
-                                <p className='text-slate-200 font-mono text-sm break-all whitespace-pre-wrap'>
-                                    {(submitedData?.data?.stdout || submitedData?.data?.stderr) ??
-                                        'Натисніть "Запустити код", щоб побачити результат виконання'}
+                        <div className='flex-1 shrink-0'>
+                            <h2 className='text-primary font-medium bg px-4 bg-bg-primary py-3 border-b-2'> Результат виконання коду</h2>
+                            <div className='h-full bg-slate-100 flex p-2'>
+                                <p className='text-slate-600 font-mono text-sm break-all whitespace-pre-wrap '>
+                                    {(submitedData?.data?.stdout || submitedData?.data?.stderr) ?? (
+                                        <div className='flex items-center text-sm gap-2'>
+                                            <LuTerminal className='h-6 w-6' />
+                                            Натисніть "Запустити код", щоб побачити результат виконання
+                                        </div>
+                                    )}
                                 </p>
                             </div>
                         </div>
@@ -120,7 +124,10 @@ export const LessonPage = () => {
                     minSize='15%'
                     maxSize='40%'>
                     <div className='flex-1'>
-                        <Chat />
+                        <Chat
+                            lesson={lesson}
+                            code={code}
+                        />
                     </div>
                 </ResizablePanel>
             </ResizablePanelGroup>
