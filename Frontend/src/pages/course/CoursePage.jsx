@@ -121,18 +121,18 @@ export const CoursePage = () => {
                             );
                         })}
                     </Box>
-                    <Box className='max-h-min flex flex-col gap-4'>
+                    <Box className='max-h-min flex flex-col gap-4 max-w-72 w-full'>
                         <Button
-                            prefixIcon={LuPlay}
+                            prefixIcon={course?.data?.enrollment.status === 'Completed' ? null : LuPlay}
                             title={
                                 course?.data?.isEnrolled
-                                    ? course.data.enrollment.isCompleted
+                                    ? course.data.enrollment.status === 'Completed'
                                         ? 'Курс пройдено'
                                         : 'Продовжити навчання'
                                     : 'Зареєструватися на курс'
                             }
                             onClick={() => onClick()}
-                            className='mx-auto border-b'
+                            className='mx-auto border-b w-full'
                         />
                         <div>
                             <h1 className='font-semibold mb-2 text-primary text-lg'>Ваш прогрес</h1>

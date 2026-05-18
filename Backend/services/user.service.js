@@ -57,19 +57,11 @@ export const getLeaderboardData = async () => {
                 leaderboard: [
                     { $sort: { points: -1 } },
                     { $limit: 20 },
-                    { $lookup: { from: 'enrollments', localField: '_id', foreignField: 'userId', as: 'enrollments' } },
                     {
                         $project: {
                             username: 1,
                             points: 1,
-                            completedCourses: {
-                                $size: {
-                                    $filter: {
-                                        input: '$enrollments',
-                                        cond: { $eq: ['$$this.status', 'Completed'] },
-                                    },
-                                },
-                            },
+                            completedCourses: 1,
                         },
                     },
                 ],
