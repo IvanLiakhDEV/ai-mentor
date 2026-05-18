@@ -8,6 +8,7 @@ import cookieParser from 'cookie-parser';
 import { courseRouter } from './routes/courseRouter.js';
 import { enrollmentRouter } from './routes/enrollmentRouter.js';
 import { lessonRouter } from './routes/lessonRouter.js';
+import { aiRouter } from './routes/aiRouter.js';
 
 dotenv.config();
 const PORT = process.env.PORT || process.env.SERVER_PORT || 5000;
@@ -27,6 +28,7 @@ app.use('/user', userRouter);
 app.use('/course', courseRouter);
 app.use('/enrollments', enrollmentRouter);
 app.use('/lesson', lessonRouter);
+app.use('/chat', aiRouter);
 
 app.use(errorMiddleware);
 
