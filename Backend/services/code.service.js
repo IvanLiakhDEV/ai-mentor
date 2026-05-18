@@ -41,7 +41,7 @@ export const executeCode = async (code, lessonId, userId) => {
 
         if (isLastLesson) {
             enrollmentUpdate.$set = { status: 'Completed' };
-            userUpdate.$inc = { completedCourses: 1 };
+            userUpdate.$inc.completedCourses = 1;
         }
 
         await Promise.all([

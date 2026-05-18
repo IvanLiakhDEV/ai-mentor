@@ -24,6 +24,7 @@ const courseSchema = new Schema(
         language: {
             type: String,
             enum: ['typescript', 'javascript', 'python', 'java', 'dart', 'ruby', 'cpp', 'c', 'csharp', 'sql', 'php'],
+            default: 'javascript',
         },
         modules: [
             {
