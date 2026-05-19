@@ -1,40 +1,45 @@
 import mongoose, { Schema } from 'mongoose';
 import bcrypt from 'bcrypt';
 
-const userSchema = new Schema({
-    username: {
-        type: String,
-        required: true,
-        trim: true,
-        minLength: [3, "Ім'я не може бути коротшим за 3 символи"],
-        maxLength: [30, "Ім'я не може бути довшим за 30 символів"],
+const userSchema = new Schema(
+    {
+        username: {
+            type: String,
+            required: true,
+            trim: true,
+            minLength: [3, "Ім'я не може бути коротшим за 3 символи"],
+            maxLength: [30, "Ім'я не може бути довшим за 30 символів"],
+        },
+        email: {
+            type: String,
+            required: true,
+            unique: true,
+        },
+        password: {
+            type: String,
+            required: true,
+            minlength: [8, 'Довжина пароля не може бути менше 8 симовлів'],
+            select: false,
+        },
+        role: {
+            type: String,
+            enum: ['student', 'admin'],
+            default: 'student',
+        },
+        points: {
+            type: Number,
+            default: 0,
+        },
+        completedCourses: {
+            type: Number,
+            default: 0,
+        },
+        refreshToken: { type: String, default: null, select: false },
     },
-    email: {
-        type: String,
-        required: true,
-        unique: true,
+    {
+        timestamps: true,
     },
-    password: {
-        type: String,
-        required: true,
-        minlength: [8, 'Довжина пароля не може бути менше 8 симовлів'],
-        select: false,
-    },
-    role: {
-        type: String,
-        enum: ['student', 'admin'],
-        default: 'student',
-    },
-    points: {
-        type: Number,
-        default: 0,
-    },
-    completedCourses: {
-        type: Number,
-        default: 0,
-    },
-    refreshToken: { type: String, default: null, select: false },
-});
+);
 
 userSchema.set('toJSON', {
     transform: (doc, ret) => {
