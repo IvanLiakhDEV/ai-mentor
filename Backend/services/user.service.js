@@ -9,6 +9,7 @@ export const createUser = async (username, email, password) => {
         throw new ErrorHandler('Така пошта вже зареєстрована', 409);
     }
     const user = await User.create({ username, email, password });
+    await UserStat.create({ userId: user._id });
     return user;
 };
 export const authenticateUser = async (email, password) => {
