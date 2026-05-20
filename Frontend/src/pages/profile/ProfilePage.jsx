@@ -1,24 +1,22 @@
 import { Button } from '@/components/button/Button';
 import { selectUser } from '@/store/selectors/authSelectors';
-import React from 'react';
+import React, { useState } from 'react';
 import { MdOutlineEmail, MdOutlineLocationOn, MdOutlineCalendarToday } from 'react-icons/md';
 import { HiOutlinePencil } from 'react-icons/hi';
 import { useSelector } from 'react-redux';
 import { Box } from '@/components/box/Box';
-import { useUserEnrollments } from '@/hooks/useEnrollment';
-import { Skeleton } from '@/components/ui/Skeleton';
-import { LuBookOpen, LuTrophy } from 'react-icons/lu';
-export const ProfilePage = () => {
-    const { data, isLoading } = useUserEnrollments();
-    const user = useSelector(selectUser);
-    if (isLoading)
-        return (
-            <div>
-                <Skeleton />
-            </div>
-        );
-    const completedCourses = data.data.filter(value => value.status === 'Completed').reduce((value, acc) => acc + value, 0);
 
+import { LuAward, LuBookOpen, LuTrophy } from 'react-icons/lu';
+import { useAllAchievements, useMyAchievements } from '@/hooks/useAchievement';
+import { Achivement } from '@/components/achivement/Achivement';
+export const ProfilePage = () => {
+    const user = useSelector(selectUser);
+    const { data: achievements, isLoadingAchievements } = useAllAchievements();
+    const { data: userAchievements, isLoadingUserAchievements } = useMyAchievements();
+    const [achievementsList, setAchievementsList] = useState([]);
+    console.log(achievements?.data);
+    console.log(userAchievements?.data);
+    if (isLoadingUserAchievements && isLoadingAchievements) return <p>Завантаження</p>;
     return (
         <div className='px-6 mx-auto max-w-7xl pt-14'>
             <Box>
@@ -32,14 +30,17 @@ export const ProfilePage = () => {
                                     <MdOutlineEmail />
                                     <p>{user.email}</p>
                                 </div>
-                                {/* <div className='flex items-center gap-1'>
-                                    <MdOutlineLocationOn />
-                                    <p>{user.email}</p>
-                                </div>
                                 <div className='flex items-center gap-1'>
                                     <MdOutlineCalendarToday />
-                                    <p>Приєднався в Квітні 2026</p>
-                                </div> */}
+                                    <p>
+                                        Приєднався&nbsp;
+                                        {new Date(user.createdAt).toLocaleDateString('uk-UA', {
+                                            year: 'numeric',
+                                            month: 'long',
+                                            day: 'numeric',
+                                        })}
+                                    </p>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -55,30 +56,28 @@ export const ProfilePage = () => {
                         <LuBookOpen className='text-blue-600 w-6 h-6' />
                         <p className='text-secondary font-semibold'>Пройдених курсів</p>
                     </div>
-                    <p className='font-bold text-3xl'>{completedCourses}</p>
+                    <p className='font-bold text-3xl'>{userAchievements?.data?.stats?.coursesCompleted}</p>
                 </Box>
                 <Box className='flex-col gap-4 flex p-6 flex-1'>
                     <div className='flex gap-2'>
                         <LuTrophy className='w-6 h-6 text-yellow-600' />
                         <p className='text-secondary font-semibold'>Кількість очок</p>
                     </div>
-                    <p className='font-bold text-3xl'>{user.points}</p>
-                </Box>
-                <Box className='flex-col gap-4 flex p-6 flex-1'>
-                    <div className='flex gap-2 items-center'>
-                        <LuBookOpen className='text-blue-600 w-6 h-6' />
-                        <p className='text-secondary font-semibold'>Пройдених курсів</p>
-                    </div>
-                    <p className='font-bold text-3xl'>{completedCourses}</p>
-                </Box>
-                <Box className='flex-col gap-4 flex p-6 flex-1'>
-                    <div className='flex gap-2'>
-                        <LuBookOpen className='text-blue-600 w-6 h-6' />
-                        <p className='text-secondary font-semibold'>Пройдених курсів</p>
-                    </div>
-                    <p className='font-bold text-3xl'>{completedCourses}</p>
+                    <p className='font-bold text-3xl'>{userAchievements?.data?.stats?.points}</p>
                 </Box>
             </div>
+            <Box className='flex flex-col mt-6 '>
+                <div className='flex gap-2 items-center'>
+                    <LuAward className=' w-6 h-6 text-[#5b4ccc]' />
+                    <h1 className='text-2xl font-bold text-primary'>Досягнення</h1>
+                </div>
+                {achievements?.data?.map(achievement => (
+                    <Achivement
+                        achivement={achievement}
+                        isCompleted={userAchievements?.data?.achievements?.some(value => value.achievementId?._id === achievement._id)}
+                    />
+                ))}
+            </Box>
         </div>
     );
 };

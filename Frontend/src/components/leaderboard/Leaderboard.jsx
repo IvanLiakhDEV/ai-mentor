@@ -51,7 +51,7 @@ export const Leaderboard = () => {
                                     <td className='text-secondary font-semibold px-6 py-4'>{getRank(index)}</td>
                                     <td className='px-6 py-4'>{value.username}</td>
                                     <td className='text-blue-600 font-semibold px-6 py-4'>{value.points}</td>
-                                    <td className='font-semibold px-6 py-4'>{value.completedCourses}</td>
+                                    <td className='font-semibold px-6 py-4'>{value.coursesCompleted}</td>
                                 </tr>
                             ))}
                     </tbody>
