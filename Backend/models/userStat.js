@@ -10,6 +10,8 @@ const userStatSchema = new mongoose.Schema({
     lessonsCompleted: { type: Number, default: 0 },
     coursesCompleted: { type: Number, default: 0 },
     currentStreak: { type: Number, default: 0 },
+    bestStreak: { type: Number, default: 0 },
+    lastActivityDate: { type: Date },
     points: { type: Number, default: 0 },
 });
 
