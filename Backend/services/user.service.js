@@ -1,4 +1,6 @@
 import User from '../models/user.js';
+import UserStat from '../models/userStat.js';
+
 import { ErrorHandler } from '../utils/errorHandlers.js';
 import { getAccessToken, getRefreshToken, verifyRefreshToken } from './token.service.js';
 export const createUser = async (username, email, password) => {
@@ -7,6 +9,7 @@ export const createUser = async (username, email, password) => {
         throw new ErrorHandler('Така пошта вже зареєстрована', 409);
     }
     const user = await User.create({ username, email, password });
+    await UserStat.create({ userId: user._id });
     return user;
 };
 export const authenticateUser = async (email, password) => {
@@ -51,17 +54,26 @@ export const getUser = async userId => {
     return user;
 };
 export const getLeaderboardData = async () => {
-    const result = await User.aggregate([
+    const result = await UserStat.aggregate([
         {
             $facet: {
                 leaderboard: [
                     { $sort: { points: -1 } },
                     { $limit: 20 },
                     {
+                        $lookup: {
+                            from: 'users',
+                            localField: 'userId',
+                            foreignField: '_id',
+                            as: 'userDetails',
+                        },
+                    },
+                    {
                         $project: {
-                            username: 1,
+                            username: { $arrayElemAt: ['$userDetails.username', 0] },
                             points: 1,
-                            completedCourses: 1,
+                            coursesCompleted: 1,
+                            currentStreak: 1,
                         },
                     },
                 ],
