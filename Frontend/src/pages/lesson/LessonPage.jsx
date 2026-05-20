@@ -11,7 +11,9 @@ import { useSubmitCode } from '@/hooks/useCode';
 import { Spinner } from '@/components/ui/Spinner';
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from '@/components/ui/Resizable';
 import { Skeleton } from '@/components/ui/Skeleton';
-
+import { AchevementToast } from '@/components/popup/AchievementToaster';
+import { toast } from 'sonner';
+import { Toaster } from '@/components/ui/sonner';
 export const LessonPage = () => {
     const { id } = useParams();
     const navigate = useNavigate();
@@ -72,6 +74,18 @@ const Lesson = ({ lesson }) => {
             {
                 onSuccess: response => {
                     if (response.data.isCorrect) setIsCompleted(true);
+                    if (response.data.unlockedAchievements.length > 0)
+                        response.data.unlockedAchievements.map(value =>
+                            toast.custom(
+                                t => (
+                                    <AchevementToast
+                                        t={t}
+                                        achievement={value}
+                                    />
+                                ),
+                                { duration: 100000 },
+                            ),
+                        );
                     setNextLesson(response.data.nextLesson);
                 },
             },
@@ -85,7 +99,6 @@ const Lesson = ({ lesson }) => {
         }
         navigate(`/lesson/${nextLesson._id}`, { replace: true });
     };
-
     return (
         <div className='flex h-screen overflow-hidden'>
             <ResizablePanelGroup orientation='horizontal'>
@@ -198,6 +211,13 @@ const Lesson = ({ lesson }) => {
                     </div>
                 </ResizablePanel>
             </ResizablePanelGroup>
+
+            <Toaster
+                position='top-center'
+                toastOptions={{
+                    className: 'bg-transparent border-0 shadow-none p-0',
+                }}
+            />
         </div>
     );
 };
