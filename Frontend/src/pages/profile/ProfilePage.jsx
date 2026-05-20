@@ -73,14 +73,14 @@ export const ProfilePage = () => {
                         <LuTrophy className='w-6 h-6 text-yellow-600' />
                         <p className='text-secondary font-semibold'>Теперішня смуга</p>
                     </div>
-                    <p className='font-bold text-3xl'>{userAchievements?.data?.stats?.bestStreak || 0}</p>
-                </Box>
-                <Box className='flex-col gap-4 flex p-6 flex-1'>
-                    <div className='flex gap-2'>
-                        <LuTarget className='w-6 h-6 text-red-600' />
-                        <p className='text-secondary font-semibold'>Найбільша смуга</p>
-                    </div>
                     <p className='font-bold text-3xl'>{userAchievements?.data?.stats?.currentStreak || 0}</p>
+                    <Box className='flex-col gap-4 flex p-6 flex-1'>
+                        <div className='flex gap-2'>
+                            <LuTarget className='w-6 h-6 text-red-600' />
+                            <p className='text-secondary font-semibold'>Найбільша смуга</p>
+                        </div>
+                        <p className='font-bold text-3xl'>{userAchievements?.data?.stats?.bestStreak || 0}</p>
+                    </Box>
                 </Box>
             </div>
             <Box className='flex flex-col mt-6 '>
