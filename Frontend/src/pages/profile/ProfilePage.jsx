@@ -1,6 +1,6 @@
 import { Button } from '@/components/button/Button';
 import { selectUser } from '@/store/selectors/authSelectors';
-import React, { useState } from 'react';
+import React from 'react';
 import { MdOutlineEmail, MdOutlineLocationOn, MdOutlineCalendarToday } from 'react-icons/md';
 import { HiOutlinePencil } from 'react-icons/hi';
 import { useSelector } from 'react-redux';
@@ -13,10 +13,13 @@ export const ProfilePage = () => {
     const user = useSelector(selectUser);
     const { data: achievements, isLoadingAchievements } = useAllAchievements();
     const { data: userAchievements, isLoadingUserAchievements } = useMyAchievements();
-    const [achievementsList, setAchievementsList] = useState([]);
-    console.log(achievements?.data);
-    console.log(userAchievements?.data);
-    if (isLoadingUserAchievements && isLoadingAchievements) return <p>Завантаження</p>;
+
+    if (isLoadingUserAchievements && isLoadingAchievements)
+        return (
+            <div className='max-w-7xl w-full h-full mx-auto'>
+                <Skeleton className='bg-slate-200 dark:bg-slate-800 w-full h-100' />
+            </div>
+        );
     return (
         <div className='px-6 mx-auto max-w-7xl pt-14'>
             <Box>

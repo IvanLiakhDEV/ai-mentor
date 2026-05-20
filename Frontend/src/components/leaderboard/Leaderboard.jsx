@@ -4,10 +4,16 @@ import { LuAward, LuTrendingUp, LuMedal } from 'react-icons/lu';
 import { useLeaderboard } from '@/hooks/useAuth';
 import { useSelector } from 'react-redux';
 import { selectUser } from '@/store/selectors/authSelectors';
+import { Skeleton } from '../ui/Skeleton';
 export const Leaderboard = () => {
     const { data: leaderboard, isLoading } = useLeaderboard();
     const user = useSelector(selectUser);
-    if (isLoading) return <p>Loading</p>;
+    if (isLoading)
+        return (
+            <div className='max-w-7xl w-full h-full mx-auto'>
+                <Skeleton className='bg-slate-200 dark:bg-slate-800 w-full h-100' />
+            </div>
+        );
 
     const getRank = index => {
         if (index === 0) return <LuMedal className='text-yellow-600 w-6 h-6 ' />;
