@@ -33,6 +33,30 @@ export const executeCode = async (code, lessonId, userId) => {
     const isLastLesson = course.numberOfLessons === lesson.sequenceNumber;
     let newlyUnlocked = [];
     if (isCorrect && !alreadyCompleted) {
+        let currentStreak = UserStat.findOne({ userId });
+
+        const now = new Date();
+        const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+        const yesterday = new Date(today);
+        yesterday.setDate(yesterday.getDate() - 1);
+
+        let newStreak = currentStat.currentStreak;
+        let newBestStreak = currentStat.bestStreak;
+
+        if (!currentStat.lastActivityDate) {
+            newStreak = 1;
+            newBestStreak = Math.max(1, newBestStreak);
+        } else {
+            const lastActivity = new Date(currentStat.lastActivityDate);
+            if (lastActivity >= today) {
+            } else if (lastActivity >= yesterday && lastActivity < today) {
+                newStreak += 1;
+                newBestStreak = Math.max(newStreak, newBestStreak);
+            } else {
+                newStreak = 1;
+            }
+        }
+
         const enrollmentUpdate = {
             $max: { completedSequence: lesson.sequenceNumber },
             $inc: { points: lesson.points },
@@ -42,7 +66,13 @@ export const executeCode = async (code, lessonId, userId) => {
                 lessonsCompleted: 1,
                 points: lesson.points,
             },
+            $set: {
+                currentStreak: newStreak,
+                bestStreak: newBestStreak,
+                lastActivityDate: now,
+            },
         };
+
         if (isLastLesson) {
             enrollmentUpdate.$set = { status: 'Completed' };
             statUpdate.$inc.coursesCompleted = 1;
@@ -52,6 +82,7 @@ export const executeCode = async (code, lessonId, userId) => {
             { conditionType: 'lessons_completed', targetValue: { $lte: updatedStats.lessonsCompleted } },
             { conditionType: 'courses_completed', targetValue: { $lte: updatedStats.coursesCompleted } },
             { conditionType: 'points_earned', targetValue: { $lte: updatedStats.points } },
+            { conditionType: 'day_streak', targetValue: { $lte: updatedStats.currentStreak } },
         ];
         const currentHour = new Date().getHours();
         if (currentHour >= 0 && currentHour < 4) {

@@ -6,7 +6,7 @@ import { HiOutlinePencil } from 'react-icons/hi';
 import { useSelector } from 'react-redux';
 import { Box } from '@/components/box/Box';
 
-import { LuAward, LuBookOpen, LuTrophy } from 'react-icons/lu';
+import { LuAward, LuBookOpen, LuTarget, LuTrophy } from 'react-icons/lu';
 import { useAllAchievements, useMyAchievements } from '@/hooks/useAchievement';
 import { Achivement } from '@/components/achivement/Achivement';
 export const ProfilePage = () => {
@@ -67,6 +67,20 @@ export const ProfilePage = () => {
                         <p className='text-secondary font-semibold'>Кількість очок</p>
                     </div>
                     <p className='font-bold text-3xl'>{userAchievements?.data?.stats?.points}</p>
+                </Box>
+                <Box className='flex-col gap-4 flex p-6 flex-1'>
+                    <div className='flex gap-2'>
+                        <LuTrophy className='w-6 h-6 text-yellow-600' />
+                        <p className='text-secondary font-semibold'>Теперішня смуга</p>
+                    </div>
+                    <p className='font-bold text-3xl'>{userAchievements?.data?.stats?.bestStreak || 0}</p>
+                </Box>
+                <Box className='flex-col gap-4 flex p-6 flex-1'>
+                    <div className='flex gap-2'>
+                        <LuTarget className='w-6 h-6 text-red-600' />
+                        <p className='text-secondary font-semibold'>Найбільша смуга</p>
+                    </div>
+                    <p className='font-bold text-3xl'>{userAchievements?.data?.stats?.currentStreak || 0}</p>
                 </Box>
             </div>
             <Box className='flex flex-col mt-6 '>
