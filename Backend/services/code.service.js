@@ -61,15 +61,12 @@ export const executeCode = async (code, lessonId, userId) => {
             $or: achievementConditions,
         });
         for (const achievement of availableAchievements) {
-            const alreadyHas = await UserAchievement.exists({
-                userId,
-                achievementId: achievement._id,
-            });
-            if (!alreadyHas) {
-                await UserAchievement.create({
-                    userId,
-                    achievementId: achievement._id,
-                });
+            const { upsertedCount } = await UserAchievement.updateOne(
+                { userId, achievementId: achievement._id },
+                { $setOnInsert: { userId, achievementId: achievement._id } },
+                { upsert: true },
+            );
+            if (upsertedCount) {
                 newlyUnlocked.push(achievement);
                 if (achievement.xpReward > 0) {
                     await UserStat.findOneAndUpdate({ userId }, { $inc: { points: achievement.xpReward } });
