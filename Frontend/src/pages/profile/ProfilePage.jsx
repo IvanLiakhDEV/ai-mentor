@@ -1,6 +1,6 @@
 import { Button } from '@/components/button/Button';
 import { selectUser } from '@/store/selectors/authSelectors';
-import React from 'react';
+import React, { useState } from 'react';
 import { MdOutlineEmail, MdOutlineLocationOn, MdOutlineCalendarToday } from 'react-icons/md';
 import { HiOutlinePencil } from 'react-icons/hi';
 import { useSelector } from 'react-redux';
@@ -9,8 +9,10 @@ import { Box } from '@/components/box/Box';
 import { LuAward, LuBookOpen, LuTarget, LuTrophy } from 'react-icons/lu';
 import { useAllAchievements, useMyAchievements } from '@/hooks/useAchievement';
 import { Achivement } from '@/components/achivement/Achivement';
+import { EditProfileForm } from '@/components/form/profile/EditProfileForm';
 export const ProfilePage = () => {
     const user = useSelector(selectUser);
+    const [isEditing, setIsEditing] = useState(true);
     const { data: achievements, isLoadingAchievements } = useAllAchievements();
     const { data: userAchievements, isLoadingUserAchievements } = useMyAchievements();
 
@@ -22,37 +24,53 @@ export const ProfilePage = () => {
         );
     return (
         <div className='px-6 mx-auto max-w-7xl pt-14'>
-            <Box>
-                <header className='flex items-start justify-between w-full '>
-                    <div className='flex items-center gap-7'>
-                        <div className='w-20 h-20 rounded-full bg-bg-primary'></div>
-                        <div className='grid gap-4'>
-                            <h3 className='text-2xl font-bold text-primary'>{user.username}</h3>
-                            <div>
-                                <div className='flex items-center gap-1'>
-                                    <MdOutlineEmail />
-                                    <p>{user.email}</p>
-                                </div>
-                                <div className='flex items-center gap-1'>
-                                    <MdOutlineCalendarToday />
-                                    <p>
-                                        Приєднався&nbsp;
-                                        {new Date(user.createdAt).toLocaleDateString('uk-UA', {
-                                            year: 'numeric',
-                                            month: 'long',
-                                            day: 'numeric',
-                                        })}
-                                    </p>
+            {isEditing ? (
+                <EditProfileForm
+                    user={user}
+                    onSave={() => setIsEditing(false)}
+                    onCancel={() => setIsEditing(false)}
+                />
+            ) : (
+                <Box>
+                    <header className='flex flex-col'>
+                        <div className='flex items-start justify-between w-full'>
+                            <div className='flex items-center gap-7'>
+                                <div className='w-20 h-20 rounded-full bg-bg-primary'></div>
+                                <div className='grid gap-4'>
+                                    <h3 className='text-3xl font-bold text-primary'>{user.username}</h3>
+                                    <div className='text-secondary'>
+                                        <div className='flex items-center gap-2'>
+                                            <MdOutlineEmail />
+                                            <p>{user.email}</p>
+                                        </div>
+                                        <div className='flex items-center gap-2'>
+                                            <MdOutlineCalendarToday />
+                                            <p>
+                                                Приєднався&nbsp;
+                                                {new Date(user.createdAt).toLocaleDateString('uk-UA', {
+                                                    year: 'numeric',
+                                                    month: 'long',
+                                                    day: 'numeric',
+                                                })}
+                                            </p>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
+                            <Button
+                                title={'Редагувати профіль'}
+                                onClick={() => setIsEditing(true)}
+                                prefixIcon={HiOutlinePencil}
+                            />
                         </div>
-                    </div>
-                    <Button
-                        title={'Редагувати профіль'}
-                        prefixIcon={HiOutlinePencil}
-                    />
-                </header>
-            </Box>
+                        <div className='py-8 space-y-6'>
+                            <hr />
+                            <span className=''>{user.about}</span>
+                        </div>
+                    </header>
+                </Box>
+            )}
+
             <div className='flex lg:flex-row flex-col justify-between mt-7 gap-4 '>
                 <Box className='flex-col gap-6 flex p-6 flex-1'>
                     <div className='flex gap-2'>

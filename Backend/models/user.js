@@ -26,7 +26,12 @@ const userSchema = new Schema(
             enum: ['student', 'admin'],
             default: 'student',
         },
-
+        about: {
+            type: String,
+            minLength: [16, 'Довжина опису не може бути менше 16 символів'],
+            maxLength: [200, 'Довжина опису не може бути більше 200 символів'],
+            required: false,
+        },
         refreshToken: { type: String, default: null, select: false },
     },
     {

@@ -1,5 +1,5 @@
 import { useMutation, useQuery } from '@tanstack/react-query';
-import { fetchLeaderboard, fetchMe, loginUser, registerUser } from '@/api/auth.api';
+import { editProfile, fetchLeaderboard, fetchMe, loginUser, registerUser } from '@/api/auth.api';
 import { useDispatch } from 'react-redux';
 import { setUser } from '@/store/slices/authSlice';
 import { useEffect } from 'react';
@@ -22,7 +22,6 @@ export const useLogin = () => {
 };
 export const useMe = () => {
     const dispatch = useDispatch();
-
     const query = useQuery({
         queryKey: ['me'],
         queryFn: fetchMe,
@@ -31,9 +30,19 @@ export const useMe = () => {
     useEffect(() => {
         if (query.data) dispatch(setUser(query.data.data));
     }, [query.data]);
-
     return query;
 };
+export const useEditProfile = () => {
+    const dispatch = useDispatch();
+    return useMutation({
+        queryKey: ['editprofile'],
+        mutationFn: data => editProfile(data),
+        onSuccess: data => {
+            dispatch(setUser(data.data));
+        },
+    });
+};
+
 export const useLeaderboard = () => {
     const query = useQuery({
         queryKey: ['leaderboard'],

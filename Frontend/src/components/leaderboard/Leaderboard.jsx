@@ -1,7 +1,7 @@
 import React from 'react';
 import { Box } from '../box/Box';
 import { LuAward, LuTrendingUp, LuMedal } from 'react-icons/lu';
-import { useLeaderboard } from '@/hooks/useAuth';
+import { useLeaderboard } from '@/hooks/useUser';
 import { useSelector } from 'react-redux';
 import { selectUser } from '@/store/selectors/authSelectors';
 import { Skeleton } from '../ui/Skeleton';

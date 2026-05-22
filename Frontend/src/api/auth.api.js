@@ -12,6 +12,10 @@ export const fetchMe = async () => {
     const response = await api.get('/user/');
     return response.data;
 };
+export const editProfile = async data => {
+    const response = await api.patch('/user/profile', data);
+    return response.data;
+};
 export const fetchLeaderboard = async () => {
     const response = await api.get('/user/leaderboard');
     return response.data;

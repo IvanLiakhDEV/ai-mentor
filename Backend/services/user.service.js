@@ -5,9 +5,9 @@ import { ErrorHandler } from '../utils/errorHandlers.js';
 import { getAccessToken, getRefreshToken, verifyRefreshToken } from './token.service.js';
 export const createUser = async (username, email, password) => {
     const userExist = await User.findOne({ email });
-    if (userExist) {
-        throw new ErrorHandler('Така пошта вже зареєстрована', 409);
-    }
+    if (userExist) throw new ErrorHandler('Така пошта вже зареєстрована', 409);
+    const usernameExist = await User.findOne({ username });
+    if (usernameExist) throw new ErrorHandler('Цей нікнейм зайнятий', 409);
     const user = await User.create({ username, email, password });
     await UserStat.create({ userId: user._id });
     return user;
@@ -29,6 +29,21 @@ export const authenticateUser = async (email, password) => {
 export const logoutUser = async userId => {
     const user = await User.findByIdAndUpdate(userId, { $set: { refreshToken: null } });
     if (!user) throw new ErrorHandler('Користувача не знайдено', 404);
+};
+export const editProfile = async ({ userId, data }) => {
+    const updateFields = {};
+    if (data.username != undefined) {
+        const usernameExist = await User.findOne({
+            username: data.username,
+            _id: { $ne: userId },
+        });
+        if (usernameExist) throw new ErrorHandler('Цей нікнейм зайнятий', 409);
+        updateFields.username = data.username;
+    }
+    if (data.about != undefined) updateFields.about = data.about;
+    const user = await User.findByIdAndUpdate(userId, { $set: updateFields }, { new: true });
+    if (!user) throw new ErrorHandler('Користувача не знайдено', 404);
+    return user;
 };
 export const renewTokens = async oldToken => {
     if (!oldToken) throw new ErrorHandler('Токен не дісний', 401);

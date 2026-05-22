@@ -17,6 +17,10 @@ export const loginSchema = z.object({
     email: z.email(issuesHandler('email')),
     password: z.string(issuesHandler('password')),
 });
+export const profileShema = z.object({
+    username: z.string(issuesHandler('username')).min(3, 'Нікнейм має бути від 3 символів').max(20, 'Нікнейм має бути до 20 символів'),
+    about: z.string(issuesHandler('about')).max(200, 'Опис має бути до 200 символів').optional(),
+});
 export const changePasswordSchema = z
     .object({
         currentPassword: z.string(issuesHandler('currentPassword')),

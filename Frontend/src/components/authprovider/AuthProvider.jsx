@@ -1,5 +1,5 @@
 import React from 'react';
-import { useMe } from '@/hooks/useAuth';
+import { useMe } from '@/hooks/useUser';
 import { useSelector } from 'react-redux';
 import { selectIsInitialized } from '@/store/selectors/authSelectors';
 import { useUserEnrollments } from '@/hooks/useEnrollment';

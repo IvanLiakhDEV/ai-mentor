@@ -5,7 +5,7 @@ import { MdOutlineEmail, MdOutlineLock, MdPersonOutline } from 'react-icons/md';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { loginSchema } from '@/formValidation/userSchema';
-import { useLogin } from '@/hooks/useAuth';
+import { useLogin } from '@/hooks/useUser';
 
 export const LoginForm = ({ onSwitch }) => {
     const { mutate: handleLogin, isPending, error } = useLogin();

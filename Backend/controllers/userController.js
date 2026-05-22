@@ -2,6 +2,7 @@ import { catchAsyncErrors } from '../utils/errorHandlers.js';
 import {
     authenticateUser,
     createUser,
+    editProfile,
     getLeaderboardData,
     getUser,
     logoutUser,
@@ -36,6 +37,16 @@ export const logout = catchAsyncErrors(async (req, res, next) => {
     res.status(200).json({
         success: true,
         message: 'Успішне завершення сесії',
+    });
+});
+export const editInfo = catchAsyncErrors(async (req, res, next) => {
+    const userId = req.user._id;
+    const data = req.body;
+    const result = await editProfile({ userId, data });
+    res.status(200).json({
+        success: true,
+        message: 'Профіль оновлено',
+        data: result,
     });
 });
 export const refresh = catchAsyncErrors(async (req, res, next) => {

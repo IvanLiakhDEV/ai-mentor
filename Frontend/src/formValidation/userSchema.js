@@ -21,3 +21,7 @@ export const loginSchema = z.object({
     email: z.email('Некоректний формат пошти').nonempty('Поле не може бути порожнім'),
     password: z.string().nonempty('Поле не може бути порожнім'),
 });
+export const profileShema = z.object({
+    username: z.string().min(3, 'Нікнейм має бути від 3 символів').max(20, 'Нікнейм має бути до 20 символів'),
+    about: z.string().max(200, 'Опис має бути до 200 символів').optional(),
+});
