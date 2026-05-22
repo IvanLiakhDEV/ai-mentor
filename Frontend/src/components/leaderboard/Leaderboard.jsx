@@ -47,7 +47,8 @@ export const Leaderboard = () => {
                             <th className='px-6 py-4'>Ранг</th>
                             <th className='px-6'>Користувач</th>
                             <th className='px-6'>Кількість очок</th>
-                            <th className='px-6'>Кількість курсів</th>
+                            <th className='px-6'>Кількість пройдених курсів</th>
+                            <th className='px-6'>Поточна серія</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -58,6 +59,7 @@ export const Leaderboard = () => {
                                     <td className='px-6 py-4'>{value.username}</td>
                                     <td className='text-blue-600 font-semibold px-6 py-4'>{value.points}</td>
                                     <td className='font-semibold px-6 py-4'>{value.coursesCompleted}</td>
+                                    <td className='font-semibold px-6 py-4'>{value.currentStreak}🔥</td>
                                 </tr>
                             ))}
                     </tbody>
