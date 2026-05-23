@@ -46,7 +46,7 @@ export const ProfilePage = () => {
                     setLoadingCourseId(null);
                 },
                 onError: error => {
-                    toast.error(error.response?.data?.message || 'При збереженні змін виникла помилка');
+                    toast.error(error.response?.data?.message || 'При завантаженні уроку виникла помилка');
                     setLoadingCourseId(null);
                 },
             },
@@ -173,6 +173,7 @@ export const ProfilePage = () => {
                             />
                             <Button
                                 onClick={() => onCourseClick({ courseId: course.courseId._id })}
+                                disabled={isLoadingNextLesson}
                                 className='max-w-fit ml-auto bg-cta text-sm hover:bg-blue-900'>
                                 {course.status === 'Completed' ? (
                                     'Курс завершено'

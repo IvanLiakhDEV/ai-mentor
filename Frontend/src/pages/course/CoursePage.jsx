@@ -12,18 +12,30 @@ import { Button } from '@/components/button/Button';
 import { useRegisterToCourse } from '@/hooks/useEnrollment';
 import { Progress } from '@/components/ui/Progress';
 import { LuPlay } from 'react-icons/lu';
+import { useGetNextLesson } from '@/hooks/useLesson';
+import { toast } from 'sonner';
+import { Toaster } from '@/components/ui/sonner';
+import { Spinner } from '@/components/ui/Spinner';
 export const CoursePage = () => {
     const { id } = useParams();
     const navigate = useNavigate();
     const { data: course, isLoading: isLoadingCourse } = useCourseById(id);
     const { mutate: handleRegister } = useRegisterToCourse();
-    const onClick = () => {
+    const { mutate: fetchNextLesson, isPending: isLoadingNextLesson } = useGetNextLesson();
+
+    const onClick = ({ courseId }) => {
         if (course?.data?.isEnrolled) {
-            const nextLesson = course.data.modules
-                .flatMap(module => module.lessons)
-                .find(lesson => lesson.sequenceNumber === course.data.enrollment.completedSequence + 1);
-            if (!nextLesson) return;
-            navigate(`/lesson/${nextLesson._id}`);
+            fetchNextLesson(
+                { courseId },
+                {
+                    onSuccess: data => {
+                        navigate(`/lesson/${data.data._id}`);
+                    },
+                    onError: error => {
+                        toast.error(error.response?.data?.message || 'При збереженні змін виникла помилка');
+                    },
+                },
+            );
         } else if (course?.data?._id) {
             handleRegister(course.data._id);
         }
@@ -126,16 +138,23 @@ export const CoursePage = () => {
                         <Button
                             prefixIcon={course?.data?.enrollment?.status === 'Completed' ? null : LuPlay}
                             title={
-                                course?.data?.isEnrolled
-                                    ? course?.data?.enrollment?.status === 'Completed'
-                                        ? 'Курс пройдено'
-                                        : 'Продовжити навчання'
-                                    : 'Зареєструватися на курс'
+                                isLoadingNextLesson ? (
+                                    <Spinner className='h-5 w-5' />
+                                ) : course?.data?.isEnrolled ? (
+                                    course?.data?.enrollment?.status === 'Completed' ? (
+                                        'Курс пройдено'
+                                    ) : (
+                                        'Продовжити навчання'
+                                    )
+                                ) : (
+                                    'Зареєструватися на курс'
+                                )
                             }
-                            onClick={() => onClick()}
+                            onClick={() => onClick({ courseId: course?.data?._id })}
                             className='mx-auto border-b w-full'
                         />
-                        {course.data.enrollment && (
+
+                        {course?.data?.enrollment && (
                             <div>
                                 <h1 className='font-semibold mb-2 text-primary text-lg'>Ваш прогрес</h1>
                                 <div className='flex flex-col'>
@@ -153,6 +172,7 @@ export const CoursePage = () => {
                     </Box>
                 </div>
             </div>
+            <Toaster position='top-center' />
         </div>
     );
 };
