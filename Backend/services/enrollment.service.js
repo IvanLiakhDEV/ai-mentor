@@ -1,5 +1,6 @@
 import Enrollment from '../models/enrollment.js';
 import Course from '../models/course.js';
+import Lesson from '../models/lesson.js';
 import { ErrorHandler } from '../utils/errorHandlers.js';
 export const createEnrollment = async (courseId, userId) => {
     const course = await Course.findById(courseId);
@@ -15,8 +16,21 @@ export const createEnrollment = async (courseId, userId) => {
     return enrollment;
 };
 export const getUserEnrollments = async userId => {
-    const enrollments = await Enrollment.find({ userId }).populate('courseId', 'title description tags');
-    return enrollments;
+    const enrollments = await Enrollment.find({ userId }).populate('courseId', 'title description tags language modules');
+    const enrollmentsWithProgress = await Promise.all(
+        enrollments.map(async enrollment => {
+            const totalLessons = await Lesson.countDocuments({
+                courseId: enrollment.courseId._id,
+            });
+
+            return {
+                ...enrollment.toObject(),
+                totalLessons,
+                progress: totalLessons > 0 ? Math.round((enrollment.completedSequence / totalLessons) * 100) : 0,
+            };
+        }),
+    );
+    return enrollmentsWithProgress;
 };
 
 export const incrementProgress = async (userId, enrollmentId) => {
