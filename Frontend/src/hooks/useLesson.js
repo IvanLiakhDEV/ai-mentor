@@ -1,4 +1,4 @@
-import { addLesson, deleteLesson, editLessons, fetchLesson, reorderLessons } from '@/api/lesson.api';
+import { addLesson, deleteLesson, editLessons, fetchLesson, getNextLesson, reorderLessons } from '@/api/lesson.api';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useNavigate } from 'react-router';
 
@@ -15,6 +15,12 @@ export const useGetLesson = id => {
                 navigate('/');
             }
         },
+    });
+};
+export const useGetNextLesson = () => {
+    return useMutation({
+        mutationKey: ['nextLesson'],
+        mutationFn: ({ courseId }) => getNextLesson({ courseId }),
     });
 };
 export const useAddLesson = () => {
