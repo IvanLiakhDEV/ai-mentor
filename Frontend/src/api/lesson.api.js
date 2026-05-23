@@ -12,7 +12,10 @@ export const submitCode = async (code, id) => {
     const response = await api.post(`/lesson/submit`, { code, id });
     return response.data;
 };
-
+export const getNextLesson = async ({ courseId }) => {
+    const response = await api.get(`/lesson/${courseId}/next-lesson`);
+    return response.data;
+};
 export const reorderLessons = async lessons => {
     const response = await api.patch('/lesson/reorder', { lessons });
     return response.data;

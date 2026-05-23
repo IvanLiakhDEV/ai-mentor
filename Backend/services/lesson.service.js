@@ -54,7 +54,26 @@ export const getLessonById = async (lessonId, userId) => {
     l.language = course.language;
     return l;
 };
+export const getNextLessonData = async ({ userId, courseId }) => {
+    const course = await Course.findById(courseId);
+    if (!course) throw new ErrorHandler('Курс не знайдено', 404);
+    const enrollment = await Enrollment.findOne({
+        courseId: course._id,
+        userId,
+    });
+    if (!enrollment) throw new ErrorHandler('Ви не зареєстровані на цей курс', 403);
+    const nextLesson = await Lesson.findOne({
+        courseId: course._id,
+        sequenceNumber: { $gt: enrollment.completedSequence },
+    }).sort({ sequenceNumber: 1 });
 
+    if (!nextLesson) {
+        return null;
+    }
+    const resultLesson = nextLesson.toObject();
+    resultLesson.language = course.language;
+    return resultLesson;
+};
 export const reorderLessonsService = async lessons => {
     await Lesson.bulkWrite(
         lessons.map(({ _id, sequenceNumber }) => ({

@@ -1,4 +1,11 @@
-import { createLesson, deleteLesson, editLessonInfo, getLessonById, reorderLessonsService } from '../services/lesson.service.js';
+import {
+    createLesson,
+    deleteLesson,
+    editLessonInfo,
+    getLessonById,
+    getNextLessonData,
+    reorderLessonsService,
+} from '../services/lesson.service.js';
 import { catchAsyncErrors } from '../utils/errorHandlers.js';
 import { executeCode } from '../services/code.service.js';
 export const addLesson = catchAsyncErrors(async (req, res, next) => {
@@ -33,6 +40,16 @@ export const getLesson = catchAsyncErrors(async (req, res, next) => {
     const { id } = req.params;
     const userId = req.user._id;
     const result = await getLessonById(id, userId);
+    res.status(201).json({
+        success: true,
+        message: `Урок знайдено`,
+        data: result,
+    });
+});
+export const getNextLesson = catchAsyncErrors(async (req, res, next) => {
+    const { courseId } = req.params;
+    const userId = req.user._id;
+    const result = await getNextLessonData({ userId, courseId });
     res.status(201).json({
         success: true,
         message: `Урок знайдено`,

@@ -48,7 +48,7 @@ export const LessonPage = () => {
     }
     return (
         <Lesson
-            key={lesson.data._id}
+            key={lesson?.data?._id}
             lesson={lesson}
         />
     );

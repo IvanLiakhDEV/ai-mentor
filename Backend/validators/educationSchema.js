@@ -35,6 +35,9 @@ export const courseValidationSchema = z.object({
 export const byIdValidationSchema = z.object({
     id: objectIdSchema('id'),
 });
+export const byCourseIdValidationSchema = z.object({
+    courseId: objectIdSchema('courseId'),
+});
 export const moduleValidationSchema = z.object({
     title: z.string(issuesHandler('title')).min(1, "Назва модуля є обов'язковою"),
     order: z.number(issuesHandler('order')).positive(),

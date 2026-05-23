@@ -1,6 +1,6 @@
-import { Button } from '@/components/button/Button';
-import { selectUser } from '@/store/selectors/authSelectors';
 import React, { useState } from 'react';
+import { Button } from '@/components/ui/Button';
+import { selectUser } from '@/store/selectors/authSelectors';
 import { MdOutlineEmail, MdOutlineCalendarToday } from 'react-icons/md';
 import { HiOutlinePencil } from 'react-icons/hi';
 import { useSelector } from 'react-redux';
@@ -9,19 +9,49 @@ import { LuAward, LuBookOpen, LuTarget, LuTrophy } from 'react-icons/lu';
 import { useAllAchievements, useMyAchievements } from '@/hooks/useAchievement';
 import { Achivement } from '@/components/achivement/Achivement';
 import { EditProfileForm } from '@/components/form/profile/EditProfileForm';
+import { useUserEnrollments } from '@/hooks/useEnrollment';
+import { Progress } from '@/components/ui/Progress';
+import { Skeleton } from '@/components/ui/Skeleton';
+import { useGetNextLesson } from '@/hooks/useLesson';
+import { Spinner } from '@/components/ui/Spinner';
+import { useNavigate } from 'react-router';
+import { toast } from 'sonner';
+import { Toaster } from '@/components/ui/sonner';
 export const ProfilePage = () => {
     const user = useSelector(selectUser);
     const [isEditing, setIsEditing] = useState(false);
+    const [loadingCourseId, setLoadingCourseId] = useState(null);
     const { data: achievements, isLoadingAchievements } = useAllAchievements();
+    const { data: enrollments, isLoadingEnrollments } = useUserEnrollments();
     const { data: userAchievements, isLoadingUserAchievements } = useMyAchievements();
-
-    if (isLoadingUserAchievements && isLoadingAchievements)
+    const { mutate: fetchNextLesson, isPending: isLoadingNextLesson } = useGetNextLesson();
+    const navigate = useNavigate();
+    if (isLoadingUserAchievements && isLoadingAchievements && isLoadingEnrollments)
         return (
-            <div className='max-w-7xl w-full h-full mx-auto'>
+            <div className='max-w-7xl w-full h-full mx-auto flex-col gap-10 flex mt-10'>
                 <Skeleton className='bg-slate-200 dark:bg-slate-800 w-full h-100' />
+                <Skeleton className='bg-slate-200 dark:bg-slate-800 w-full h-200' />
+                <Skeleton className='bg-slate-200 dark:bg-slate-800 w-full h-300' />
             </div>
         );
-
+    const onCourseClick = ({ courseId }) => {
+        setLoadingCourseId(courseId);
+        fetchNextLesson(
+            { courseId },
+            {
+                onSuccess: data => {
+                    navigate(`/lesson/${data.data._id}`);
+                },
+                onSettled: () => {
+                    setLoadingCourseId(null);
+                },
+                onError: error => {
+                    toast.error(error.response?.data?.message || 'При завантаженні уроку виникла помилка');
+                    setLoadingCourseId(null);
+                },
+            },
+        );
+    };
     return (
         <div className='px-6 mx-auto max-w-7xl pt-14'>
             {isEditing ? (
@@ -67,10 +97,11 @@ export const ProfilePage = () => {
                                 </div>
                             </div>
                             <Button
-                                title={'Редагувати профіль'}
                                 onClick={() => setIsEditing(true)}
-                                prefixIcon={HiOutlinePencil}
-                            />
+                                className='text-sm bg-cta hover:bg-blue-900'>
+                                <HiOutlinePencil />
+                                Редагувати профіль
+                            </Button>
                         </div>
                         <div className='py-8 space-y-6'>
                             <hr />
@@ -118,10 +149,47 @@ export const ProfilePage = () => {
                 {achievements?.data?.map(achievement => (
                     <Achivement
                         achivement={achievement}
+                        key={achievement._id}
                         isCompleted={userAchievements?.data?.achievements?.some(value => value.achievementId?._id === achievement._id)}
                     />
                 ))}
             </Box>
+            <Box className='flex flex-col mt-6 gap-3'>
+                <h1 className='font-semibold text-2xl text-secondary'>Ваші курси</h1>
+                {isLoadingEnrollments ? (
+                    <Spinner className='h-10 w-10 mx-auto' />
+                ) : enrollments?.data ? (
+                    enrollments?.data?.map(course => (
+                        <Box
+                            key={course.courseId._id}
+                            className='flex flex-col transition-colors border shadow-sm cursor-pointer rounded-xl gap-6  hover:border-blue-700 '>
+                            <div className='flex justify-between'>
+                                <h1 className='text-xl font-bold'>{course.courseId.title}</h1>
+                                <span className='text-cta font-semibold'>{course.progress}%</span>
+                            </div>
+                            <Progress
+                                value={course?.progress}
+                                className='h-2'
+                            />
+                            <Button
+                                onClick={() => onCourseClick({ courseId: course.courseId._id })}
+                                disabled={isLoadingNextLesson}
+                                className='max-w-fit ml-auto bg-cta text-sm hover:bg-blue-900'>
+                                {course.status === 'Completed' ? (
+                                    'Курс завершено'
+                                ) : isLoadingNextLesson && loadingCourseId === course.courseId._id ? (
+                                    <Spinner className='h-5 w-5' />
+                                ) : (
+                                    'Продовжити'
+                                )}
+                            </Button>
+                        </Box>
+                    ))
+                ) : (
+                    <h1 className='mx-auto'>Ваші курси будуть відображатися тут</h1>
+                )}
+            </Box>
+            <Toaster position='top-center' />
         </div>
     );
 };
