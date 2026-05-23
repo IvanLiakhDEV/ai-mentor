@@ -92,6 +92,7 @@ export const getLeaderboardData = async () => {
                     {
                         $project: {
                             username: { $arrayElemAt: ['$userDetails.username', 0] },
+                            avatar: { $arrayElemAt: ['$userDetails.avatar', 0] },
                             points: 1,
                             coursesCompleted: 1,
                             currentStreak: 1,

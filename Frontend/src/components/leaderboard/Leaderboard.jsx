@@ -56,7 +56,19 @@ export const Leaderboard = () => {
                             leaderboard.data.leaderboard.map((value, index) => (
                                 <tr className={`border-b ${value.username === user.username && 'dark:bg-gray-600 bg-gray-100'}`}>
                                     <td className='text-secondary font-semibold px-6 py-4'>{getRank(index)}</td>
-                                    <td className='px-6 py-4'>{value.username}</td>
+                                    <td className='px-6 py-4 flex gap-2 items-center'>
+                                        <div className={`w-10 h-10 rounded-full bg-bg-primary flex items-center justify-center`}>
+                                            {value?.avatar ? (
+                                                <img
+                                                    className='w-10 h-10 rounded-full bg-bg-primary  overflow-hidden'
+                                                    src={value?.avatar}
+                                                />
+                                            ) : (
+                                                <p className='text-secondary font-semibold text-lg'>{value?.username[0].toUpperCase()}</p>
+                                            )}
+                                        </div>
+                                        {value?.username}
+                                    </td>
                                     <td className='text-blue-600 font-semibold px-6 py-4'>{value.points}</td>
                                     <td className='font-semibold px-6 py-4'>{value.coursesCompleted}</td>
                                     <td className='font-semibold px-6 py-4'>{value.currentStreak}🔥</td>
