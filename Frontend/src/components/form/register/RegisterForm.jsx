@@ -5,7 +5,7 @@ import { MdOutlineEmail, MdOutlineLock, MdPersonOutline } from 'react-icons/md';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { registerSchema } from '@/formValidation/userSchema';
-import { useRegister } from '@/hooks/useAuth';
+import { useRegister } from '@/hooks/useUser';
 export const RegisterForm = ({ onSwitch }) => {
     const { mutate: handleRegister, isPending, isSuccess, error } = useRegister();
     const {
