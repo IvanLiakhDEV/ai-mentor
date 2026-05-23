@@ -42,7 +42,8 @@ export const logout = catchAsyncErrors(async (req, res, next) => {
 export const editInfo = catchAsyncErrors(async (req, res, next) => {
     const userId = req.user._id;
     const data = req.body;
-    const result = await editProfile({ userId, data });
+    const avatar = req.file;
+    const result = await editProfile({ userId, data, avatar });
     res.status(200).json({
         success: true,
         message: 'Профіль оновлено',

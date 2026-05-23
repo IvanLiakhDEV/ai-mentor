@@ -1,6 +1,6 @@
 import User from '../models/user.js';
 import UserStat from '../models/userStat.js';
-
+import sharp from 'sharp';
 import { ErrorHandler } from '../utils/errorHandlers.js';
 import { getAccessToken, getRefreshToken, verifyRefreshToken } from './token.service.js';
 export const createUser = async (username, email, password) => {
@@ -30,7 +30,7 @@ export const logoutUser = async userId => {
     const user = await User.findByIdAndUpdate(userId, { $set: { refreshToken: null } });
     if (!user) throw new ErrorHandler('Користувача не знайдено', 404);
 };
-export const editProfile = async ({ userId, data }) => {
+export const editProfile = async ({ userId, data, avatar }) => {
     const updateFields = {};
     if (data.username != undefined) {
         const usernameExist = await User.findOne({
@@ -41,6 +41,12 @@ export const editProfile = async ({ userId, data }) => {
         updateFields.username = data.username;
     }
     if (data.about != undefined) updateFields.about = data.about;
+    if (avatar != undefined) {
+        const buffer = await sharp(avatar.buffer).resize(250, 250, { fit: 'cover', position: 'center' }).webp({ quality: 80 }).toBuffer();
+        const base64Image = `data:image/webp;base64,${buffer.toString('base64')}`;
+        updateFields.avatar = base64Image;
+    }
+
     const user = await User.findByIdAndUpdate(userId, { $set: updateFields }, { new: true });
     if (!user) throw new ErrorHandler('Користувача не знайдено', 404);
     return user;

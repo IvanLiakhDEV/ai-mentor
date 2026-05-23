@@ -26,6 +26,10 @@ const userSchema = new Schema(
             enum: ['student', 'admin'],
             default: 'student',
         },
+        avatar: {
+            type: String,
+            requred: false,
+        },
         about: {
             type: String,
             minLength: [16, 'Довжина опису не може бути менше 16 символів'],
