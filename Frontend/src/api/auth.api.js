@@ -20,3 +20,7 @@ export const fetchLeaderboard = async () => {
     const response = await api.get('/user/leaderboard');
     return response.data;
 };
+export const fetchProfile = async ({ id }) => {
+    const response = await api.get(`/user/${id}`);
+    return response.data.data;
+};

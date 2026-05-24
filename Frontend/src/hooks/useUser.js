@@ -1,5 +1,5 @@
 import { useMutation, useQuery } from '@tanstack/react-query';
-import { editProfile, fetchLeaderboard, fetchMe, loginUser, registerUser } from '@/api/auth.api';
+import { editProfile, fetchLeaderboard, fetchMe, fetchProfile, loginUser, registerUser } from '@/api/auth.api';
 import { useDispatch } from 'react-redux';
 import { setUser } from '@/store/slices/authSlice';
 import { useEffect } from 'react';
@@ -18,6 +18,13 @@ export const useLogin = () => {
         onSuccess: response => {
             dispatch(setUser(response.data));
         },
+    });
+};
+export const useGetProfile = id => {
+    return useQuery({
+        queryKey: ['profile', id],
+        queryFn: () => fetchProfile({ id }),
+        retry: false,
     });
 };
 export const useMe = () => {
