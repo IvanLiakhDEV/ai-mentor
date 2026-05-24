@@ -21,8 +21,6 @@ export const PublicProfilePage = () => {
                 <Skeleton className='bg-slate-200 dark:bg-slate-800 w-full h-200' />
             </div>
         );
-    console.log(user);
-    console.log(achievements);
 
     return (
         <div className='px-6 mx-auto max-w-7xl pt-14'>
