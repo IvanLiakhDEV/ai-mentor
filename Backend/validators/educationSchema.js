@@ -71,7 +71,7 @@ export const lessonValidationSchema = z.object({
     practice: z.object({
         taskDescription: z.string(issuesHandler('practice.taskDescription')).min(1, "Опис завдання є обов'язковим"),
         initialCode: z.string(issuesHandler('practice.initialCode')).default(''),
-        expectedOutput: z.string(issuesHandler('practice.expectedOutput')).optional(),
+        testCode: z.string(issuesHandler('practice.testCode')).optional(),
     }),
     points: z.number().nonnegative('Кількість очок не може бути негативна').default(10).optional(),
 });

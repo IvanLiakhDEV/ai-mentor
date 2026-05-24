@@ -14,6 +14,6 @@ export const lessonValidationSchema = z.object({
     practice: z.object({
         taskDescription: z.string().min(1, "Опис завдання є обов'язковим"),
         initialCode: z.string().default('').optional(),
-        expectedOutput: z.string(),
+        testCode: z.string(),
     }),
 });
