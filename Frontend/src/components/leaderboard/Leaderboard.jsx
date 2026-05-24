@@ -5,9 +5,11 @@ import { useLeaderboard } from '@/hooks/useUser';
 import { useSelector } from 'react-redux';
 import { selectUser } from '@/store/selectors/authSelectors';
 import { Skeleton } from '../ui/Skeleton';
+import { useNavigate } from 'react-router';
 export const Leaderboard = () => {
     const { data: leaderboard, isLoading } = useLeaderboard();
     const user = useSelector(selectUser);
+    const navigate = useNavigate();
     if (isLoading)
         return (
             <div className='max-w-7xl w-full h-full mx-auto'>
@@ -20,6 +22,9 @@ export const Leaderboard = () => {
         if (index === 1) return <LuMedal className='text-gray-400 w-6 h-6' />;
         if (index === 2) return <LuMedal className='text-orange-600 w-6 h-6' />;
         return `#${index + 1}`;
+    };
+    const goToProfile = id => {
+        navigate(`/profile/${id}`);
     };
 
     return (
@@ -56,7 +61,9 @@ export const Leaderboard = () => {
                             leaderboard.data.leaderboard.map((value, index) => (
                                 <tr className={`border-b ${value.username === user.username && 'dark:bg-gray-600 bg-gray-100'}`}>
                                     <td className='text-secondary font-semibold px-6 py-4'>{getRank(index)}</td>
-                                    <td className='px-6 py-4 flex gap-2 items-center'>
+                                    <td
+                                        className='px-6 py-4 flex gap-2 items-center cursor-pointer'
+                                        onClick={() => goToProfile(value?.userId)}>
                                         <div className={`w-10 h-10 rounded-full bg-bg-primary flex items-center justify-center`}>
                                             {value?.avatar ? (
                                                 <img

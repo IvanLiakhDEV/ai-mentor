@@ -1,5 +1,7 @@
 import User from '../models/user.js';
 import UserStat from '../models/userStat.js';
+import UserAchievement from '../models/userAchievement.js';
+
 import sharp from 'sharp';
 import { ErrorHandler } from '../utils/errorHandlers.js';
 import { getAccessToken, getRefreshToken, verifyRefreshToken } from './token.service.js';
@@ -74,6 +76,15 @@ export const getUser = async userId => {
     if (!user) throw new ErrorHandler('Користувача не знайдено', 404);
     return user;
 };
+export const getProfileInfo = async userId => {
+    const [user, userStat, userAchievements] = await Promise.all([
+        User.findById(userId),
+        UserStat.findOne({ userId }),
+        UserAchievement.find({ userId }),
+    ]);
+    if (!user) throw new ErrorHandler('Користувача не знайдено', 404);
+    return { user, userStat, userAchievements };
+};
 export const getLeaderboardData = async () => {
     const result = await UserStat.aggregate([
         {
@@ -92,6 +103,7 @@ export const getLeaderboardData = async () => {
                     {
                         $project: {
                             username: { $arrayElemAt: ['$userDetails.username', 0] },
+                            userId: { $arrayElemAt: ['$userDetails._id', 0] },
                             avatar: { $arrayElemAt: ['$userDetails.avatar', 0] },
                             points: 1,
                             coursesCompleted: 1,

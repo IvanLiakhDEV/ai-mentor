@@ -11,6 +11,7 @@ import { LeaderBoardPage } from '@/pages/leaderboard/LeaderBoard';
 import { ErrorBoundary } from '@/components/errorelement/ErrorBoundary';
 import { AdminRoute } from './adminRoute';
 import { AdminPage } from '@/pages/admin/AdminPage';
+import { PublicProfilePage } from '@/pages/publicprofile/PublicProfilePage';
 export const router = createBrowserRouter([
     {
         path: '/',
@@ -28,6 +29,7 @@ export const router = createBrowserRouter([
                         children: [
                             { index: true, element: <HomePage /> },
                             { path: 'profile', element: <ProfilePage /> },
+                            { path: 'profile/:id', element: <PublicProfilePage /> },
                             { path: 'course/:id', element: <CoursePage /> },
                             { path: 'leaderboard', element: <LeaderBoardPage /> },
                         ],
