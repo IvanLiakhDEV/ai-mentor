@@ -12,12 +12,12 @@ import UserAchievement from '../models/userAchievement.js';
 export const executeCode = async (code, lessonId, userId) => {
     const lesson = await getLessonById(lessonId, userId);
     const course = await getCourse(lesson.courseId, userId);
-
+    const finalCode = `${code}\n\n${lesson.practice.testCode}`;
     const response = await axios.post(
         'https://api.onecompiler.com/v1/run',
         {
             language: course.language,
-            files: [{ name: getFileNameByLanguage(course.language), content: code }],
+            files: [{ name: getFileNameByLanguage(course.language), content: finalCode }],
         },
         {
             headers: {
@@ -29,8 +29,7 @@ export const executeCode = async (code, lessonId, userId) => {
 
     const { stdout, stderr, exception, status } = response.data;
     const normalize = str => str?.trim().replace(/[\s\n]/g, '');
-    const isCorrect = normalize(stdout) === normalize(lesson.practice.expectedOutput || null);
-
+    const isCorrect = stdout ? stdout.includes('__ALL_TESTS_PASSED__') : false;
     const enrollment = await Enrollment.findOne({ courseId: lesson.courseId, userId });
     const alreadyCompleted = enrollment.completedSequence >= lesson.sequenceNumber;
     const isLastLesson = course.numberOfLessons === lesson.sequenceNumber;
