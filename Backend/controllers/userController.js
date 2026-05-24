@@ -4,6 +4,7 @@ import {
     createUser,
     editProfile,
     getLeaderboardData,
+    getProfileInfo,
     getUser,
     logoutUser,
     renewTokens,
@@ -71,6 +72,16 @@ export const changePassword = catchAsyncErrors(async (req, res, next) => {
 export const getMe = catchAsyncErrors(async (req, res, next) => {
     const userId = req.user._id;
     const result = await getUser(userId);
+    res.status(200).json({
+        success: true,
+        message: 'Дані користувача отримано',
+        data: result,
+    });
+});
+export const getProfile = catchAsyncErrors(async (req, res, next) => {
+    const { id } = req.params;
+
+    const result = await getProfileInfo(id);
     res.status(200).json({
         success: true,
         message: 'Дані користувача отримано',

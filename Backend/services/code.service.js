@@ -38,7 +38,6 @@ export const executeCode = async (code, lessonId, userId) => {
     let newlyUnlocked = [];
 
     if (isCorrect && !alreadyCompleted) {
-        // ✅ await + fallback якщо UserStat не існує
         const currentStat = (await UserStat.findOne({ userId })) || {
             currentStreak: 0,
             bestStreak: 0,
@@ -59,7 +58,6 @@ export const executeCode = async (code, lessonId, userId) => {
         } else {
             const lastActivity = new Date(currentStat.lastActivityDate);
             if (lastActivity >= today) {
-                // Вже активний сьогодні — streak не змінюється
             } else if (lastActivity >= yesterday && lastActivity < today) {
                 newStreak += 1;
                 newBestStreak = Math.max(newStreak, newBestStreak);

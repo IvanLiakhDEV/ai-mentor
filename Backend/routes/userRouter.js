@@ -1,7 +1,18 @@
 import { Router } from 'express';
-import { changePassword, editInfo, getLeaderboard, getMe, login, logout, refresh, register } from '../controllers/userController.js';
-import { validateSchema } from '../middleware/validation.js';
+import {
+    changePassword,
+    editInfo,
+    getLeaderboard,
+    getMe,
+    getProfile,
+    login,
+    logout,
+    refresh,
+    register,
+} from '../controllers/userController.js';
+import { validateParamsSchema, validateSchema } from '../middleware/validation.js';
 import { changePasswordSchema, loginSchema, profileShema, registerSchema } from '../validators/userSchemas.js';
+import { byIdValidationSchema } from '../validators/educationSchema.js';
 import { verifyJWT } from '../middleware/verifyUser.js';
 export const userRouter = Router();
 import multer from 'multer';
@@ -14,3 +25,4 @@ userRouter.patch('/change-password', verifyJWT, validateSchema(changePasswordSch
 userRouter.patch('/profile', verifyJWT, upload.single('avatar'), validateSchema(profileShema.partial()), editInfo);
 userRouter.get('/leaderboard', verifyJWT, getLeaderboard);
 userRouter.get('/', verifyJWT, getMe);
+userRouter.get('/:id', verifyJWT, validateParamsSchema(byIdValidationSchema), getProfile);
