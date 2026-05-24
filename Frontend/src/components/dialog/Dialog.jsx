@@ -6,12 +6,12 @@ import { Spinner } from '../ui/Spinner';
 export const Dialog = ({ children, visible = false, headerTitle, onClose, sumbitTitle, onSubmit, isPending = false }) => {
     return (
         <form
-            className={cn('fixed inset-0 bg-black/50 hidden items-center justify-center p-4 z-50', visible && 'flex')}
+            className={cn('fixed inset-0 bg-black/50 hidden items-center justify-center z-50', visible && 'flex')}
             onSubmit={onSubmit}>
             <div
-                className='bg-white rounded-xl shadow-xl max-w-2xl w-full max-h-3/4 
+                className='bg-white rounded-xl shadow-xl max-w-7xl w-full max-h-[90vh] flex-col flex
              '>
-                <header className='flex justify-between border-b p-4 px-6 items-center w-full flex-1'>
+                <header className='flex justify-between border-b p-4 px-6 items-center w-full flex-1 shrink-0'>
                     <h2 className='text-lg font-bold text-gray-900'>{headerTitle}</h2>
                     <button
                         type='button'
@@ -20,7 +20,7 @@ export const Dialog = ({ children, visible = false, headerTitle, onClose, sumbit
                         <IoIosClose className='w-6 h-6' />
                     </button>
                 </header>
-                <main className='py-4 px-6 gap-4 flex flex-col overflow-y-auto h-96'>{children}</main>
+                <main className='py-4 px-6 gap-4 flex flex-col overflow-y-auto flex-1'>{children}</main>
                 <footer className='flex justify-between gap-6 px-6 py-3 flex-1'>
                     <Button
                         variant='secondary'
