@@ -160,6 +160,7 @@ export const CourseItem = ({ course }) => {
                                         key={module._id}
                                         module={module}
                                         courseId={fullCourseData?.data?._id}
+                                        language={fullCourseData?.data?.language}
                                     />
                                 ))}
                             </div>

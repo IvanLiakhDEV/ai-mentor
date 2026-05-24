@@ -3,7 +3,7 @@ import { DndContext, closestCenter, KeyboardSensor, PointerSensor, useSensor, us
 import { arrayMove, SortableContext, sortableKeyboardCoordinates, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { SortableItem } from './SortableItem';
 
-export const SortableList = ({ lessons, onReorder }) => {
+export const SortableList = ({ lessons, onReorder, language }) => {
     const [lessonList, setLessonList] = useState(lessons);
     useEffect(() => {
         setLessonList(lessons);
@@ -39,6 +39,7 @@ export const SortableList = ({ lessons, onReorder }) => {
                     <SortableItem
                         key={lesson._id}
                         lesson={lesson}
+                        language={language}
                     />
                 ))}
             </SortableContext>
