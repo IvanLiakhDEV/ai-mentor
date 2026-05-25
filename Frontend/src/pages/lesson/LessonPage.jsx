@@ -14,11 +14,11 @@ import { Skeleton } from '@/components/ui/Skeleton';
 import { AchevementToast } from '@/components/popup/AchievementToaster';
 import { toast } from 'sonner';
 import { Toaster } from '@/components/ui/sonner';
+import { CourseCompletitionDialog } from '@/components/course/CourseCompletitionDialog';
 export const LessonPage = () => {
     const { id } = useParams();
     const navigate = useNavigate();
     const { data: lesson, isLoading, isError, error } = useGetLesson(id);
-
     if (isLoading)
         return (
             <div className='flex justify-between gap-4'>
@@ -48,7 +48,7 @@ export const LessonPage = () => {
     }
     return (
         <Lesson
-            key={lesson?.data?._id}
+            key={lesson?.data?.lesson._id}
             lesson={lesson}
         />
     );
@@ -56,11 +56,11 @@ export const LessonPage = () => {
 
 const Lesson = ({ lesson }) => {
     const navigate = useNavigate();
-    const [code, setCode] = useState(lesson.data.practice.initialCode ?? '');
+    const [code, setCode] = useState(lesson.data.lesson.practice.initialCode ?? '');
     const [isCompleted, setIsCompleted] = useState(false);
     const [nextLesson, setNextLesson] = useState(null);
     const editorRef = useRef(null);
-
+    const [showCompletionModal, setShowCompletionModal] = useState(false);
     const { mutate: handleSubmit, isPending, data: submitedData } = useSubmitCode();
 
     function handleEditorDidMount(editor) {
@@ -70,7 +70,7 @@ const Lesson = ({ lesson }) => {
 
     const submitCode = () => {
         handleSubmit(
-            { code, id: lesson.data._id },
+            { code, id: lesson.data.lesson._id },
             {
                 onSuccess: response => {
                     if (response.data.isCorrect) setIsCompleted(true);
@@ -86,21 +86,32 @@ const Lesson = ({ lesson }) => {
                                 { duration: 10000 },
                             ),
                         );
-                    setNextLesson(response.data.nextLesson);
+                    if (response.data.nextLesson) {
+                        setNextLesson(response.data.nextLesson);
+                    }
                 },
             },
         );
     };
 
     const goToNextLesson = () => {
-        if (!nextLesson) {
-            navigate('/');
+        if (!nextLesson && isCompleted) {
+            setShowCompletionModal(true); // Відкриваємо модалку
             return;
         }
         navigate(`/lesson/${nextLesson._id}`, { replace: true });
     };
+
     return (
         <div className='flex h-screen overflow-hidden'>
+            {showCompletionModal && (
+                <CourseCompletitionDialog
+                    course={lesson.data.course}
+                    points={lesson.data.enrollment.points}
+                    numberOfLessons={lesson.data.enrollment.completedSequence}
+                />
+            )}
+
             <ResizablePanelGroup orientation='horizontal'>
                 <ResizablePanel
                     defaultSize='30%'
@@ -115,21 +126,21 @@ const Lesson = ({ lesson }) => {
                         </button>
                         <div className='flex flex-col gap-6 p-3 overflow-y-auto '>
                             <Box className='bg-slate-700 rounded-md'>
-                                <h1 className='text-xl font-semibold  text-white'>{lesson.data.title}</h1>
+                                <h1 className='text-xl font-semibold  text-white'>{lesson.data.lesson.title}</h1>
                             </Box>
                             <Box>
                                 <div className='flex items-center gap-2 mb-4'>
                                     <LuBookOpen className='w-5 h-5 text-secondary' />
                                     <p className='text-lg font-semibold text-primary'>Теорія</p>
                                 </div>
-                                <p className='wrap-break-word'>{lesson.data.theory.content}</p>
+                                <p className='wrap-break-word'>{lesson.data.lesson.theory.content}</p>
                             </Box>
                             <Box>
                                 <div className='flex items-center gap-2 mb-4'>
                                     <IoMdCheckmarkCircleOutline className='w-5 h-5 text-secondary' />
                                     <p className='text-lg font-semibold text-primary'>Практика</p>
                                 </div>
-                                <p className='wrap-break-word'>{lesson.data.practice.taskDescription}</p>
+                                <p className='wrap-break-word'>{lesson.data.lesson.practice.taskDescription}</p>
                             </Box>
                         </div>
                     </div>
@@ -148,7 +159,7 @@ const Lesson = ({ lesson }) => {
                                         onClick={goToNextLesson}>
                                         <div className='flex items-center gap-2'>
                                             <FaPlay />
-                                            Перейди до наступного уроку
+                                            {!nextLesson ? 'Завершити курс' : 'Перейди до наступного уроку'}
                                         </div>
                                     </button>
                                 )}
@@ -169,8 +180,8 @@ const Lesson = ({ lesson }) => {
                             <div className='flex-1 h-full min-h-0'>
                                 <Editor
                                     height='100%'
-                                    defaultLanguage={lesson.data.language}
-                                    defaultValue={lesson.data.practice.initialCode ?? ''}
+                                    defaultLanguage={lesson.data.lesson.language}
+                                    defaultValue={lesson.data.lesson.practice.initialCode ?? ''}
                                     onMount={handleEditorDidMount}
                                     theme='vs-dark'
                                     value={code}
@@ -211,7 +222,6 @@ const Lesson = ({ lesson }) => {
                     </div>
                 </ResizablePanel>
             </ResizablePanelGroup>
-
             <Toaster
                 position='top-center'
                 toastOptions={{
