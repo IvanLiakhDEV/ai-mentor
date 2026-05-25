@@ -60,7 +60,6 @@ export const executeCode = async (code, lessonId, userId) => {
         } else {
             const lastActivity = new Date(currentStat.lastActivityDate);
             if (lastActivity >= today) {
-                // вже активний сьогодні
             } else if (lastActivity >= yesterday && lastActivity < today) {
                 newStreak += 1;
                 newBestStreak = Math.max(newStreak, newBestStreak);

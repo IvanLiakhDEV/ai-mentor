@@ -52,7 +52,7 @@ export const getLessonById = async (lessonId, userId) => {
     }
     const l = lesson.toObject();
     l.language = course.language;
-    return l;
+    return { lesson: l, course, enrollment };
 };
 export const getNextLessonData = async ({ userId, courseId }) => {
     const course = await Course.findById(courseId);
