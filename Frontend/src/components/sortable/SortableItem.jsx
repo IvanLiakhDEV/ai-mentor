@@ -8,8 +8,10 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { lessonValidationSchema } from '@/formValidation/lessonSchema';
 import { InputField } from '../inputs/InputField';
+import { Editor } from '@monaco-editor/react';
 
-export function SortableItem({ lesson }) {
+export function SortableItem({ lesson, language }) {
+    const [activeTab, setActiveTab] = useState('initial');
     const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id: lesson._id });
     const { mutate: handleEditLesson, isPending: isEditingLesson, error: editError } = useEditLesson(lesson.courseId);
     const { mutate: handleDeleteLesson, isPending: isDeletingLesson, error: deleteError } = useDeleteLesson(lesson.courseId);
@@ -27,6 +29,7 @@ export function SortableItem({ lesson }) {
                 onSuccess: () => {
                     setIsEditing(false);
                     resetEdit(data);
+                    setActiveTab('initial');
                 },
             },
         );
@@ -46,6 +49,8 @@ export function SortableItem({ lesson }) {
         register: registerEdit,
         handleSubmit: handleSubmitEdit,
         reset: resetEdit,
+        watch,
+        setValue,
         formState: { errors: errorsEdit },
     } = useForm({
         defaultValues: {
@@ -58,12 +63,21 @@ export function SortableItem({ lesson }) {
             practice: {
                 taskDescription: lesson.practice.taskDescription,
                 initialCode: lesson.practice.initialCode,
-                expectedOutput: lesson.practice.expectedOutput,
+                testCode: lesson.practice.testCode,
             },
             points: lesson.points,
         },
         resolver: zodResolver(lessonValidationSchema),
     });
+    const currentInitialCode = watch('practice.initialCode');
+    const currentTestCode = watch('practice.testCode');
+    const handleCodeChange = value => {
+        if (activeTab === 'initial') {
+            setValue('practice.initialCode', value, { shouldValidate: true });
+        } else {
+            setValue('practice.testCode', value, { shouldValidate: true });
+        }
+    };
     const style = {
         transform: CSS.Transform.toString(transform),
         transition,
@@ -126,17 +140,41 @@ export function SortableItem({ lesson }) {
                     isTextArea={true}
                     error={errorsEdit.practice?.taskDescription?.message}
                 />
-                <InputField
-                    label={'Початковий код'}
-                    {...registerEdit('practice.initialCode')}
-                    isTextArea={true}
-                    error={errorsEdit.practice?.initialCode?.message}
-                />
-                <InputField
-                    label={'Очікуваний результат'}
-                    {...registerEdit('practice.expectedOutput')}
-                    error={errorsEdit.practice?.expectedOutput?.message}
-                />
+                <div className='border border-slate-700 mt-4 rounded-xl overflow-hidden'>
+                    <div className='flex bg-slate-800 '>
+                        <button
+                            type='button'
+                            onClick={() => setActiveTab('initial')}
+                            className={`px-6 py-3 font-medium text-sm transition-colors ${
+                                activeTab === 'initial'
+                                    ? 'bg-slate-900 text-blue-400 border-t-2 border-blue-500'
+                                    : 'text-slate-400 hover:text-slate-200'
+                            }`}>
+                            Початковий код
+                        </button>
+                        <button
+                            type='button'
+                            onClick={() => setActiveTab('test')}
+                            className={`px-6 py-3 font-medium text-sm transition-colors flex items-center gap-2  ${
+                                activeTab === 'test'
+                                    ? 'bg-slate-900 text-amber-400 border-t-2 border-amber-500'
+                                    : 'text-slate-400 hover:text-slate-200'
+                            }`}>
+                            <span>Код перевірки</span>
+                        </button>
+                    </div>
+
+                    <div className='h-90 bg-slate-900 '>
+                        <Editor
+                            height='100%'
+                            theme='vs-dark'
+                            language={language || 'javascript'}
+                            value={activeTab === 'initial' ? currentInitialCode : currentTestCode}
+                            onChange={handleCodeChange}
+                            options={{ minimap: { enabled: false }, fontSize: 14 }}
+                        />
+                    </div>
+                </div>
                 <InputField
                     label={'Кількість очок'}
                     type='number'
@@ -152,9 +190,7 @@ export function SortableItem({ lesson }) {
                 sumbitTitle={'Видалити'}
                 onSubmit={onSubmitDeleting}
                 isPending={isDeletingLesson}>
-                <h2 className='text-base font-semibold text-red-500'>
-                    Ви впевнені, що хочете видалити модуль? <br /> Всі дані модуля будуть видалені, включно з уроками
-                </h2>
+                <h2 className='text-base font-semibold text-red-500'>Ви впевнені, що хочете видалити урок?</h2>
 
                 {deleteError && <p className='text-center text-red-500'>{deleteError.message}</p>}
             </Dialog>

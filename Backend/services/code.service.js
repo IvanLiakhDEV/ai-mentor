@@ -1,23 +1,28 @@
 import axios from 'axios';
 import Enrollment from '../models/enrollment.js';
-import Lesson from '../models/lesson.js';
 import { getLessonById } from './lesson.service.js';
-import Course from '../models/course.js';
 import { getCourse } from './course.service.js';
 import { getFileNameByLanguage } from '../utils/getFilename.js';
 import UserStat from '../models/userStat.js';
 import Achievement from '../models/achievement.js';
 import UserAchievement from '../models/userAchievement.js';
+import crypto from 'crypto';
 
 export const executeCode = async (code, lessonId, userId) => {
     const lesson = await getLessonById(lessonId, userId);
     const course = await getCourse(lesson.courseId, userId);
+    const secretToken = crypto.randomUUID();
 
     const response = await axios.post(
         'https://api.onecompiler.com/v1/run',
         {
             language: course.language,
-            files: [{ name: getFileNameByLanguage(course.language), content: code }],
+            files: [
+                {
+                    name: getFileNameByLanguage(course.language),
+                    content: `${code}\n\n${lesson.practice.testCode.replace('__ALL_TESTS_PASSED__', secretToken)}`,
+                },
+            ],
         },
         {
             headers: {
@@ -28,13 +33,10 @@ export const executeCode = async (code, lessonId, userId) => {
     );
 
     const { stdout, stderr, exception, status } = response.data;
-    const normalize = str => str?.trim().replace(/[\s\n]/g, '');
-    const isCorrect = normalize(stdout) === normalize(lesson.practice.expectedOutput || null);
-
+    const isCorrect = stdout ? stdout.includes(secretToken) : false;
     const enrollment = await Enrollment.findOne({ courseId: lesson.courseId, userId });
     const alreadyCompleted = enrollment.completedSequence >= lesson.sequenceNumber;
     const isLastLesson = course.numberOfLessons === lesson.sequenceNumber;
-
     let newlyUnlocked = [];
 
     if (isCorrect && !alreadyCompleted) {
@@ -58,6 +60,7 @@ export const executeCode = async (code, lessonId, userId) => {
         } else {
             const lastActivity = new Date(currentStat.lastActivityDate);
             if (lastActivity >= today) {
+                // вже активний сьогодні
             } else if (lastActivity >= yesterday && lastActivity < today) {
                 newStreak += 1;
                 newBestStreak = Math.max(newStreak, newBestStreak);
@@ -72,10 +75,7 @@ export const executeCode = async (code, lessonId, userId) => {
         };
 
         const statUpdate = {
-            $inc: {
-                lessonsCompleted: 1,
-                points: lesson.points,
-            },
+            $inc: { lessonsCompleted: 1, points: lesson.points },
             $set: {
                 currentStreak: newStreak,
                 bestStreak: newBestStreak,
@@ -97,8 +97,7 @@ export const executeCode = async (code, lessonId, userId) => {
             { conditionType: 'day_streak', targetValue: { $lte: updatedStats.currentStreak } },
         ];
 
-        const currentHour = new Date().getHours();
-        if (currentHour >= 0 && currentHour < 4) {
+        if (new Date().getHours() < 4) {
             achievementConditions.push({
                 conditionType: 'night_lesson_completed',
                 targetValue: { $lte: 1 },
@@ -128,7 +127,7 @@ export const executeCode = async (code, lessonId, userId) => {
     const nextLesson = course.modules?.flatMap(module => module.lessons).find(l => l.sequenceNumber === lesson.sequenceNumber + 1) || null;
 
     return {
-        stdout,
+        stdout: stdout?.replace(secretToken, '').trim() || '',
         stderr,
         exception,
         status,

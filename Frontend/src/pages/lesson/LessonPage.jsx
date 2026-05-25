@@ -83,7 +83,7 @@ const Lesson = ({ lesson }) => {
                                         achievement={value}
                                     />
                                 ),
-                                { duration: 100000 },
+                                { duration: 10000 },
                             ),
                         );
                     setNextLesson(response.data.nextLesson);

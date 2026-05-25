@@ -17,7 +17,7 @@ const lessonSchema = new Schema(
         practice: {
             taskDescription: { type: String, required: true },
             initialCode: { type: String, default: '' },
-            expectedOutput: { type: String },
+            testCode: { type: String },
         },
     },
     {
