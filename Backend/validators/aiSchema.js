@@ -24,7 +24,7 @@ export const questionValidationSchema = z.object({
         practice: z.object({
             taskDescription: z.string(issuesHandler('practice.taskDescription')).min(1, "Опис завдання є обов'язковим"),
             initialCode: z.string(issuesHandler('practice.initialCode')).default(''),
-            expectedOutput: z.string(issuesHandler('practice.expectedOutput')).optional(),
+            testCode: z.string(issuesHandler('practice.testCode')).optional(),
         }),
     }),
     code: z.string(issuesHandler('code')).max(2000, 'Код занадто довгий'),
