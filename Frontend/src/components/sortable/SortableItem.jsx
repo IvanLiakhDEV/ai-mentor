@@ -63,7 +63,7 @@ export function SortableItem({ lesson, language }) {
             practice: {
                 taskDescription: lesson.practice.taskDescription,
                 initialCode: lesson.practice.initialCode,
-                expectedOutput: lesson.practice.expectedOutput,
+                testCode: lesson.practice.testCode,
             },
             points: lesson.points,
         },
@@ -75,7 +75,7 @@ export function SortableItem({ lesson, language }) {
         if (activeTab === 'initial') {
             setValue('practice.initialCode', value, { shouldValidate: true });
         } else {
-            setValue('practice.TestCode', value, { shouldValidate: true });
+            setValue('practice.testCode', value, { shouldValidate: true });
         }
     };
     const style = {
