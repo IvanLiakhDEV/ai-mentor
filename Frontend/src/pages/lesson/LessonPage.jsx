@@ -42,7 +42,7 @@ export const LessonPage = () => {
                 </div>
             </div>
         );
-    if (isError && error?.message?.includes('403') && error?.message?.includes('404')) {
+    if (isError && (error?.message?.includes('403') || error?.message?.includes('404'))) {
         navigate('/');
         return null;
     }
