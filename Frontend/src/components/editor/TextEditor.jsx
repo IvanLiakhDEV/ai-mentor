@@ -50,7 +50,7 @@ export const TextEditor = ({ content, onChange }) => {
                 </button>
                 <button
                     type='button'
-                    onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}
+                    onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
                     className={`px-2 py-1 rounded text-sm  transition-colors ${editor.isActive('heading', { level: 2 }) ? 'bg-gray-300' : 'hover:bg-gray-200'}`}>
                     H2
                 </button>
