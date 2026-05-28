@@ -102,7 +102,7 @@ export const AddLessonDialog = ({ visible, onClose, moduleId, courseId }) => {
                     <label className='font-medium'>Теоретичні відомості</label>
                     <TextEditor
                         key={activeTabText}
-                        content={watch(activeTabText === 'theory' ? 'theory.content' : 'practice.taskDesription')}
+                        content={watch(activeTabText === 'theory' ? 'theory.content' : 'practice.taskDescription')}
                         onChange={handleTextChange}
                     />
                     {activeTabText === 'theory' && errors.theory?.content && (
