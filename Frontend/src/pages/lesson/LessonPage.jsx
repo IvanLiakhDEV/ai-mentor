@@ -42,7 +42,7 @@ export const LessonPage = () => {
                 </div>
             </div>
         );
-    if (isError && error?.message?.includes('403')) {
+    if (isError && error?.message?.includes('403') && error?.message?.includes('404')) {
         navigate('/');
         return null;
     }
@@ -96,7 +96,7 @@ const Lesson = ({ lesson }) => {
 
     const goToNextLesson = () => {
         if (!nextLesson && isCompleted) {
-            setShowCompletionModal(true); // Відкриваємо модалку
+            setShowCompletionModal(true);
             return;
         }
         navigate(`/lesson/${nextLesson._id}`, { replace: true });
@@ -133,14 +133,20 @@ const Lesson = ({ lesson }) => {
                                     <LuBookOpen className='w-5 h-5 text-secondary' />
                                     <p className='text-lg font-semibold text-primary'>Теорія</p>
                                 </div>
-                                <p className='wrap-break-word'>{lesson.data.lesson.theory.content}</p>
+                                <div
+                                    className='prose max-w-none'
+                                    dangerouslySetInnerHTML={{ __html: lesson.data.lesson.theory.content }}
+                                />
                             </Box>
                             <Box>
                                 <div className='flex items-center gap-2 mb-4'>
                                     <IoMdCheckmarkCircleOutline className='w-5 h-5 text-secondary' />
                                     <p className='text-lg font-semibold text-primary'>Практика</p>
                                 </div>
-                                <p className='wrap-break-word'>{lesson.data.lesson.practice.taskDescription}</p>
+                                <div
+                                    className='prose max-w-none'
+                                    dangerouslySetInnerHTML={{ __html: lesson.data.lesson.practice.taskDescription }}
+                                />
                             </Box>
                         </div>
                     </div>
@@ -199,7 +205,7 @@ const Lesson = ({ lesson }) => {
                             <div className='h-full bg-bg-primary flex p-2'>
                                 <p className='text-slate-600 font-mono text-sm break-all whitespace-pre-wrap '>
                                     {(submitedData?.data?.stdout || submitedData?.data?.stderr) ?? (
-                                        <div className='flex items-center text-sm gap-2'>
+                                        <div className={`flex items-center text-sm gap-2 ${submitedData?.data?.stderr && 'text-red-200'}`}>
                                             <LuTerminal className='h-6 w-6' />
                                             Натисніть "Запустити код", щоб побачити результат виконання
                                         </div>

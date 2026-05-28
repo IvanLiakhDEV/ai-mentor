@@ -9,7 +9,7 @@ export const Dialog = ({ children, visible = false, headerTitle, onClose, sumbit
             className={cn('fixed inset-0 bg-black/50 hidden items-center justify-center z-50', visible && 'flex')}
             onSubmit={onSubmit}>
             <div
-                className='bg-white rounded-xl shadow-xl max-w-7xl w-full max-h-[90vh] flex-col flex
+                className='bg-white rounded-xl shadow-xl max-w-7xl w-full max-h-[90vh] flex-col flex overflow-auto
              '>
                 <header className='flex justify-between border-b p-4 px-6 items-center w-full flex-1 shrink-0'>
                     <h2 className='text-lg font-bold text-gray-900'>{headerTitle}</h2>

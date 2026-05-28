@@ -9,9 +9,12 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { lessonValidationSchema } from '@/formValidation/lessonSchema';
 import { InputField } from '../inputs/InputField';
 import { Editor } from '@monaco-editor/react';
+import { TextEditor } from '../editor/TextEditor';
 
 export function SortableItem({ lesson, language }) {
     const [activeTab, setActiveTab] = useState('initial');
+    const [activeTabText, setActiveTabText] = useState('theory');
+
     const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id: lesson._id });
     const { mutate: handleEditLesson, isPending: isEditingLesson, error: editError } = useEditLesson(lesson.courseId);
     const { mutate: handleDeleteLesson, isPending: isDeletingLesson, error: deleteError } = useDeleteLesson(lesson.courseId);
@@ -30,6 +33,7 @@ export function SortableItem({ lesson, language }) {
                     setIsEditing(false);
                     resetEdit(data);
                     setActiveTab('initial');
+                    setActiveTabText('theory');
                 },
             },
         );
@@ -76,6 +80,15 @@ export function SortableItem({ lesson, language }) {
             setValue('practice.initialCode', value, { shouldValidate: true });
         } else {
             setValue('practice.testCode', value, { shouldValidate: true });
+        }
+    };
+    const handleTextChange = value => {
+        console.log(value);
+
+        if (activeTabText === 'theory') {
+            setValue('theory.content', value, { shouldValidate: true });
+        } else {
+            setValue('practice.taskDescription', value, { shouldValidate: true });
         }
     };
     const style = {
@@ -128,19 +141,45 @@ export function SortableItem({ lesson, language }) {
                     {...registerEdit('title')}
                     error={errorsEdit.title?.message}
                 />
-                <InputField
-                    label={'Теоретичні відомості'}
-                    isTextArea={true}
-                    {...registerEdit('theory.content')}
-                    error={errorsEdit.theory?.content?.message}
-                />
-                <InputField
-                    label={'Завдання'}
-                    {...registerEdit('practice.taskDescription')}
-                    isTextArea={true}
-                    error={errorsEdit.practice?.taskDescription?.message}
-                />
-                <div className='border border-slate-700 mt-4 rounded-xl overflow-hidden'>
+                <div>
+                    <div className='flex bg-slate-800 '>
+                        <button
+                            type='button'
+                            onClick={() => setActiveTabText('theory')}
+                            className={`px-6 py-3 font-medium text-sm transition-colors ${
+                                activeTabText === 'theory'
+                                    ? 'bg-slate-900 text-blue-400 border-t-2 border-blue-500'
+                                    : 'text-slate-400 hover:text-slate-200'
+                            }`}>
+                            Теоретичні відомості
+                        </button>
+                        <button
+                            type='button'
+                            onClick={() => setActiveTabText('practice')}
+                            className={`px-6 py-3 font-medium text-sm transition-colors flex items-center gap-2  ${
+                                activeTabText === 'practice'
+                                    ? 'bg-slate-900 text-amber-400 border-t-2 border-amber-500'
+                                    : 'text-slate-400 hover:text-slate-200'
+                            }`}>
+                            <span>Практика</span>
+                        </button>
+                    </div>
+                    <div className='flex flex-col gap-1'>
+                        <TextEditor
+                            key={activeTabText}
+                            content={watch(activeTabText === 'theory' ? 'theory.content' : 'practice.taskDescription')}
+                            onChange={handleTextChange}
+                        />
+                        {activeTabText === 'theory' && errorsEdit.theory?.content && (
+                            <p className='text-sm text-red-500'>{errorsEdit.theory.content.message}</p>
+                        )}
+                        {activeTabText === 'practice' && errorsEdit.practice?.taskDescription && (
+                            <p className='text-sm text-red-500'>{errorsEdit.practice.taskDescription.message}</p>
+                        )}
+                    </div>
+                </div>
+
+                <div className='border border-slate-700 mt-4 rounded-xl overflow-hidden min-h-80'>
                     <div className='flex bg-slate-800 '>
                         <button
                             type='button'
