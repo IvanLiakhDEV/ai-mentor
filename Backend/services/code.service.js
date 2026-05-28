@@ -9,10 +9,19 @@ import UserAchievement from '../models/userAchievement.js';
 import crypto from 'crypto';
 
 export const executeCode = async (code, lessonId, userId) => {
-    const lesson = await getLessonById(lessonId, userId);
-    const course = await getCourse(lesson.courseId, userId);
-    const secretToken = crypto.randomUUID();
+    const { lesson } = await getLessonById(lessonId, userId);
 
+    const course = await getCourse(lesson.courseId, userId);
+
+    const secretToken = crypto.randomUUID();
+    const studentLogs = `
+let __capturedOutput = "";
+const __originalLog = console.log;
+console.log = (...args) => { 
+    __capturedOutput += args.join(' ') + "\\n"; 
+    __originalLog(...args); 
+};
+`;
     const response = await axios.post(
         'https://api.onecompiler.com/v1/run',
         {
@@ -20,7 +29,7 @@ export const executeCode = async (code, lessonId, userId) => {
             files: [
                 {
                     name: getFileNameByLanguage(course.language),
-                    content: `${code}\n\n${lesson.practice.testCode.replace('__ALL_TESTS_PASSED__', secretToken)}`,
+                    content: `${studentLogs}\n${code}\n\n${lesson.practice.testCode.replace('__ALL_TESTS_PASSED__', secretToken)}`,
                 },
             ],
         },
