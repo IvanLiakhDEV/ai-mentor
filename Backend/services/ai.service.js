@@ -1,6 +1,5 @@
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import { buildSystemPrompt, buildUserMessage } from '../utils/promt.js';
-import { process } from 'zod/v4/core';
 
 export const askAI = async ({ messages, lesson, code }) => {
     const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
