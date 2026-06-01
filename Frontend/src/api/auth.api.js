@@ -16,6 +16,10 @@ export const editProfile = async data => {
     const response = await api.patch('/user/profile', data);
     return response.data;
 };
+export const logOut = async () => {
+    const response = await api.post('/user/logout');
+    return response.data;
+};
 export const fetchLeaderboard = async () => {
     const response = await api.get('/user/leaderboard');
     return response.data;
