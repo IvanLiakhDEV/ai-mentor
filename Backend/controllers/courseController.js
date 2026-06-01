@@ -92,6 +92,6 @@ export const toggleArchived = catchAsyncErrors(async (req, res, next) => {
     const result = await toggleArchivedCourse({ id });
     res.status(200).json({
         success: true,
-        message: `Курс ${result.isArchived ? 'Розархівовано' : 'Заархівовано'}`,
+        message: `Курс ${result.isArchived ? 'Заархівовано' : 'Розархівовано'}`,
     });
 });
