@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { LuFileText, LuPencil, LuTrash2 } from 'react-icons/lu';
-import { Dialog } from '../dialog/Dialog';
+import { Dialog } from '../ui/Dialog';
 import { useDeleteLesson, useEditLesson } from '@/hooks/useLesson';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
