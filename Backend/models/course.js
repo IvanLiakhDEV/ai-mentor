@@ -32,6 +32,10 @@ const courseSchema = new Schema(
                 order: { type: Number, required: true },
             },
         ],
+        isArchived: {
+            type: Boolean,
+            default: true,
+        },
     },
     {
         timestamps: true,

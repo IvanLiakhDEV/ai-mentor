@@ -7,6 +7,7 @@ import {
     getCourses,
     removeCourse,
     removeModule,
+    toggleArchivedCourse,
 } from '../services/course.service.js';
 import { catchAsyncErrors } from '../utils/errorHandlers.js';
 export const create = catchAsyncErrors(async (req, res, next) => {
@@ -37,7 +38,8 @@ export const editCourse = catchAsyncErrors(async (req, res, next) => {
     });
 });
 export const getAll = catchAsyncErrors(async (req, res, next) => {
-    const result = await getCourses();
+    const { role } = req.user;
+    const result = await getCourses({ role });
     res.status(200).json({
         success: true,
         message: `Курсів знайдено: ${result.length}`,
@@ -47,7 +49,8 @@ export const getAll = catchAsyncErrors(async (req, res, next) => {
 export const getById = catchAsyncErrors(async (req, res, next) => {
     const { id } = req.params;
     const userId = req.user._id;
-    const result = await getCourse(id, userId);
+    const { role } = req.user;
+    const result = await getCourse(id, userId, role);
     res.status(200).json({
         success: true,
         message: `Курс з id = ${id} знайдено`,
@@ -82,5 +85,13 @@ export const deleteModule = catchAsyncErrors(async (req, res, next) => {
     res.status(200).json({
         success: true,
         message: `Модуль видалено`,
+    });
+});
+export const toggleArchived = catchAsyncErrors(async (req, res, next) => {
+    const { id } = req.params;
+    const result = await toggleArchivedCourse({ id });
+    res.status(200).json({
+        success: true,
+        message: `Курс ${result.isArchived ? 'Заархівовано' : 'Розархівовано'}`,
     });
 });

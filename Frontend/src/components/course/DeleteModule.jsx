@@ -1,5 +1,5 @@
 import React from 'react';
-import { Dialog } from '@/components/dialog/Dialog';
+import { Dialog } from '@/components/ui/Dialog';
 import { useDeleteModule } from '@/hooks/useCourse';
 
 export const DeleteModuleDialog = ({ visible, onClose, moduleId }) => {

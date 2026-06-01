@@ -4,7 +4,6 @@ import Enrollment from '../models/enrollment.js';
 import { ErrorHandler } from '../utils/errorHandlers.js';
 export const createLesson = async data => {
     const { moduleId, courseId } = data;
-
     const course = await Course.findById(courseId);
     if (!course) {
         throw new ErrorHandler(`Курсу з id = ${data.courseId} не існує`, 404);
@@ -40,13 +39,13 @@ export const editLessonInfo = async ({ id, lesson }) => {
 export const getLessonById = async (lessonId, userId) => {
     const lesson = await Lesson.findById(lessonId);
     if (!lesson) throw new ErrorHandler('Урок не знайдено', 404);
-    const course = await Course.findOne(lesson.courseId);
+    const course = await Course.findOne({ _id: lesson.courseId, isArchived: { $ne: true } });
+    if (!course) throw new ErrorHandler('Курс не знайдено або він недоступний', 404);
     const enrollment = await Enrollment.findOne({
         courseId: lesson.courseId,
         userId,
     });
     if (!enrollment) throw new ErrorHandler('Ви не записані на цей курс', 403);
-
     if (lesson.sequenceNumber > enrollment.completedSequence + 1) {
         throw new ErrorHandler('Спочатку пройдіть попередні уроки', 403);
     }
@@ -55,8 +54,8 @@ export const getLessonById = async (lessonId, userId) => {
     return { lesson: l, course, enrollment };
 };
 export const getNextLessonData = async ({ userId, courseId }) => {
-    const course = await Course.findById(courseId);
-    if (!course) throw new ErrorHandler('Курс не знайдено', 404);
+    const course = await Course.findOne({ _id: courseId, isArchived: { $ne: true } });
+    if (!course) throw new ErrorHandler('Курс не знайдено або він недоступний', 404);
     const enrollment = await Enrollment.findOne({
         courseId: course._id,
         userId,

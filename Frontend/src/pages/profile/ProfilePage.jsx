@@ -158,7 +158,7 @@ export const ProfilePage = () => {
                 <h1 className='font-semibold text-2xl text-secondary'>Ваші курси</h1>
                 {isLoadingEnrollments ? (
                     <Spinner className='h-10 w-10 mx-auto' />
-                ) : enrollments?.data ? (
+                ) : enrollments?.data.length > 0 ? (
                     enrollments?.data?.map(course => (
                         <Box
                             key={course.courseId._id}

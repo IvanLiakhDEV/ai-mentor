@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Dialog } from '@/components/dialog/Dialog';
+import { Dialog } from '@/components/ui/Dialog';
 import { InputField } from '@/components/inputs/InputField';
 import { moduleValidationSchema } from '@/formValidation/courseSchema';
 import { useEditModule } from '@/hooks/useCourse';

@@ -14,7 +14,6 @@ import { Progress } from '@/components/ui/Progress';
 import { LuPlay } from 'react-icons/lu';
 import { useGetNextLesson } from '@/hooks/useLesson';
 import { toast } from 'sonner';
-import { Toaster } from '@/components/ui/sonner';
 import { Spinner } from '@/components/ui/Spinner';
 export const CoursePage = () => {
     const { id } = useParams();
@@ -172,7 +171,6 @@ export const CoursePage = () => {
                     </Box>
                 </div>
             </div>
-            <Toaster position='top-center' />
         </div>
     );
 };

@@ -20,6 +20,11 @@ export const editCourse = async (id, data) => {
     const response = await api.patch(`/course/${id}`, data);
     return response.data;
 };
+export const toggleArchiveCourse = async id => {
+    const response = await api.patch(`/course/${id}/toggle-archived`);
+    return response.data;
+};
+
 export const addModule = async (id, data) => {
     const response = await api.post(`/course/${id}/modules`, data);
     return response.data;

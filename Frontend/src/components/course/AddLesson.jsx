@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Editor } from '@monaco-editor/react';
-import { Dialog } from '@/components/dialog/Dialog';
+import { Dialog } from '@/components/ui/Dialog';
 import { InputField } from '@/components/inputs/InputField';
 import { lessonValidationSchema } from '@/formValidation/lessonSchema';
 import { useAddLesson } from '@/hooks/useLesson';

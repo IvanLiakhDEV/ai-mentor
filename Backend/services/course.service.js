@@ -17,7 +17,7 @@ export const removeCourse = async id => {
     if (!result) {
         throw new ErrorHandler(`Курсу з id = "${id}" не знайдено`, 404);
     }
-    await Lesson.deleteMany({ courseId: id });
+    await Promise.all([Lesson.deleteMany({ courseId: id }), Enrollment.deleteMany({ courseId: id })]);
 };
 export const editCourseInfo = async ({ id, data }) => {
     const result = await Course.findByIdAndUpdate(id, {
@@ -31,13 +31,13 @@ export const editCourseInfo = async ({ id, data }) => {
         throw new ErrorHandler(`Курсу з id = "${id}" не знайдено`, 404);
     }
 };
-export const getCourse = async (courseId, userId) => {
+export const getCourse = async (courseId, userId, role) => {
     const [course, lessons, enrollment] = await Promise.all([
-        Course.findById(courseId),
+        role === 'student' ? Course.findOne({ _id: courseId, isArchived: { $ne: true } }) : Course.findById(courseId),
         Lesson.find({ courseId }).sort({ sequenceNumber: 1 }),
         Enrollment.findOne({ courseId, userId }),
     ]);
-    if (!course) throw new ErrorHandler('Курс не знайдено', 404);
+    if (!course) throw new ErrorHandler('Курс не знайдено або він недоступний', 404);
     const modulesWithLessons = course.modules.map(module => ({
         ...module.toObject(),
         lessons: lessons.filter(lesson => lesson.moduleId.toString() === module._id.toString()),
@@ -50,9 +50,8 @@ export const getCourse = async (courseId, userId) => {
         enrollment: enrollment,
     };
 };
-export const getCourses = async () => {
-    const result = await Course.find();
-    return result;
+export const getCourses = async ({ role }) => {
+    return role === 'student' ? await Course.find({ isArchived: { $ne: true } }) : await Course.find();
 };
 export const addModuleToCourse = async (moduleData, courseId) => {
     const courseExist = await Course.findById(courseId);
@@ -88,4 +87,14 @@ export const removeModule = async ({ id }) => {
         throw new ErrorHandler('Модуль не знайдено', 404);
     }
     await Lesson.deleteMany({ moduleId: id });
+};
+export const toggleArchivedCourse = async ({ id }) => {
+    const result = await Course.findByIdAndUpdate(id, [{ $set: { isArchived: { $not: '$isArchived' } } }], {
+        new: true,
+        updatePipeline: true,
+    });
+    if (!result) {
+        throw new ErrorHandler('Курс не знайдено', 404);
+    }
+    return result;
 };
