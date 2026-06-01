@@ -7,7 +7,6 @@ import React from 'react';
 import { LuAward, LuBookOpen, LuTarget, LuTrophy } from 'react-icons/lu';
 import { MdOutlineCalendarToday, MdOutlineEmail } from 'react-icons/md';
 import { useParams } from 'react-router';
-import { Toaster } from 'sonner';
 
 export const PublicProfilePage = () => {
     const { id } = useParams();
@@ -110,8 +109,6 @@ export const PublicProfilePage = () => {
                     />
                 ))}
             </Box>
-
-            <Toaster position='top-center' />
         </div>
     );
 };

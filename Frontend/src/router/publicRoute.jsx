@@ -16,5 +16,9 @@ export const PublicRoute = () => {
             />
         );
 
-    return <Outlet />;
+    return (
+        <div>
+            <Outlet /> <Toaster position='top-center' />
+        </div>
+    );
 };
