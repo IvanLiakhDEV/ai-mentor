@@ -6,7 +6,17 @@ import {
     moduleValidationSchema,
     editModuleValidationSchema,
 } from '../validators/educationSchema.js';
-import { addModule, create, deleteModule, editCourse, editModule, getAll, getById, remove } from '../controllers/courseController.js';
+import {
+    addModule,
+    create,
+    deleteModule,
+    editCourse,
+    editModule,
+    getAll,
+    getById,
+    remove,
+    toggleArchived,
+} from '../controllers/courseController.js';
 import { validateSchema, validateParamsSchema } from '../middleware/validation.js';
 export const courseRouter = Router();
 
@@ -39,3 +49,4 @@ courseRouter.patch(
     editModule,
 );
 courseRouter.delete('/:id/modules', verifyJWT, authorize('admin'), validateParamsSchema(byIdValidationSchema), deleteModule);
+courseRouter.patch('/:id/toggle-archived', verifyJWT, authorize('admin'), validateParamsSchema(byIdValidationSchema), toggleArchived);

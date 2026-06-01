@@ -50,8 +50,11 @@ export const getCourse = async (courseId, userId) => {
         enrollment: enrollment,
     };
 };
-export const getCourses = async () => {
-    const result = await Course.find();
+export const getCourses = async ({ role }) => {
+    const result = role === 'student' ? await Course.find({ isArchived: { $ne: '$isArchived' } }) : await Course.find();
+    if (!result) {
+        throw new ErrorHandler('Курс не знайдено', 404);
+    }
     return result;
 };
 export const addModuleToCourse = async (moduleData, courseId) => {
@@ -88,4 +91,14 @@ export const removeModule = async ({ id }) => {
         throw new ErrorHandler('Модуль не знайдено', 404);
     }
     await Lesson.deleteMany({ moduleId: id });
+};
+export const toggleArchivedCourse = async ({ id }) => {
+    const result = await Course.findByIdAndUpdate(id, [{ $set: { isArchived: { $not: '$isArchived' } } }], {
+        replace: true,
+        updatePipeline: true,
+    });
+    if (!result) {
+        throw new ErrorHandler('Курс не знайдено', 404);
+    }
+    return result;
 };
