@@ -1,7 +1,7 @@
 import { useMutation, useQuery } from '@tanstack/react-query';
-import { editProfile, fetchLeaderboard, fetchMe, fetchProfile, loginUser, registerUser } from '@/api/auth.api';
+import { editProfile, fetchLeaderboard, fetchMe, fetchProfile, loginUser, logOut, registerUser } from '@/api/auth.api';
 import { useDispatch } from 'react-redux';
-import { setUser } from '@/store/slices/authSlice';
+import { clearUser, setUser } from '@/store/slices/authSlice';
 import { useEffect } from 'react';
 export const useRegister = () => {
     return useMutation({
@@ -46,6 +46,15 @@ export const useEditProfile = () => {
         mutationFn: data => editProfile(data),
         onSuccess: data => {
             dispatch(setUser(data.data));
+        },
+    });
+};
+export const useLogOut = () => {
+    const dispatch = useDispatch();
+    return useMutation({
+        mutationFn: logOut,
+        onSuccess: () => {
+            dispatch(clearUser());
         },
     });
 };
