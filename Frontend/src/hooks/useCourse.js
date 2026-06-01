@@ -11,6 +11,7 @@ import {
     editModule,
     fetchCourseById,
     fetchCourses,
+    toggleArchiveCourse,
 } from '@/api/course.api';
 export const useCourses = () => {
     const dispatch = useDispatch();
@@ -53,6 +54,15 @@ export const useEditCourse = () => {
     const queryClient = useQueryClient();
     const query = useMutation({
         mutationFn: ({ id, data }) => editCourse(id, data),
+        onSuccess: () => queryClient.invalidateQueries({ queryKey: ['course'] }),
+    });
+    return query;
+};
+export const useToggleArchiveCourse = id => {
+    const queryClient = useQueryClient();
+
+    const query = useMutation({
+        mutationFn: () => toggleArchiveCourse(id),
         onSuccess: () => queryClient.invalidateQueries({ queryKey: ['course'] }),
     });
     return query;
