@@ -27,7 +27,7 @@ export const Chat = ({ lesson, code }) => {
         setMessage('');
 
         sendMessage(
-            { messages: newMessages, lesson: lesson.data, code },
+            { messages: newMessages, lesson: lesson.data.lesson, code },
             {
                 onSuccess: response => {
                     setMessages(prev => [
