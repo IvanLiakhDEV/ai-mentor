@@ -51,6 +51,13 @@ export const Header = () => {
                                     Leaderboard
                                 </NavLink>
                             </li>
+                            <li>
+                                <NavLink
+                                    to='/practicum'
+                                    className={getClassName}>
+                                    Практикум
+                                </NavLink>
+                            </li>
                         </ul>
                     </nav>
                 </div>

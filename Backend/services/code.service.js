@@ -7,6 +7,8 @@ import UserStat from '../models/userStat.js';
 import Achievement from '../models/achievement.js';
 import UserAchievement from '../models/userAchievement.js';
 import crypto from 'crypto';
+import { calculateNewStreak } from '../utils/streakCalculator.js';
+import { checkAndUnlockAchievements } from './achievement.service.js';
 
 export const executeCode = async (code, lessonId, userId) => {
     const { lesson } = await getLessonById(lessonId, userId);
@@ -55,27 +57,7 @@ console.log = (...args) => {
             lastActivityDate: null,
         };
 
-        const now = new Date();
-        const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-        const yesterday = new Date(today);
-        yesterday.setDate(yesterday.getDate() - 1);
-
-        let newStreak = currentStat.currentStreak;
-        let newBestStreak = currentStat.bestStreak;
-
-        if (!currentStat.lastActivityDate) {
-            newStreak = 1;
-            newBestStreak = Math.max(1, newBestStreak);
-        } else {
-            const lastActivity = new Date(currentStat.lastActivityDate);
-            if (lastActivity >= today) {
-            } else if (lastActivity >= yesterday && lastActivity < today) {
-                newStreak += 1;
-                newBestStreak = Math.max(newStreak, newBestStreak);
-            } else {
-                newStreak = 1;
-            }
-        }
+        const updatedStreakData = calculateNewStreak(currentStat.lastActivityDate, currentStat.currentStreak, currentStat.bestStreak);
 
         const enrollmentUpdate = {
             $max: { completedSequence: lesson.sequenceNumber },
@@ -85,9 +67,7 @@ console.log = (...args) => {
         const statUpdate = {
             $inc: { lessonsCompleted: 1, points: lesson.points },
             $set: {
-                currentStreak: newStreak,
-                bestStreak: newBestStreak,
-                lastActivityDate: now,
+                ...updatedStreakData,
             },
         };
 
@@ -98,36 +78,7 @@ console.log = (...args) => {
 
         const updatedStats = await UserStat.findOneAndUpdate({ userId }, statUpdate, { new: true, upsert: true });
 
-        const achievementConditions = [
-            { conditionType: 'lessons_completed', targetValue: { $lte: updatedStats.lessonsCompleted } },
-            { conditionType: 'courses_completed', targetValue: { $lte: updatedStats.coursesCompleted } },
-            { conditionType: 'points_earned', targetValue: { $lte: updatedStats.points } },
-            { conditionType: 'day_streak', targetValue: { $lte: updatedStats.currentStreak } },
-        ];
-
-        if (new Date().getHours() < 4) {
-            achievementConditions.push({
-                conditionType: 'night_lesson_completed',
-                targetValue: { $lte: 1 },
-            });
-        }
-
-        const availableAchievements = await Achievement.find({ $or: achievementConditions });
-
-        for (const achievement of availableAchievements) {
-            const { upsertedCount } = await UserAchievement.updateOne(
-                { userId, achievementId: achievement._id },
-                { $setOnInsert: { userId, achievementId: achievement._id } },
-                { upsert: true },
-            );
-
-            if (upsertedCount) {
-                newlyUnlocked.push(achievement);
-                if (achievement.xpReward > 0) {
-                    await UserStat.findOneAndUpdate({ userId }, { $inc: { points: achievement.xpReward } });
-                }
-            }
-        }
+        newlyUnlocked = await checkAndUnlockAchievements({ userId, updatedStats });
 
         await Enrollment.findOneAndUpdate({ courseId: lesson.courseId, userId }, enrollmentUpdate);
     }
