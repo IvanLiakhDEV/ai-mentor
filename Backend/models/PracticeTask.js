@@ -17,6 +17,7 @@ const practiceTaskSchema = new Schema({
     isCompleted: { type: Boolean, default: false },
     attempts: { type: Number, default: 0 },
     createdAt: { type: Date, default: Date.now },
+    userCode: { type: String, default: '' },
 });
 
 const PracticeTask = mongoose.model('PracticeTask', practiceTaskSchema);

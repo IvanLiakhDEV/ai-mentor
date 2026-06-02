@@ -16,3 +16,6 @@ export const taskValidationSchema = z.object({
         .enum(['typescript', 'javascript', 'python', 'java', 'dart', 'ruby', 'cpp', 'c', 'csharp', 'sql', 'php'], issuesHandler('language'))
         .default('javascript'),
 });
+export const userCodeValidation = z.object({
+    code: z.string(),
+});
