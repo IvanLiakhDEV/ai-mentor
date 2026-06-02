@@ -15,6 +15,7 @@ export const PracticeTask = () => {
     const { id } = useParams();
     const navigate = useNavigate();
     const [code, setCode] = useState('');
+    const [isCompleted, setIsCompleted] = useState(false);
     const { data: taskData, isPending: isLoadingTask } = useFetchTask(id);
     const { mutate: submitCode, isPending: isSubmitting, data } = useSubmitCode();
     const [showCompletionModal, setShowCompletionModal] = useState(false);
@@ -29,6 +30,7 @@ export const PracticeTask = () => {
                 onSuccess: res => {
                     if (res.isCorrect) {
                         setShowCompletionModal(true);
+                        setIsCompleted(true);
                     }
                 },
             },
@@ -106,7 +108,7 @@ export const PracticeTask = () => {
                                 <button
                                     className='px-4 py-1.5 text-sm bg-slate-600 hover:bg-slate-700 text-white rounded-lg transition-all font-medium flex items-center justify-center cursor-pointer disabled:opacity-50'
                                     onClick={() => onSubmit()}
-                                    disabled={isSubmitting}>
+                                    disabled={isSubmitting || isCompleted}>
                                     {isSubmitting ? (
                                         <Spinner />
                                     ) : (

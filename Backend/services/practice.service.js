@@ -16,8 +16,8 @@ export const createTask = async ({ userId, topic, difficulty, language }) => {
     return createdTask;
 };
 export const getTaskInfo = async ({ id }) => {
-    const task = await PracticeTask.findById(id);
-    if (!task) throw new ErrorHandler('Завдання не знайдено, перевірте правильність id', 404);
+    const task = await PracticeTask.findOne({ _id: id, isCompleted: false });
+    if (!task) throw new ErrorHandler('Завдання не знайдено або недоступне, перевірте правильність id', 404);
     return task;
 };
 export const submitTask = async ({ id, code }) => {
