@@ -12,6 +12,7 @@ import { ErrorBoundary } from '@/components/errorelement/ErrorBoundary';
 import { AdminRoute } from './adminRoute';
 import { AdminPage } from '@/pages/admin/AdminPage';
 import { PublicProfilePage } from '@/pages/publicprofile/PublicProfilePage';
+import { PracticePage } from '@/pages/practicum/PracticePage';
 export const router = createBrowserRouter([
     {
         path: '/',
@@ -32,6 +33,7 @@ export const router = createBrowserRouter([
                             { path: 'profile/:id', element: <PublicProfilePage /> },
                             { path: 'course/:id', element: <CoursePage /> },
                             { path: 'leaderboard', element: <LeaderBoardPage /> },
+                            { path: 'practicum', element: <PracticePage /> },
                         ],
                     },
                     { path: 'lesson/:id', element: <LessonPage /> },

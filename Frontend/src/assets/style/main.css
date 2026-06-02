@@ -29,7 +29,7 @@
 
     --color-bg-primary: var(--background-primary);
     --color-bg-surface: var(--background-surface);
-    --color-cta: #5b4ccc;
+    --color-cta: oklch(48.8% 0.243 264.376);
 
     --font-sans: 'Inter Variable', sans-serif;
     --radius-lg: var(--radius);
