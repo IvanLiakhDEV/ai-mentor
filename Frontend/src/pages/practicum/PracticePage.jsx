@@ -43,8 +43,17 @@ export const PracticePage = () => {
         setValue('difficulty', value, { shouldValidate: true });
     };
 
+    const sortedTasks = myTasks
+        ? [...myTasks]?.sort((a, b) => {
+              if (a.isCompleted !== b.isCompleted) {
+                  return a.isCompleted ? 1 : -1;
+              }
+              return new Date(b.createdAt) - new Date(a.createdAt);
+          })
+        : [];
+
     return (
-        <div className='flex flex-col mx-auto py-3'>
+        <div className='flex flex-col mx-auto'>
             <section className='w-full bg-cta'>
                 <div className='grid gap-10 px-6 py-16 mx-auto text-white max-w-7xl '>
                     <h1 className='text-5xl font-semibold '>Додаткові завдання</h1>
@@ -53,7 +62,7 @@ export const PracticePage = () => {
                     </h2>
                 </div>
             </section>
-            <div className='flex w-full px-6 mx-auto mt-6 items-center justify-center flex-col gap-4 max-w-3xl'>
+            <div className='flex w-full px-6 mx-auto mt-6 items-center justify-center flex-col gap-4 max-w-3xl py-3'>
                 <Box className='p-0 overflow-hidden w-full'>
                     <form onSubmit={handleSubmit(onCreateTask)}>
                         <header className='flex items-center gap-4 border-b p-6 py-4 bg-(--background-primary)'>
@@ -156,14 +165,16 @@ export const PracticePage = () => {
                     {isPending ? (
                         <Skeleton className='w-full h-50' />
                     ) : (
-                        myTasks &&
-                        myTasks.map(task => (
+                        sortedTasks &&
+                        sortedTasks.map(task => (
                             <PracticeTaskCard
                                 key={task._id}
                                 difficulty={task.difficulty}
                                 title={task.topic}
                                 description={task.shortDescription}
                                 points={task.points}
+                                id={task._id}
+                                isCompleted={task.isCompleted}
                             />
                         ))
                     )}

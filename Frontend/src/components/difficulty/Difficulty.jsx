@@ -6,15 +6,13 @@ export const Difficulty = ({ onDifficultyChange, isActive, difficultyValue, diff
     const easyDifficultyClass =
         isActive && difficultyValue === 'easy'
             ? 'bg-emerald-50  border-emerald-200 hover:border-green-300'
-            : 'border-slate-200 hover:border-slate-300';
+            : 'border-border hover:border-slate-300';
     const mediumDifficultyClass =
         isActive && difficultyValue === 'medium'
             ? 'bg-amber-100 border-amber-200 hover:border-amber-300'
-            : 'border-slate-200 hover:border-slate-300';
+            : 'border-border hover:border-slate-300';
     const hardDifficultyClass =
-        isActive && difficultyValue === 'hard'
-            ? 'bg-red-100 border-red-200 hover:border-red-300'
-            : 'border-slate-200 hover:border-slate-300';
+        isActive && difficultyValue === 'hard' ? 'bg-red-100 border-red-200 hover:border-red-300' : 'border-border hover:border-slate-300';
 
     const starClassEasy = isActive && difficultyValue === 'easy' && 'text-emerald-500 fill-emerald-500';
     const starClassMedium = isActive && difficultyValue === 'medium' && 'text-amber-500 fill-amber-500';

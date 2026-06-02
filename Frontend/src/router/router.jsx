@@ -13,6 +13,7 @@ import { AdminRoute } from './adminRoute';
 import { AdminPage } from '@/pages/admin/AdminPage';
 import { PublicProfilePage } from '@/pages/publicprofile/PublicProfilePage';
 import { PracticePage } from '@/pages/practicum/PracticePage';
+import { PracticeTask } from '@/pages/practiceTask/PracticeTask';
 export const router = createBrowserRouter([
     {
         path: '/',
@@ -36,6 +37,7 @@ export const router = createBrowserRouter([
                             { path: 'practicum', element: <PracticePage /> },
                         ],
                     },
+                    { path: 'practice-task/:id', element: <PracticeTask /> },
                     { path: 'lesson/:id', element: <LessonPage /> },
                     {
                         element: <AdminRoute />,
