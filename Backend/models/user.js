@@ -3,22 +3,12 @@ import bcrypt from 'bcrypt';
 
 const userSchema = new Schema(
     {
-        username: {
-            type: String,
-            required: true,
-            trim: true,
-            minLength: [3, "Ім'я не може бути коротшим за 3 символи"],
-            maxLength: [30, "Ім'я не може бути довшим за 30 символів"],
-        },
-        email: {
-            type: String,
-            required: true,
-            unique: true,
-        },
+        username: { type: String, required: true, trim: true, minLength: [3, "Закоротке ім'я"], maxLength: [30, "Задовге ім'я"] },
+        email: { type: String, required: true, unique: true },
         password: {
             type: String,
             required: true,
-            minlength: [8, 'Довжина пароля не може бути менше 8 симовлів'],
+            minLength: [8, 'Пароль від 8 символів'],
             select: false,
         },
         role: {
@@ -26,21 +16,11 @@ const userSchema = new Schema(
             enum: ['student', 'admin'],
             default: 'student',
         },
-        avatar: {
-            type: String,
-            requred: false,
-        },
-        about: {
-            type: String,
-            minLength: [16, 'Довжина опису не може бути менше 16 символів'],
-            maxLength: [200, 'Довжина опису не може бути більше 200 символів'],
-            required: false,
-        },
+        avatar: { type: String, required: false },
+        about: { type: String, minLength: [16, 'Опис від 16 знаків'], maxLength: [200, 'Опис до 200 знаків'], required: false },
         refreshToken: { type: String, default: null, select: false },
     },
-    {
-        timestamps: true,
-    },
+    { timestamps: true },
 );
 
 userSchema.set('toJSON', {
