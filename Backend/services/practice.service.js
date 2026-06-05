@@ -7,6 +7,7 @@ import axios from 'axios';
 import { getFileNameByLanguage } from '../utils/getFilename.js';
 import { calculateNewStreak } from '../utils/streakCalculator.js';
 import { checkAndUnlockAchievements } from './achievement.service.js';
+import { runCode } from './code.service.js';
 export const getMyTasks = async ({ userId }) => {
     return await PracticeTask.find({ userId }).sort({ createdAt: -1 });
 };
@@ -23,30 +24,14 @@ export const getTaskInfo = async ({ id }) => {
 export const submitTask = async ({ id, code }) => {
     try {
         const task = await getTaskInfo({ id });
-        const secretToken = crypto.randomUUID();
+        const attempts = task.attempts + 1;
+        const { stdout, stderr, isCorrect } = await runCode({
+            code,
+            testCode: task.testCode,
+            language: task.language,
+            timeout: 4000,
+        });
         let achievements = [];
-        const response = await axios.post(
-            'https://api.onecompiler.com/v1/run',
-            {
-                language: task.language,
-                files: [
-                    {
-                        name: getFileNameByLanguage(task.language),
-                        content: `${code}\n\n${task.testCode.replace('___TESTS_PASSED___', secretToken)}`,
-                    },
-                ],
-            },
-            {
-                headers: {
-                    'X-API-Key': process.env.ONECOMPILER_KEY,
-                    'Content-Type': 'application/json',
-                },
-                timeout: 4000,
-            },
-        );
-        const { stdout, stderr } = response.data;
-        const isCorrect = stdout ? stdout.includes(secretToken) : false;
-        const cleanStdout = stdout ? stdout.replace(secretToken, '').trim() : '';
         if (isCorrect) {
             const userStat = (await UserStat.findOne({ userId: task.userId })) || {
                 currentStreak: 0,
@@ -54,25 +39,50 @@ export const submitTask = async ({ id, code }) => {
                 lastActivityDate: null,
             };
             const updatedStreakData = calculateNewStreak(userStat.lastActivityDate, userStat.currentStreak, userStat.bestStreak);
-            const [_, updatedStats] = await Promise.all([
-                PracticeTask.findByIdAndUpdate(id, { $set: { isCompleted: true, userCode: code }, $inc: { attempts: 1 } }),
+            const [, updatedStats] = await Promise.all([
+                PracticeTask.findByIdAndUpdate(id, {
+                    $set: { isCompleted: true, userCode: code },
+                    $inc: { attempts: 1 },
+                }),
                 UserStat.findOneAndUpdate(
                     { userId: task.userId },
-                    { $inc: { points: task.points }, $set: updatedStreakData },
+                    {
+                        $inc: { points: task.points },
+                        $set: updatedStreakData,
+                    },
                     { upsert: true, new: true },
                 ),
             ]);
-            achievements = await checkAndUnlockAchievements({ userId: task.userId, updatedStats });
+            achievements = await checkAndUnlockAchievements({
+                userId: task.userId,
+                updatedStats,
+            });
         } else {
-            await PracticeTask.findByIdAndUpdate(id, { $inc: { attempts: 1 }, $set: { userCode: code } });
+            await PracticeTask.findByIdAndUpdate(
+                id,
+                {
+                    $inc: { attempts: 1 },
+                    $set: { userCode: code },
+                },
+                { returnDocument: 'after' },
+            );
         }
-        return { output: cleanStdout || stderr, isCorrect, unlockedAchievements: achievements };
+        return {
+            output: stdout || stderr,
+            isCorrect,
+            attempts,
+            unlockedAchievements: achievements,
+        };
     } catch (error) {
         if (error.code === 'ECONNABORTED' || error.message?.includes('timeout')) {
-            await PracticeTask.findByIdAndUpdate(id, { $inc: { attempts: 1 }, $set: { userCode: code } });
+            await PracticeTask.findByIdAndUpdate(id, {
+                $inc: { attempts: 1 },
+                $set: { userCode: code },
+            });
             return {
                 output: 'Time Limit Exceeded: Перевищено ліміт часу (4.0с)',
                 isCorrect: false,
+                unlockedAchievements: [],
             };
         }
         throw error;
