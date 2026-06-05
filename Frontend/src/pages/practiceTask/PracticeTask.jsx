@@ -16,6 +16,7 @@ export const PracticeTask = () => {
     const navigate = useNavigate();
     const [code, setCode] = useState('');
     const [isCompleted, setIsCompleted] = useState(false);
+    const [attempts, setAttempts] = useState(0);
     const { data: taskData, isPending: isLoadingTask } = useFetchTask(id);
     const { mutate: submitCode, isPending: isSubmitting, data } = useSubmitCode();
     const [showCompletionModal, setShowCompletionModal] = useState(false);
@@ -31,6 +32,7 @@ export const PracticeTask = () => {
                     if (res.isCorrect) {
                         setShowCompletionModal(true);
                         setIsCompleted(true);
+                        setAttempts(res.attempts);
                     }
                 },
             },
@@ -62,7 +64,12 @@ export const PracticeTask = () => {
         );
     return (
         <div className='flex flex-col h-screen'>
-            {showCompletionModal && <TaskCompleted task={taskData} />}
+            {showCompletionModal && (
+                <TaskCompleted
+                    task={taskData}
+                    attempts={attempts}
+                />
+            )}
             <ResizablePanelGroup
                 orientation='horizontal'
                 className='grid grid-cols-3 flex-1 min-h-0'>
@@ -164,7 +171,11 @@ export const PracticeTask = () => {
                     defaultSize='28%'
                     minSize='15%'
                     maxSize='40%'>
-                    <Chat lesson={taskData} />
+                    <Chat
+                        data={taskData}
+                        code={code}
+                        type={'practiceTask'}
+                    />
                 </ResizablePanel>
                 <ResizableHandle withHandle />
             </ResizablePanelGroup>

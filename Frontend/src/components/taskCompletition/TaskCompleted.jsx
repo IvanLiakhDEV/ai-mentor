@@ -3,7 +3,9 @@ import { LuArrowRight, LuBookOpen, LuCircleCheck, LuRepeat, LuStar, LuZap } from
 import { Button } from '../ui/Button';
 import { useNavigate } from 'react-router';
 
-export const TaskCompleted = ({ task }) => {
+export const TaskCompleted = ({ task, attempts }) => {
+    console.log(task, '123');
+
     const navigate = useNavigate();
     const getDiffucultyColor = () => {
         return task.difficulty === 'easy'
@@ -43,7 +45,7 @@ export const TaskCompleted = ({ task }) => {
                     <div className='grid grid-cols-3 gap-3'>
                         <div className='rounded-2xl bg-blue-100 p-4 flex flex-col justify-center items-center gap-1'>
                             <LuRepeat className='text-blue-600 font-bold h-6 w-6' />
-                            <p className='font-bold text-lg'>{task.attempts}</p>
+                            <p className='font-bold text-lg'>{attempts}</p>
                             <p className='text-sm text-secondary'>Спроб</p>
                         </div>
                         <div className='rounded-2xl bg-violet-100 p-4 flex flex-col justify-center items-center gap-1'>

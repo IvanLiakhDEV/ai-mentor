@@ -5,7 +5,7 @@ import { Message } from '../message/Message';
 import { useSendMessage } from '@/hooks/useChat';
 import { TypingIndicator } from '../message/TypingIndicator';
 
-export const Chat = ({ lesson, code }) => {
+export const Chat = ({ data, code, type }) => {
     const { mutate: sendMessage, isPending } = useSendMessage();
     const [message, setMessage] = useState('');
     const [messages, setMessages] = useState([
@@ -27,7 +27,7 @@ export const Chat = ({ lesson, code }) => {
         setMessage('');
 
         sendMessage(
-            { messages: newMessages, lesson: lesson.data.lesson, code },
+            { messages: newMessages, data, type, code },
             {
                 onSuccess: response => {
                     setMessages(prev => [

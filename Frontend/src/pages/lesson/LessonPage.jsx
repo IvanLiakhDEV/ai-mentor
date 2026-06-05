@@ -73,9 +73,9 @@ const Lesson = ({ lesson }) => {
             { code, id: lesson.data.lesson._id },
             {
                 onSuccess: response => {
-                    if (response.data.isCorrect) setIsCompleted(true);
-                    if (response.data.unlockedAchievements.length > 0)
-                        response.data.unlockedAchievements.map(value =>
+                    if (response.isCorrect) setIsCompleted(true);
+                    if (response.unlockedAchievements.length > 0)
+                        response.unlockedAchievements.map(value =>
                             toast.custom(
                                 t => (
                                     <AchevementToast
@@ -86,8 +86,8 @@ const Lesson = ({ lesson }) => {
                                 { duration: 10000 },
                             ),
                         );
-                    if (response.data.nextLesson) {
-                        setNextLesson(response.data.nextLesson);
+                    if (response.nextLesson) {
+                        setNextLesson(response.nextLesson);
                     }
                 },
             },
@@ -204,11 +204,15 @@ const Lesson = ({ lesson }) => {
                             <h2 className='text-primary font-medium bg px-4 bg-bg-primary py-3 border-b-2'> Результат виконання коду</h2>
                             <div className='h-full bg-bg-primary flex p-2'>
                                 <p className='text-slate-600 font-mono text-sm break-all whitespace-pre-wrap '>
-                                    {(submitedData?.data?.stdout || submitedData?.data?.stderr) ?? (
-                                        <div className={`flex items-center text-sm gap-2 ${submitedData?.data?.stderr && 'text-red-200'}`}>
-                                            <LuTerminal className='h-6 w-6' />
+                                    {submitedData ? (
+                                        <span className={submitedData?.isCorrect ? 'text-green-400' : 'text-red-400'}>
+                                            {submitedData?.output}
+                                        </span>
+                                    ) : (
+                                        <span className='flex items-center text-sm gap-2 text-slate-500'>
+                                            <LuTerminal className='h-5 w-5 shrink-0' />
                                             Натисніть "Запустити код", щоб побачити результат виконання
-                                        </div>
+                                        </span>
                                     )}
                                 </p>
                             </div>
@@ -222,8 +226,9 @@ const Lesson = ({ lesson }) => {
                     maxSize='40%'>
                     <div className='flex-1'>
                         <Chat
-                            lesson={lesson}
+                            data={lesson?.data?.lesson}
                             code={code}
+                            type={'lesson'}
                         />
                     </div>
                 </ResizablePanel>
