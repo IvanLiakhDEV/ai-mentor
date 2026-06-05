@@ -10,28 +10,17 @@ import crypto from 'crypto';
 import { calculateNewStreak } from '../utils/streakCalculator.js';
 import { checkAndUnlockAchievements } from './achievement.service.js';
 
-export const executeCode = async (code, lessonId, userId) => {
-    const { lesson } = await getLessonById(lessonId, userId);
-
-    const course = await getCourse(lesson.courseId, userId);
-
+export const runCode = async ({ code, testCode, language, timeout = 4000 }) => {
     const secretToken = crypto.randomUUID();
-    const studentLogs = `
-let __capturedOutput = "";
-const __originalLog = console.log;
-console.log = (...args) => { 
-    __capturedOutput += args.join(' ') + "\\n"; 
-    __originalLog(...args); 
-};
-`;
+
     const response = await axios.post(
         'https://api.onecompiler.com/v1/run',
         {
-            language: course.language,
+            language,
             files: [
                 {
-                    name: getFileNameByLanguage(course.language),
-                    content: `${studentLogs}\n${code}\n\n${lesson.practice.testCode.replace('__ALL_TESTS_PASSED__', secretToken)}`,
+                    name: getFileNameByLanguage(language),
+                    content: `${code}\n\n${testCode.replace('__ALL_TESTS_PASSED__', secretToken).replace('___TESTS_PASSED___', secretToken)}`,
                 },
             ],
         },
@@ -40,58 +29,13 @@ console.log = (...args) => {
                 'X-API-Key': process.env.ONECOMPILER_KEY,
                 'Content-Type': 'application/json',
             },
+            timeout,
         },
     );
 
     const { stdout, stderr, exception, status } = response.data;
     const isCorrect = stdout ? stdout.includes(secretToken) : false;
-    const enrollment = await Enrollment.findOne({ courseId: lesson.courseId, userId });
-    const alreadyCompleted = enrollment.completedSequence >= lesson.sequenceNumber;
-    const isLastLesson = course.numberOfLessons === lesson.sequenceNumber;
-    let newlyUnlocked = [];
+    const cleanStdout = stdout?.replace(secretToken, '').trim() || '';
 
-    if (isCorrect && !alreadyCompleted) {
-        const currentStat = (await UserStat.findOne({ userId })) || {
-            currentStreak: 0,
-            bestStreak: 0,
-            lastActivityDate: null,
-        };
-
-        const updatedStreakData = calculateNewStreak(currentStat.lastActivityDate, currentStat.currentStreak, currentStat.bestStreak);
-
-        const enrollmentUpdate = {
-            $max: { completedSequence: lesson.sequenceNumber },
-            $inc: { points: lesson.points },
-        };
-
-        const statUpdate = {
-            $inc: { lessonsCompleted: 1, points: lesson.points },
-            $set: {
-                ...updatedStreakData,
-            },
-        };
-
-        if (isLastLesson) {
-            enrollmentUpdate.$set = { status: 'Completed' };
-            statUpdate.$inc.coursesCompleted = 1;
-        }
-
-        const updatedStats = await UserStat.findOneAndUpdate({ userId }, statUpdate, { new: true, upsert: true });
-
-        newlyUnlocked = await checkAndUnlockAchievements({ userId, updatedStats });
-
-        await Enrollment.findOneAndUpdate({ courseId: lesson.courseId, userId }, enrollmentUpdate);
-    }
-
-    const nextLesson = course.modules?.flatMap(module => module.lessons).find(l => l.sequenceNumber === lesson.sequenceNumber + 1) || null;
-
-    return {
-        stdout: stdout?.replace(secretToken, '').trim() || '',
-        stderr,
-        exception,
-        status,
-        isCorrect,
-        nextLesson,
-        unlockedAchievements: newlyUnlocked,
-    };
+    return { stdout: cleanStdout, stderr, exception, status, isCorrect };
 };
