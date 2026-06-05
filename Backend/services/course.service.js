@@ -31,7 +31,7 @@ export const editCourseInfo = async ({ id, data }) => {
         throw new ErrorHandler(`Курсу з id = "${id}" не знайдено`, 404);
     }
 };
-export const getCourse = async (courseId, userId, role) => {
+export const getCourse = async (courseId, userId, role = 'student') => {
     const [course, lessons, enrollment] = await Promise.all([
         role === 'student' ? Course.findOne({ _id: courseId, isArchived: { $ne: true } }) : Course.findById(courseId),
         Lesson.find({ courseId }).sort({ sequenceNumber: 1 }),
