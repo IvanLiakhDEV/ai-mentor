@@ -4,14 +4,13 @@ import { useNavigate } from 'react-router';
 
 export const useGetLesson = id => {
     const navigate = useNavigate();
-
     return useQuery({
         queryKey: ['lesson', id],
         queryFn: () => fetchLesson(id),
         enabled: !!id,
         retry: false,
         onError: error => {
-            if (error.response?.status === 403) {
+            if (error.response?.status === 404) {
                 navigate('/');
             }
         },

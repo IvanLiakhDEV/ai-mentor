@@ -5,5 +5,10 @@ import enrollmentReducer from './slices/enrollmentSlice';
 import themeReducer from './slices/themeSlice';
 
 export default configureStore({
-    reducer: { auth: authReducer, courses: courseReducer, enrollment: enrollmentReducer, theme: themeReducer },
+    reducer: {
+        auth: authReducer,
+        courses: courseReducer,
+        enrollment: enrollmentReducer,
+        theme: themeReducer,
+    },
 });

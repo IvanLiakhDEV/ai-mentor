@@ -9,7 +9,7 @@ export const questionValidationSchema = z.object({
             isBot: z.boolean(),
         }),
     ),
-    lesson: z.object({
+    data: z.object({
         title: z
             .string(issuesHandler('title'))
             .trim()

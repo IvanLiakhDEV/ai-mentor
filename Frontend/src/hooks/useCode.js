@@ -6,7 +6,7 @@ export const useSubmitCode = () => {
     return useMutation({
         mutationFn: ({ code, id }) => submitCode(code, id),
         onSuccess: data => {
-            if (data.data.isCorrect) {
+            if (data.isCorrect) {
                 queryClient.invalidateQueries({ queryKey: ['enrollment'] });
             }
         },

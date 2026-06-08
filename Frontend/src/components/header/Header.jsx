@@ -34,21 +34,21 @@ export const Header = () => {
         <header className='w-full border-b border-border  bg-bg-surface'>
             <div className='flex items-center justify-between px-6 py-2 mx-auto max-w-7xl'>
                 <div className='flex items-center'>
-                    <div className='mr-10 text-2xl font-bold text-cta'>Logo</div>
+                    <div className='mr-10 text-2xl font-bold text-cta'>AI-mentor</div>
                     <nav>
                         <ul className='flex gap-6 list-none'>
                             <li>
                                 <NavLink
                                     to='/'
                                     className={getClassName}>
-                                    Catalog
+                                    Головна
                                 </NavLink>
                             </li>
                             <li>
                                 <NavLink
                                     to='/leaderboard'
                                     className={getClassName}>
-                                    Leaderboard
+                                    Таблиця лідерів
                                 </NavLink>
                             </li>
                             <li>

@@ -5,9 +5,10 @@ import {
     getLessonById,
     getNextLessonData,
     reorderLessonsService,
+    submitLesson,
 } from '../services/lesson.service.js';
 import { catchAsyncErrors } from '../utils/errorHandlers.js';
-import { executeCode } from '../services/code.service.js';
+import { runCode } from '../services/code.service.js';
 export const addLesson = catchAsyncErrors(async (req, res, next) => {
     const data = req.body;
     const result = await createLesson(data);
@@ -60,14 +61,8 @@ export const getNextLesson = catchAsyncErrors(async (req, res, next) => {
 export const submitCode = catchAsyncErrors(async (req, res) => {
     const { code, id } = req.body;
     const userId = req.user._id;
-
-    const result = await executeCode(code, id, userId);
-
-    res.status(200).json({
-        success: true,
-        message: result.isCorrect ? 'Урок пройдено' : 'Неправильна відповідь',
-        data: result,
-    });
+    const data = await submitLesson(code, id, userId);
+    res.status(200).json(data);
 });
 export const reorderLessons = catchAsyncErrors(async (req, res) => {
     const { lessons } = req.body;

@@ -41,11 +41,11 @@ export const CoursePage = () => {
     };
     if (isLoadingCourse)
         return (
-            <div className='max-w-7xl mx-auto pt-14'>
+            <div className='max-w-7xl mx-auto pt-14 flex flex-col w-full'>
                 <Skeleton className='bg-gray-200 h-60 ' />
-                <div className='flex gap-10 pt-6'>
-                    <Skeleton className='h-16' />
-                    <Skeleton className='h-16' />
+                <div className='flex pt-6 w-full h-full gap-6 justify-between'>
+                    <Skeleton className='h-60 w-full pr-100 bg-gray-200' />
+                    <Skeleton className='h-20 w-full bg-gray-200' />
                 </div>
             </div>
         );
