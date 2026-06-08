@@ -50,8 +50,27 @@ export const getCourse = async (courseId, userId, role = 'student') => {
         enrollment: enrollment,
     };
 };
-export const getCourses = async ({ role }) => {
-    return role === 'student' ? await Course.find({ isArchived: { $ne: true } }) : await Course.find();
+export const getCoursesInfo = async ({ role, userId, search, difficulty, enrolled, page, limit }) => {
+    const query = role === 'student' ? { isArchived: { $ne: true } } : {};
+    if (search) {
+        query.$or = [{ title: { $regex: search, $options: 'i' } }, { description: { $regex: search, $options: 'i' } }];
+    }
+    if (difficulty) {
+        query.difficulty = difficulty;
+    }
+    if (enrolled !== undefined) {
+        const enrollments = await Enrollment.find({ userId }).select('courseId');
+        const courseIds = enrollments.map(e => e.courseId);
+        query._id = enrolled === 'true' ? { $in: courseIds } : { $nin: courseIds };
+    }
+    const skip = (page - 1) * limit;
+    const [courses, total] = await Promise.all([Course.find(query).skip(skip).limit(Number(limit)), Course.countDocuments(query)]);
+    return {
+        courses,
+        total,
+        pages: Math.ceil(total / limit),
+        currentPage: Number(page),
+    };
 };
 export const addModuleToCourse = async (moduleData, courseId) => {
     const courseExist = await Course.findById(courseId);
