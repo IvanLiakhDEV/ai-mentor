@@ -1,7 +1,7 @@
 import { api } from './axios';
 
-export const fetchCourses = async () => {
-    const response = await api.get('/course');
+export const fetchCourses = async filters => {
+    const response = await api.get('/course', { params: filters });
     return response.data;
 };
 export const fetchCourseById = async id => {
