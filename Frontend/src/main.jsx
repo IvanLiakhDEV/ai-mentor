@@ -16,9 +16,7 @@ const queryClient = new QueryClient({
         },
     },
 });
-
 const root = document.getElementById('root');
-
 ReactDOM.createRoot(root).render(
     <Provider store={store}>
         <QueryClientProvider client={queryClient}>

@@ -18,7 +18,7 @@ export const CourseList = () => {
 
     return (
         <div className='flex flex-col gap-6 flex-1'>
-            <h1 className='text-2xl font-bold '>Досліджуй каталог доступних курсів</h1>
+            <h1 className='text-2xl font-bold'>Досліджуй каталог доступних курсів</h1>
             <div className='-mt-3.75'>
                 <InputField
                     placeholder={'Введіть назвою або тег'}
@@ -28,17 +28,19 @@ export const CourseList = () => {
                     id={'searchbar'}
                 />
             </div>
-            <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'>
+            <div className='flex'>
                 {isInitialized &&
                     (filteredCourses.length > 0 ? (
-                        filteredCourses.map(course => (
-                            <CourseCard
-                                key={course._id}
-                                courseData={course}
-                            />
-                        ))
+                        <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'>
+                            {filteredCourses.map(course => (
+                                <CourseCard
+                                    key={course._id}
+                                    courseData={course}
+                                />
+                            ))}
+                        </div>
                     ) : (
-                        <p className='text-center'>Список курсів порожній</p>
+                        <p className='font-semibold text-lg'>Список курсів порожній</p>
                     ))}
             </div>
         </div>

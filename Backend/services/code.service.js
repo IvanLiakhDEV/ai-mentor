@@ -12,7 +12,6 @@ import { checkAndUnlockAchievements } from './achievement.service.js';
 
 export const runCode = async ({ code, testCode, language, timeout = 4000 }) => {
     const secretToken = crypto.randomUUID();
-
     const response = await axios.post(
         'https://api.onecompiler.com/v1/run',
         {
@@ -20,7 +19,7 @@ export const runCode = async ({ code, testCode, language, timeout = 4000 }) => {
             files: [
                 {
                     name: getFileNameByLanguage(language),
-                    content: `${code}\n\n${testCode.replace('__ALL_TESTS_PASSED__', secretToken).replace('___TESTS_PASSED___', secretToken)}`,
+                    content: `${code}\n\n${testCode.replace('___TESTS_PASSED___', secretToken)}`,
                 },
             ],
         },
@@ -32,10 +31,8 @@ export const runCode = async ({ code, testCode, language, timeout = 4000 }) => {
             timeout,
         },
     );
-
     const { stdout, stderr, exception, status } = response.data;
     const isCorrect = stdout ? stdout.includes(secretToken) : false;
     const cleanStdout = stdout?.replace(secretToken, '').trim() || '';
-
     return { stdout: cleanStdout, stderr, exception, status, isCorrect };
 };

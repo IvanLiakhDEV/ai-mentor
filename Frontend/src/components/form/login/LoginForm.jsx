@@ -23,7 +23,7 @@ export const LoginForm = ({ onSwitch }) => {
         <form
             onSubmit={handleSubmit(onSubmit)}
             className='p-[2rem] shadow-[0_10px_15px_-3px_rgb(0,0,0,0.1)] bg-bg-surface max-w-[28rem] w-full rounded-10 '>
-            <div className='flex flex-col gap-6 '>
+            <div className='flex flex-col gap-6 mb-6'>
                 <InputField
                     label='Електронна адреса'
                     placeholder={'example@email.com'}
@@ -43,13 +43,13 @@ export const LoginForm = ({ onSwitch }) => {
                     error={errors.password?.message}
                 />
             </div>
-            <div className='flex justify-end mt-1 mb-3'>
+            {/* <div className='flex justify-end mt-1 mb-3'>
                 <a
                     href='#'
                     className='font-semibold text-cta'>
                     Забули пароль?
                 </a>
-            </div>
+            </div> */}
             {error && (
                 <p className='mb-3 text-sm font-medium text-center text-red-500 '>{error.response?.data?.message || 'Щось пішло не так'}</p>
             )}

@@ -1,5 +1,5 @@
 import { GoogleGenerativeAI } from '@google/generative-ai';
-import { buildSystemPromptForLesson, buildSystemPromptForTask, buildUserMessage } from '../utils/promt.js';
+import { buildPracticeTaskPrompt, buildSystemPromptForLesson, buildSystemPromptForTask, buildUserMessage } from '../utils/promt.js';
 
 export const askAI = async ({ messages, data, code, type }) => {
     const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);

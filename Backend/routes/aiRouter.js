@@ -4,5 +4,4 @@ import { validateSchema } from '../middleware/validation.js';
 import { questionValidationSchema } from '../validators/aiSchema.js';
 import { askQuestion } from '../controllers/aiController.js';
 export const aiRouter = Router();
-
 aiRouter.post('/ask', verifyJWT, askQuestion);
