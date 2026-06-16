@@ -196,7 +196,7 @@ export const PracticePage = () => {
                     </Box>
                     {isPending ? (
                         <Skeleton className='w-full h-50' />
-                    ) : myTasks?.length > 1 ? (
+                    ) : myTasks?.tasks?.length >= 1 ? (
                         myTasks.tasks.map(task => (
                             <PracticeTaskCard
                                 key={task._id}
