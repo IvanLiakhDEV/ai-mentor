@@ -15,6 +15,7 @@ import { LuPlay } from 'react-icons/lu';
 import { useGetNextLesson } from '@/hooks/useLesson';
 import { toast } from 'sonner';
 import { Spinner } from '@/components/ui/Spinner';
+import { Tag } from '@/components/tag/Tag';
 export const CoursePage = () => {
     const { id } = useParams();
     const navigate = useNavigate();
@@ -68,6 +69,16 @@ export const CoursePage = () => {
                 </button>
                 <div className='bg-gradient-to-r from-[#5b4ccc] to-[#7c6fd6] rounded-lg p-8 mb-8 text-white'>
                     <div className='grid gap-7'>
+                        <div>
+                            <ul className='flex gap-2 line-clamp-1'>
+                                {course.data.tags?.map((tag, index) => (
+                                    <Tag
+                                        title={tag}
+                                        key={index}
+                                    />
+                                ))}
+                            </ul>
+                        </div>
                         <h1 className='text-4xl font-bold'>{course.data.title}</h1>
                         <h2 className='text-xl'>{course.data.description}</h2>
                         <div className='grid gap-2'>
