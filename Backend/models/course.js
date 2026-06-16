@@ -1,4 +1,5 @@
 import mongoose, { Schema } from 'mongoose';
+import { type } from 'node:os';
 
 const courseSchema = new Schema(
     {
@@ -15,6 +16,11 @@ const courseSchema = new Schema(
             trim: true,
             minLength: [50, 'Опис не може бути коротшим за 50 символів'],
             maxLength: [500, 'Опис не може бути довшим за 500 символів'],
+        },
+        difficulty: {
+            type: String,
+            enum: ['Beginner', 'Intermediate', 'Advanced'],
+            default: 'Beginner',
         },
         tags: [{ type: String, required: true, maxLength: [30, 'Текст не може бути довшим за 30 символів'] }],
         numOfParticipants: {

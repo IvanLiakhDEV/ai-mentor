@@ -1,7 +1,4 @@
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { useDispatch } from 'react-redux';
-import { setCourses } from '@/store/slices/courseSlice';
-import { useEffect } from 'react';
+import { useMutation, useQuery, useQueryClient, keepPreviousData } from '@tanstack/react-query';
 import {
     addModule,
     createCourse,
@@ -13,18 +10,15 @@ import {
     fetchCourses,
     toggleArchiveCourse,
 } from '@/api/course.api';
-export const useCourses = () => {
-    const dispatch = useDispatch();
-    const query = useQuery({
-        queryKey: ['course'],
-        queryFn: fetchCourses,
+export const useCourses = filters => {
+    return useQuery({
+        queryKey: ['course', filters],
+        queryFn: () => fetchCourses(filters),
         retry: false,
+        placeholderData: keepPreviousData,
     });
-    useEffect(() => {
-        if (query.data) dispatch(setCourses(query.data.data));
-    }, [query.data]);
-    return query;
 };
+
 export const useCourseById = (id, isEnabled) => {
     const query = useQuery({
         queryKey: ['course', id],

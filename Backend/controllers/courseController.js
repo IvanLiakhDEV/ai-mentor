@@ -4,7 +4,7 @@ import {
     editCourseInfo,
     editModuleInfo,
     getCourse,
-    getCourses,
+    getCoursesInfo,
     removeCourse,
     removeModule,
     toggleArchivedCourse,
@@ -37,14 +37,11 @@ export const editCourse = catchAsyncErrors(async (req, res, next) => {
         message: `Курс з id = "${id}" видалено успішно`,
     });
 });
-export const getAll = catchAsyncErrors(async (req, res, next) => {
-    const { role } = req.user;
-    const result = await getCourses({ role });
-    res.status(200).json({
-        success: true,
-        message: `Курсів знайдено: ${result.length}`,
-        data: result,
-    });
+export const getCourses = catchAsyncErrors(async (req, res, next) => {
+    const { role, _id: userId } = req.user;
+    const { search, difficulty, enrolled, page = '1', limit = '6' } = req.query;
+    const data = await getCoursesInfo({ role, userId, search, difficulty, enrolled, page, limit });
+    res.status(200).json(data);
 });
 export const getById = catchAsyncErrors(async (req, res, next) => {
     const { id } = req.params;

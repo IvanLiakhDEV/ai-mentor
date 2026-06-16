@@ -58,7 +58,7 @@ export const CoursePage = () => {
         return module.lessons.filter(isCompleted).length;
     };
     return (
-        <div className='pt-14 mx-auto max-w-7xl px-6 '>
+        <div className='pt-14 mx-auto max-w-7xl px-6'>
             <div className='flex flex-col gap-7 '>
                 <button
                     className='flex gap-2 text-secondary items-center font-medium cursor-pointer max-w-fit'

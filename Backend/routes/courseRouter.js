@@ -12,8 +12,8 @@ import {
     deleteModule,
     editCourse,
     editModule,
-    getAll,
     getById,
+    getCourses,
     remove,
     toggleArchived,
 } from '../controllers/courseController.js';
@@ -22,7 +22,7 @@ export const courseRouter = Router();
 
 courseRouter.post('/', verifyJWT, authorize('admin'), validateSchema(courseValidationSchema), create);
 courseRouter.delete('/:id', verifyJWT, authorize('admin'), validateParamsSchema(byIdValidationSchema), remove);
-courseRouter.get('/', verifyJWT, getAll);
+courseRouter.get('/', verifyJWT, getCourses);
 courseRouter.get('/:id', verifyJWT, validateParamsSchema(byIdValidationSchema), getById);
 courseRouter.patch(
     '/:id',

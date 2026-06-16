@@ -15,6 +15,7 @@ export const courseValidationSchema = z.object({
         .transform(val => val.split(/\s+/).filter(Boolean))
         .pipe(z.array(z.string().max(30, 'Тег не може бути довшим за 30 символів')).nonempty('Додайте хоча б 1 тег')),
     language: z.enum(LANGUAGES, 'Виберіть одну з запропонованих мов').default('javascript'),
+    difficulty: z.enum(['Beginner', 'Intermediate', 'Advanced'], 'Виберіть рівень складності').default('Beginner'),
 });
 export const moduleValidationSchema = z.object({
     title: z.string().min(1, "Назва модуля є обов'язковою"),

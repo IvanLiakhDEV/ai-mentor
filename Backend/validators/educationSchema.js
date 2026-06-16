@@ -22,6 +22,7 @@ export const courseValidationSchema = z.object({
     language: z
         .enum(['typescript', 'javascript', 'python', 'java', 'dart', 'ruby', 'cpp', 'c', 'csharp', 'sql', 'php'], issuesHandler('language'))
         .default('javascript'),
+    difficulty: z.enum(['Beginner', 'Intermediate', 'Advanced'], issuesHandler('difficulty')).default('Beginner'),
     modules: z
         .array(
             z.object({
