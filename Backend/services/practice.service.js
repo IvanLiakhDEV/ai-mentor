@@ -8,8 +8,21 @@ import { getFileNameByLanguage } from '../utils/getFilename.js';
 import { calculateNewStreak } from '../utils/streakCalculator.js';
 import { checkAndUnlockAchievements } from './achievement.service.js';
 import { runCode } from './code.service.js';
-export const getMyTasks = async ({ userId }) => {
-    return await PracticeTask.find({ userId }).sort({ createdAt: -1 });
+export const getMyTasks = async ({ userId, isCompleted, difficulty, page, limit }) => {
+    const query = { userId };
+    if (isCompleted !== undefined) query.isCompleted = isCompleted;
+    if (difficulty) query.difficulty = difficulty;
+    const skip = (page - 1) * limit;
+    const [tasks, total] = await Promise.all([
+        PracticeTask.find(query).skip(skip).limit(Number(limit)),
+        PracticeTask.countDocuments(query),
+    ]);
+    return {
+        tasks,
+        total,
+        pages: Math.ceil(total / limit),
+        currentPage: Number(page),
+    };
 };
 export const createTask = async ({ userId, topic, difficulty, language }) => {
     const task = await generateTask({ topic, difficulty, language });

@@ -2,7 +2,8 @@ import { catchAsyncErrors } from '../utils/errorHandlers.js';
 import { createTask, getMyTasks, getTaskInfo, submitTask } from '../services/practice.service.js';
 export const getPracticeTasks = catchAsyncErrors(async (req, res, next) => {
     const userId = req.user._id;
-    const tasks = await getMyTasks({ userId });
+    const { isCompleted, difficulty, page = '1', limit = '5' } = req.query;
+    const tasks = await getMyTasks({ userId, isCompleted, difficulty, page, limit });
     res.status(200).json(tasks);
 });
 export const createPracticeTask = catchAsyncErrors(async (req, res, next) => {

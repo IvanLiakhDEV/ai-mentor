@@ -1,6 +1,6 @@
 import { Box } from '@/components/box/Box';
-import React from 'react';
-import { LuSparkles, LuStar } from 'react-icons/lu';
+import React, { useState } from 'react';
+import { LuSparkles } from 'react-icons/lu';
 import { Combobox, ComboboxContent, ComboboxEmpty, ComboboxInput, ComboboxItem, ComboboxList } from '@/components/ui/combobox';
 import { Button } from '@/components/ui/Button';
 import { PracticeTaskCard } from '@/components/practiceTaskCard/PracticeTaskCard';
@@ -14,11 +14,23 @@ import { Difficulty } from '@/components/difficulty/Difficulty';
 import { Spinner } from '@/components/ui/Spinner';
 import { Skeleton } from '@/components/ui/Skeleton';
 import { PRACTICE_TOPICS } from '@/assets/style/constants/Constants';
+import {
+    Pagination,
+    PaginationContent,
+    PaginationItem,
+    PaginationLink,
+    PaginationNext,
+    PaginationPrevious,
+} from '@/components/ui/pagination';
 
+import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from '@/components/ui/select';
 export const PracticePage = () => {
-    const { data: myTasks, isPending } = useFetchMyTasks();
-    const { mutate: createTask, isPending: isCreatingTask } = useCreateTask();
+    const [difficulty, setDifficulty] = useState();
+    const [currentPage, setCurrentPage] = useState(1);
+    const [isCompleted, setIsCompleted] = useState();
 
+    const { data: myTasks, isPending, isSuccess } = useFetchMyTasks({ difficulty, page: currentPage, isCompleted });
+    const { mutate: createTask, isPending: isCreatingTask } = useCreateTask();
     const { register, handleSubmit, setValue, watch } = useForm({
         defaultValues: {
             topic: '',
@@ -28,10 +40,10 @@ export const PracticePage = () => {
         resolver: zodResolver(taskValidationSchema),
     });
 
-    const difficulty = watch('difficulty');
+    const taskDifficulty = watch('difficulty');
+    console.log(myTasks);
 
     const onCreateTask = data => {
-        console.log(data);
         createTask(data, {
             onSuccess: () => {
                 toast.success('Завдання успішно згенеровано!');
@@ -42,15 +54,6 @@ export const PracticePage = () => {
     const onDifficultyChange = value => {
         setValue('difficulty', value, { shouldValidate: true });
     };
-
-    const sortedTasks = myTasks
-        ? [...myTasks]?.sort((a, b) => {
-              if (a.isCompleted !== b.isCompleted) {
-                  return a.isCompleted ? 1 : -1;
-              }
-              return new Date(b.createdAt) - new Date(a.createdAt);
-          })
-        : [];
 
     return (
         <div className='flex flex-col mx-auto'>
@@ -124,19 +127,19 @@ export const PracticePage = () => {
                                         difficultyTitle='Легко'
                                         difficultyValue='easy'
                                         onDifficultyChange={onDifficultyChange}
-                                        isActive={difficulty === 'easy'}
+                                        isActive={taskDifficulty === 'easy'}
                                     />
                                     <Difficulty
                                         difficultyTitle='Середньо'
                                         difficultyValue='medium'
                                         onDifficultyChange={onDifficultyChange}
-                                        isActive={difficulty === 'medium'}
+                                        isActive={taskDifficulty === 'medium'}
                                     />
                                     <Difficulty
                                         difficultyTitle='Важко'
                                         difficultyValue='hard'
                                         onDifficultyChange={onDifficultyChange}
-                                        isActive={difficulty === 'hard'}
+                                        isActive={taskDifficulty === 'hard'}
                                     />
                                 </div>
                             </div>
@@ -160,13 +163,41 @@ export const PracticePage = () => {
                 <div className='flex flex-col gap-2  w-full'>
                     <div className='flex justify-between'>
                         <span className='font-semibold'>Згенеровані завдання</span>
-                        <span className='text-sm '>{myTasks?.length || 0} завдань</span>
+                        <span className='text-sm '>{myTasks?.total || 0} завдань</span>
                     </div>
+                    <Box className='flex gap-2'>
+                        <Select onValueChange={value => setDifficulty(value)}>
+                            <SelectTrigger className='w-full max-w-48 h-full bg-(--background-surface) py-4'>
+                                <SelectValue placeholder='Рівень важкості' />
+                            </SelectTrigger>
+                            <SelectContent className='dark:bg-(--background-surface) text-primary'>
+                                <SelectGroup>
+                                    <SelectLabel>Складність</SelectLabel>
+                                    <SelectItem value='easy'>Легко</SelectItem>
+                                    <SelectItem value='medium'>Середньо</SelectItem>
+                                    <SelectItem value='hard'>Важко</SelectItem>
+                                    <SelectItem value={null}>Будь-яка</SelectItem>
+                                </SelectGroup>
+                            </SelectContent>
+                        </Select>
+                        <Select onValueChange={value => setIsCompleted(value)}>
+                            <SelectTrigger className='w-full max-w-48 bg-(--background-surface) py-4'>
+                                <SelectValue placeholder='Оберіть видимість' />
+                            </SelectTrigger>
+                            <SelectContent className='dark:bg-(--background-surface) text-primary'>
+                                <SelectGroup>
+                                    <SelectLabel>Видимість</SelectLabel>
+                                    <SelectItem value={null}>Всі</SelectItem>
+                                    <SelectItem value={true}>Виконані</SelectItem>
+                                    <SelectItem value={false}>Доступні</SelectItem>
+                                </SelectGroup>
+                            </SelectContent>
+                        </Select>
+                    </Box>
                     {isPending ? (
                         <Skeleton className='w-full h-50' />
-                    ) : (
-                        sortedTasks &&
-                        sortedTasks.map(task => (
+                    ) : myTasks?.length > 1 ? (
+                        myTasks.tasks.map(task => (
                             <PracticeTaskCard
                                 key={task._id}
                                 difficulty={task.difficulty}
@@ -177,6 +208,40 @@ export const PracticePage = () => {
                                 isCompleted={task.isCompleted}
                             />
                         ))
+                    ) : (
+                        <p>Список порожній</p>
+                    )}
+                    {isSuccess && myTasks?.pages > 1 && (
+                        <Pagination>
+                            <PaginationContent>
+                                {currentPage != 1 && (
+                                    <PaginationItem onClick={() => setCurrentPage(prev => prev - 1)}>
+                                        <PaginationPrevious
+                                            className='cursor-pointer'
+                                            text='Попередня'
+                                        />
+                                    </PaginationItem>
+                                )}
+                                {Array.from({ length: myTasks.pages }).map((value, index) => (
+                                    <PaginationItem onClick={() => setCurrentPage(index + 1)}>
+                                        <PaginationLink
+                                            className='cursor-pointer'
+                                            isActive={currentPage === index + 1}>
+                                            {index + 1}
+                                        </PaginationLink>
+                                    </PaginationItem>
+                                ))}
+                                {currentPage !== myTasks.pages && (
+                                    <PaginationItem>
+                                        <PaginationNext
+                                            text='Наступна'
+                                            className='cursor-pointer'
+                                            onClick={() => setCurrentPage(prev => prev + 1)}
+                                        />
+                                    </PaginationItem>
+                                )}
+                            </PaginationContent>
+                        </Pagination>
                     )}
                 </div>
             </div>

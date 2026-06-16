@@ -1,11 +1,12 @@
 import { createTask, fetchMyTasks, fetchTask, submitTaskCode } from '@/api/practice';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { keepPreviousData, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
-export const useFetchMyTasks = () => {
+export const useFetchMyTasks = filters => {
     return useQuery({
-        queryKey: ['my-tasks'],
-        queryFn: fetchMyTasks,
+        queryKey: ['my-tasks', filters],
+        queryFn: () => fetchMyTasks(filters),
         retry: false,
+        placeholderData: keepPreviousData,
     });
 };
 export const useFetchTask = id => {

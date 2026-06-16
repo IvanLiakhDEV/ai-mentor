@@ -1,7 +1,7 @@
 import { api } from './axios';
 
-export const fetchMyTasks = async () => {
-    const response = await api.get(`/practice/my-tasks`);
+export const fetchMyTasks = async filters => {
+    const response = await api.get(`/practice/my-tasks`, { params: filters });
     return response.data;
 };
 export const fetchTask = async id => {

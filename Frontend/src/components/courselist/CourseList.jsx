@@ -22,7 +22,7 @@ export const CourseList = () => {
             <h1 className='text-2xl font-bold'>Досліджуй каталог доступних курсів</h1>
             <div className='-mt-3.75 flex gap-2 h-10'>
                 <InputField
-                    placeholder={'Введіть назву або тег'}
+                    placeholder={'Введіть пошуковий запит'}
                     value={searchQuery}
                     onChange={e => setSearchQuery(e.target.value)}
                     icon={HiMagnifyingGlass}
