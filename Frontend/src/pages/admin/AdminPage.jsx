@@ -7,6 +7,7 @@ import { CreateCourse } from '@/components/course/CreateCourse';
 export const AdminPage = () => {
     const { data: courses, isLoading } = useCourses();
     const [isVisible, setIsVisible] = useState(false);
+
     if (isLoading) return <p>Loading</p>;
     return (
         <div className='flex flex-col'>
@@ -17,7 +18,7 @@ export const AdminPage = () => {
                 <div className='flex justify-between items-center'>
                     <h2>
                         Всього курсів:
-                        <span className='font-bold'> {courses?.data?.length || 0}</span>
+                        <span className='font-bold'> {courses?.courses?.length || 0}</span>
                     </h2>
                     <Button
                         size='lg'
@@ -31,9 +32,9 @@ export const AdminPage = () => {
                         isVisible={isVisible}
                     />
                 </div>
-                {courses?.data && (
+                {courses?.courses && (
                     <div className='rounded-lg shadow-sm border-gray-200 grid gap-2'>
-                        {courses.data.map(course => (
+                        {courses?.courses.map(course => (
                             <CourseItem
                                 course={course}
                                 key={course._id}

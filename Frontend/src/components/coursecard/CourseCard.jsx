@@ -4,7 +4,7 @@ import { Tag } from '../tag/Tag';
 import { useNavigate } from 'react-router';
 import { useSelector } from 'react-redux';
 import { selectEnrollments } from '@/store/selectors/enrollmentSelectors';
-import { DifficultyBadge } from '../difficultyBadge/DifficultyBadge';
+import { DifficultyBadge } from '../difficultybadge/DifficultyBadge';
 export const CourseCard = ({ courseData }) => {
     const usersCourses = useSelector(selectEnrollments);
     const isEnrolled = usersCourses?.find(value => value.courseId._id === courseData._id);
