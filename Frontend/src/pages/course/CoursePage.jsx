@@ -59,7 +59,7 @@ export const CoursePage = () => {
         return module.lessons.filter(isCompleted).length;
     };
     return (
-        <div className='pt-14 mx-auto max-w-7xl px-6'>
+        <div className='pt-7 mx-auto max-w-7xl px-6'>
             <div className='flex flex-col gap-7 '>
                 <button
                     className='flex gap-2 text-secondary items-center font-medium cursor-pointer max-w-fit'
@@ -67,7 +67,7 @@ export const CoursePage = () => {
                     <FaArrowLeft />
                     Повернутися до курсів
                 </button>
-                <div className='bg-gradient-to-r from-[#5b4ccc] to-[#7c6fd6] rounded-lg p-8 mb-8 text-white'>
+                <div className='bg-gradient-to-r bg-cta  rounded-lg p-8 mb-8 text-white'>
                     <div className='grid gap-7'>
                         <div>
                             <ul className='flex gap-2 line-clamp-1'>
